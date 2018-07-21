@@ -1,0 +1,114 @@
+{
+	"http://purl.org/emmedi/mauth/zeri/artwork/": { 	
+			"label": "Zeri Catalog",
+			"endpoint": "http://127.0.0.1:9999/blazegraph/sparql" 
+		},
+	"http://purl.org/emmedi/mauth/zeri/artist/": { 	
+			"label": "Zeri Catalog",
+			"endpoint": "http://127.0.0.1:9999/blazegraph/sparql" 
+		},
+	"http://purl.org/emmedi/mauth/zeri/": { 	
+			"label": "Zeri Catalog",
+			"endpoint": "http://127.0.0.1:9999/blazegraph/sparql" 
+		},
+	"http://yago-knowledge.org/resource/": { 
+			"label": "yago",	
+			"endpoint": "https://linkeddata1.calcul.u-psud.fr/sparql" 
+		},
+	"http://www.wikidata.org/entity/": { 	
+			"label": "wikidata",
+			"endpoint": "https://query.wikidata.org/sparql"
+		},
+	"http://wikidata.dbpedia.org/resource/": { 	
+			"label": "wikidata dbpedia",
+			"endpoint": "http://wikidata.dbpedia.org/sparql" 
+		},
+	"http://dbpedia.org/resource/":	{ 	
+			"label": "dbpedia",
+			"linkeddatafragments": "http://fragments.dbpedia.org/2016-04/en"
+		},
+	"http://cs.dbpedia.org/resource/": { 	
+			"label": "cs.dbpedia",
+			"endpoint": "http://cs.dbpedia.org/sparql"
+		},
+	"http://eo.dbpedia.org/resource/": { 	
+			"label": "eo.dbpedia",
+			"endpoint": "http://eo.dbpedia.org/sparql"
+		},
+	"http://gl.dbpedia.org/resource/": { 	
+			"label": "gl.dbpedia",
+			"endpoint": "http://gl.dbpedia.org/sparql"
+		},
+	"http://fr.dbpedia.org/resource/": { 	
+			"label": "fr.dbpedia",
+			"endpoint": "http://fr.dbpedia.org/sparql" 
+		},
+	"http://de.dbpedia.org/resource/":	{ 	
+			"label": "de.dbpedia",
+			"endpoint": "http://de.dbpedia.org/sparql" 
+		},
+	"http://it.dbpedia.org/resource/": { 	
+			"label": "it.dbpedia",
+			"endpoint": "http://it.dbpedia.org/sparql"
+		},
+	"http://es.dbpedia.org/resource/": { 	
+			"label": "es.dbpedia",
+			"endpoint": "http://es.dbpedia.org/sparql"
+		},
+	"http://pl.dbpedia.org/resource/": { 	
+			"label": "pl.dbpedia",
+			"endpoint": "http://pl.dbpedia.org/sparql" 
+		},
+	"http://ja.dbpedia.org/resource/": { 	
+			"label": "ja.dbpedia",
+			"endpoint": "http://ja.dbpedia.org/sparql" 
+		},
+	"http://el.dbpedia.org/resource/": { 	
+			"label": "el.dbpedia",
+			"endpoint": "http://el.dbpedia.org/sparql"
+		},
+	"http://nl.dbpedia.org/resource/": { 	
+			"label": "nl.dbpedia",
+			"content-negotiation": {"":""}
+		},
+	"http://data.nytimes.com/":	{ 	
+			"label": "nytimes",
+			"linkeddatafragments": "http://ldf.lodlaundromat.org/307100ddcfd19e0afca7b629079d0f3a"
+		},
+	"http://viaf.org/viaf/":	{ 	
+			"label": "viaf",
+			"linkeddatafragments": "http://data.linkeddatafragments.org/viaf"
+		},
+	"http://gadm.geovocab.org/id/": { 	
+			"label": "gadm rdf",
+			"content-negotiation": {"(.)$":"\\1.rdf"} 
+		},
+	"http://sws.geonames.org/": { 	
+			"label": "geonames",
+			"content-negotiation": {"":""}
+		},
+	"http://linkedgeodata.org/triplify/": { 	
+			"label": "linkedgeodata",
+			"endpoint": "http://linkedgeodata.org/sparql" 
+		},
+	"http://d-nb.info/gnd/": { 	
+			"label": "deutsche national bibliotek",
+			"content-negotiation": {"(.)$":"\\1\/about\/rdf"}
+		},
+	"http://data.bnf.fr/ark:/": { 	
+			"label": "Bibliothèque Nationale de France",
+			"content-negotiation": {"":""}
+		},
+	"http://www.idref.fr/": { 	
+			"label": "IdRef",
+			"content-negotiation": {"":""}
+		},
+	"http://purl.org/emmedi/mauth/itatti/": { 	
+			"label": "I Tatti",
+			"endpoint": "http://127.0.0.1:9999/blazegraph/sparql" 
+		},
+	"http://purl.org/emmedi/mauth/itatti/artwork/": { 	
+			"label": "I Tatti",
+			"endpoint": "http://127.0.0.1:9999/blazegraph/sparql" 
+		}
+}

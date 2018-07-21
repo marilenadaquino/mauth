@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en-US" prefix="og: http://ogp.me/ns#" class=" no-touchevents no-forcetouch" style="">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	    <meta name="title" content="Title">
+	    <meta name="description" content="Keyswords, etc.">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	    <meta name="msapplication-TileColor" content="#ffffff">
+	    <meta name="msapplication-TileImage" content="https://apostrophe.xyz/wp-content/themes/apostrophe/favicon/ms-icon-144x144.png">
+	    <meta name="theme-color" content="#ffffff"><!-- Global site tag (gtag.js) - Google Analytics -->
+		<title>mAuth | Search</title>
+		<link rel="stylesheet" id="app-style-css" href="./Apostrophe Copywriters - For the words you&#39;re missing_files/app.css" type="text/css" media="all">
+		<link rel="stylesheet" id="gforms_reset_css-css" href="./Apostrophe Copywriters - For the words you&#39;re missing_files/formreset.min.css" type="text/css" media="all">
+		<link rel="stylesheet" id="gforms_formsmain_css-css" href="./Apostrophe Copywriters - For the words you&#39;re missing_files/formsmain.min.css" type="text/css" media="all">
+		<link rel="stylesheet" id="gforms_ready_class_css-css" href="./Apostrophe Copywriters - For the words you&#39;re missing_files/readyclass.min.css" type="text/css" media="all">
+		<link rel="stylesheet" id="gforms_browsers_css-css" href="./Apostrophe Copywriters - For the words you&#39;re missing_files/browsers.min.css" type="text/css" media="all">
+		<script type="text/javascript" src="./Apostrophe Copywriters - For the words you&#39;re missing_files/app.js"></script>
+		<script type="text/javascript" src="./Apostrophe Copywriters - For the words you&#39;re missing_files/jquery.js"></script>
+		<script type="text/javascript" src="./Apostrophe Copywriters - For the words you&#39;re missing_files/jquery-migrate.min.js"></script>
+		<script type="text/javascript" src="./Apostrophe Copywriters - For the words you&#39;re missing_files/jquery.json.min.js"></script>
+		<script type="text/javascript" src="./Apostrophe Copywriters - For the words you&#39;re missing_files/gravityforms.min.js"></script>
+		<script type="text/javascript" src="./Apostrophe Copywriters - For the words you&#39;re missing_files/placeholders.jquery.min.js"></script>
+		<script type="text/javascript" src="./Apostrophe Copywriters - For the words you&#39;re missing_files/js.cookie.js"></script>
+		<script type="text/javascript" src="./Apostrophe Copywriters - For the words you&#39;re missing_files/forms.js"></script>
+	</head>
+	<body class="home blog">
+		<div class="site">
+			<header class="header">
+				<div class="header__menu">
+					<button class="menu-toggle" aria-controls="primary-menu" aria-expanded="false">Menu</button>
+				</div>
+				<div class="header__sub" aria-expanded="false">
+					<div class="header__branding">
+						<h1><a href="/">mAuth</a></h1>
+						<div class="cursor cursor--cursor1">|</div>
+					</div>
+					<nav class="header__navigation">
+						<div class="menu-main-container">
+		                    <ul id="menu-main" class="main-menu">
+		                        <li id="menu-item-151" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-151"><a href="../#niceties">Niceties</a></li>
+		                        <li id="menu-item-152" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-152"><a href="../#about">About</a></li>
+		                        <li id="menu-item-153" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-153"><a href="../#clients">Artists</a></li>
+		                        <li id="menu-item-163" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-163"><a href="../#process">Process</a></li>
+		                        <li id="menu-item-156" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-156"><a href="/">Search</a></li>
+		                        <li id="menu-item-156" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-156"><a href="../#contact">Contact</a></li>
+		                    </ul>
+		                </div>			
+		            </nav>
+					
+			</header>
+			<div class="main">
+				<div id="about" class="home home--green home__about">
+            <div class="half half--green">
+                <h2 class="title">Search*</h2>
+                <p>
+                	<form method="GET" action="{{ url_for('results') }}">
+                		<textarea name="uri_source"></textarea>
+    					<input type="submit" value="Go!">
+					</form>
+				</p>
+            </div>
+            <div class="half half--green">
+                <div class="content">
+                     <p><strong>- HOW TO -</strong> Look at the online record of an artwork, copy and paste the URL into the text area and... Go!</p>
+                     <p>&nbsp;</p>
+                     <p><strong>- WHAT SOURCES -</strong> ATM around 50.000 artworks of Italian Modern Art (16th century) from the following providers can be searched:</p>
+                     <p>&nbsp;</p>
+                     <p>// <u><a href="http://catalogo.fondazionezeri.unibo.it/">The Zeri Photo Archive</a></u>, search for <i>Works</i>. Copy the URL of a cataloguing form</p>
+                     <p>// <u><a href="https://images.hollis.harvard.edu/primo-explore/search?query=lsr26,contains,unknown,AND&tab=default_tab&search_scope=default_scope&sortby=rank&vid=HVD_IMAGES&facet=local4,include,Biblioteca%20Berenson,%20Fototeca,%20Villa%20I%20Tatti%20-%20The%20Harvard%20University%20Center%20for%20Italian%20Renaissance%20Studies&lang=en_US&mode=advanced&offset=0">Berenson Library</a></u>, <i>Homeless paintings</i>, copy the URL of a selected image (not of the record).</p>
+                     <p>// Wikipedia pages of Italian Modern Art paintings, e.g. <u><a href="https://it.wikipedia.org/wiki/Madonna_col_Bambino_(Alonso_Berruguete)">this</a></u></p>
+                     <p>&nbsp;</p>
+                     <p>If you are a little geeky, you may want to paste a <u><a href="https://www.wikidata.org/Q3842439">Wikidata URI</a></u>, or a <u><a href="http://viaf.org/viaf/176322485">VIAF record URI</a></u>.</p>
+                </div>
+            </div>
+            <blockquote>*pssss! Don't you know where to start from? Here some examples:<p>&nbsp;</p>
+            	<u><a href="./results?uri_source=http://catalogo.fondazionezeri.unibo.it/scheda.v2.jsp?locale=it&decorator=layout_resp&apply=true&tipo_scheda=OA&id=46872&titolo=Robusti+Domenico+%28Domenico+Tintoretto%29%2C+Ritratto+di+giovane+uomo">Robusti Domenico, <i>Ritratto di giovane uomo</i></a></u>. Zeri Photo Archive</blockquote>   
+        </div>
+			</div>
+		</div>
+	</body>	
+</html>

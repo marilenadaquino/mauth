@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en-US" prefix="og: http://ogp.me/ns#" class=" no-touchevents no-forcetouch" style="">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	    <meta name="title" content="Title">
+	    <meta name="description" content="Keyswords, etc.">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	    <meta name="msapplication-TileColor" content="#ffffff">
+	    <meta name="msapplication-TileImage" content="https://apostrophe.xyz/wp-content/themes/apostrophe/favicon/ms-icon-144x144.png">
+	    <meta name="theme-color" content="#ffffff"><!-- Global site tag (gtag.js) - Google Analytics -->
+		<title>mAuth | Search</title>
+		<link rel="stylesheet" id="app-style-css" href="./Apostrophe Copywriters - For the words you&#39;re missing_files/app.css" type="text/css" media="all">
+		<link rel="stylesheet" id="gforms_reset_css-css" href="./Apostrophe Copywriters - For the words you&#39;re missing_files/formreset.min.css" type="text/css" media="all">
+		<link rel="stylesheet" id="gforms_formsmain_css-css" href="./Apostrophe Copywriters - For the words you&#39;re missing_files/formsmain.min.css" type="text/css" media="all">
+		<link rel="stylesheet" id="gforms_ready_class_css-css" href="./Apostrophe Copywriters - For the words you&#39;re missing_files/readyclass.min.css" type="text/css" media="all">
+		<link rel="stylesheet" id="gforms_browsers_css-css" href="./Apostrophe Copywriters - For the words you&#39;re missing_files/browsers.min.css" type="text/css" media="all">
+		<script type="text/javascript" src="./Apostrophe Copywriters - For the words you&#39;re missing_files/app.js"></script>
+		<script type="text/javascript" src="./Apostrophe Copywriters - For the words you&#39;re missing_files/jquery.js"></script>
+		<script type="text/javascript" src="./Apostrophe Copywriters - For the words you&#39;re missing_files/jquery-migrate.min.js"></script>
+		<script type="text/javascript" src="./Apostrophe Copywriters - For the words you&#39;re missing_files/jquery.json.min.js"></script>
+		<script type="text/javascript" src="./Apostrophe Copywriters - For the words you&#39;re missing_files/gravityforms.min.js"></script>
+		<script type="text/javascript" src="./Apostrophe Copywriters - For the words you&#39;re missing_files/placeholders.jquery.min.js"></script>
+		<script type="text/javascript" src="./Apostrophe Copywriters - For the words you&#39;re missing_files/js.cookie.js"></script>
+		<script type="text/javascript" src="./Apostrophe Copywriters - For the words you&#39;re missing_files/forms.js"></script>
+	</head>
+	<body class="home blog">
+		<div class="site">
+			<header class="header">
+				<div class="header__menu">
+					<button class="menu-toggle" aria-controls="primary-menu" aria-expanded="false">Menu</button>
+				</div>
+				<div class="header__sub" aria-expanded="false">
+					<div class="header__branding">
+						<h1><a href="/">mAuth</a></h1>
+						<div class="cursor cursor--cursor1">|</div>
+					</div>
+					<nav class="header__navigation">
+						<div class="menu-main-container">
+		                    <ul id="menu-main" class="main-menu">
+		                        <li id="menu-item-151" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-151"><a href="../#niceties">Niceties</a></li>
+		                        <li id="menu-item-152" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-152"><a href="../#about">About</a></li>
+		                        <li id="menu-item-153" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-153"><a href="../#clients">Artists</a></li>
+		                        <li id="menu-item-163" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-163"><a href="../#process">Process</a></li>
+		                        <li id="menu-item-156" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-156"><a href="../search">Search</a></li>
+		                        <li id="menu-item-156" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-156"><a href="../#contact">Contact</a></li>
+		                    </ul>
+		                </div>			
+		            </nav>
+					
+			</header>
+			<div class="main"><!-- {{ searchURL }} -->
+				
+            		
+            		{% for attribution in results %}
+            			<div id="about" class="{{ loop.cycle('home home--cream home__process', 'home home--brown home__process') }}">
+	            			{% for key, value in attribution.items() %}
+								{% if key == 'provider' %}
+									<div class="full">
+							            <h2 class="title title-dropdown">{{ value }}</h2>
+							            <button class="dropdown" aria-expanded="false">+</button>  
+							        </div>
+							    {% endif %}
+							    
+						        <section class="dropdown-content" aria-expanded="false">
+	  
+						            <div class="full full--no-padding-top">
+						                <div class="content">
+						                     
+						                </div>
+						            </div>
+						            <hr>
+						            <div class="half">
+						            	{% if attribution['artistTitle'] %}
+							                {% for artist in attribution['artistTitle'] %}
+							                	<div class="content">
+								                    <h3>{{ artist }}</h3>
+								                </div>
+							                {% endfor %}
+						                {% endif %}
+						            </div>
+						            	<div class="half">
+							                <div class="content">
+							                	{% if attribution['artworkTitle'] %}
+									                	<div class="content">
+										                    <h3>{{ attribution['artworkTitle'] }}</h3>
+										                </div>
+								                {% endif %}
+							                    {% if attribution['images'] and attribution['images'][0] != 'none'%}
+							                    	<div class="demo">
+														    {% for image in attribution['images']%}
+														    	<img src={{ image }}>
+														    {% endfor %}
+							                    	</div>
+							                    {% endif %}
+
+							                </div>
+						            	</div>
+						            <hr>
+						            <div class="half">
+						                <div class="content">
+						                    <h3>Attribution</h3>
+						                    <p>&nbsp;</p>
+						                    <p>score:
+						                    	{% if attribution['score'] %}
+						                    		{{ attribution['score'] }}
+						                    	{% endif %}
+						                    </p>
+						                </div>
+						            </div>
+						            <div class="half">
+						                <div class="content">
+						                    <p>DATE(S) OF THE ATTRIBUTION:</p>
+						                    <ul>
+					                        	{% if attribution['date'] %}
+												    {% for date in attribution['date']%}
+												    	{% set f = date %}
+	    												<li>{{ f[:4] }}</li>
+												    {% endfor %}
+							                    {% endif %}
+							                </ul>
+
+							                <p>&nbsp;</p>
+				                        	{% if attribution['criterionLabel']%}
+				                        		<p>CRITERIA</p>
+					                   			 <ul>
+												    {% for criterion in attribution['criterionLabel']%}
+												    	<li>{{ criterion }}</li>
+												    {% endfor %}
+						                    	</ul>
+						                    {% endif %}
+						                    
+				                        	{% if attribution['scholar'] and attribution['scholar'][0] != 'none' %}
+				                        		<p>&nbsp;</p>
+				                        		<p>SOURCE OF ATTRIBUTION: </p>
+											    {% for scholarUri in attribution['scholar']%}
+											    	{% for scholar in attribution[scholarUri] %}
+										    			<li>{{ scholar['label'] }} </li>
+											    		<small>// h index: {{ scholar['h_index'] }}</small>
+										    			<small>// citations by artist: {{ scholar['a_index'] }}</small>
+										    			<small>// biased citation: {{ scholar['auth_index'] }}</small>	
+											    	{% endfor %}
+											    {% endfor %}
+						                    {% endif %}
+
+							                <p>&nbsp;</p>
+							                <p>NUMBER OF SOURCES IN AGREEMENT: 
+							                	{% if attribution['agreement'] and attribution['agreement'] != '0.0' %}
+							                		{{ attribution['agreement'] }}
+							                	{% else %}
+							                		0
+							                	{% endif %}
+							                </p>
+						                </div>
+						            </div>
+						           
+							                           
+						            <div class="full">
+							            <div class="content">
+							                <blockquote>Do you see something wrong? Leave a feedback!</blockquote>
+							            </div>
+						        	</div>
+	        					</section>
+								
+							{% endfor %}
+						</div>
+					{% endfor %}
+				</div>
+	</body>	
+	<style type="text/css">
+		.demo {
+		    width:90%;
+		    margin-top:0.5em;
+		}
+		
+		img {
+			width: 150px;
+		    height: auto;
+		    max-width: 100%;
+		    padding: 0.3em;
+		}
+	</style>
+</html>
