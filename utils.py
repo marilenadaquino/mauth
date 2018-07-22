@@ -3,9 +3,11 @@ from rdflib import URIRef , XSD, Namespace , Literal
 from rdflib.plugins.sparql import prepareQuery
 from rdflib.namespace import OWL, DC , RDF , RDFS
 from SPARQLWrapper import SPARQLWrapper, JSON 
+from pymantic import sparql
 
 
 logging.basicConfig(level=logging.INFO)
+server = sparql.SPARQLServer('http://127.0.0.1:9999/blazegraph/sparql')
 
 WHY = Namespace("http://purl.org/emmedi/mauth/")
 PROV = Namespace("http://www.w3.org/ns/prov#")
@@ -136,7 +138,7 @@ def fetchData(uri, settingFile, inputPattern, outputPattern):
 
 
 def rebuildResults(results):
-	""" given the results of a SPARQL query (defined in mauth) in JSON assings a score to each attribution"""
+	""" given the results of a SPARQL query (against mauth) in JSON assings rebuilds the JSON"""
 	providers = set()
 	for attribution in results["results"]["bindings"]:
 		providers.add(attribution["obsLabel"]["value"])
@@ -151,6 +153,7 @@ def rebuildResults(results):
 		date = set()
 		scholars = set()
 		images = set()
+		
 		for attribution in results["results"]["bindings"]:
 			if attribution["obsLabel"]["value"] == provider:
 				attrib['provider'] = re.sub(' accepted attribution','',provider)
@@ -189,8 +192,17 @@ def rebuildResults(results):
 				# scholar
 				if  attribution["obsLabel"]["value"] == provider and 'scholar' in attribution.keys():
 					scholars.add(attribution["scholar"]["value"])	
+					if 'h_index' in attribution.keys():
+						attrib[attribution["scholar"]["value"]] = [{'h_index': attribution["h_index"]["value"]}]
+					else: 
+						attrib[attribution["scholar"]["value"]] = [{'h_index': 0.0}]
+					if 'a_index' in attribution.keys():
+						attrib[attribution["scholar"]["value"]][0]['a_index'] = attribution["a_index"]["value"]
+					else: 
+						pass
 				if  attribution["obsLabel"]["value"] == provider and 'scholar' not in attribution.keys():
 					scholars.add('none')
+				
 				# images
 				if  attribution["obsLabel"]["value"] == provider and 'image' in attribution.keys():
 					images.add(attribution["image"]["value"])
@@ -204,13 +216,26 @@ def rebuildResults(results):
 		attrib['criterionLabel'] = list(criteriaLabel) 
 		attrib['scholar'] = list(scholars) 
 		attrib['images'] = list(images) 
+		
+		# for attribution in results["results"]["bindings"]:
+		# 	if attribution["obsLabel"]["value"] == provider:
+		# 		for schol in scholars:
+		# 			indexes = list()
+		# 			for attribution in results["results"]["bindings"]:
+		# 				if 'h_index' in attribution.keys():
+		# 					indexes.append({'h_index': attribution["h_index"]["value"]})
+		# 				if 'a_index' in attribution.keys():
+		# 					indexes.append({'a_index': attribution["a_index"]["value"]})
+		# 			attrib[schol] = list(indexes)
+				
+	
 		attributions.append(attrib)
 	
 	return attributions	
 
 
 def rankDates(dates):
-	""" given a list of providers and dates, sorts them by them (desc) and attributes a score"""
+	""" given a list of dates, sorts them by them (desc) and attributes a score"""
 	
 	sortedDates = sorted(dates, reverse=True)
 	current_date = datetime.datetime.today().strftime('%Y-%m-%dT%H:%M:%S')
@@ -221,6 +246,8 @@ def rankDates(dates):
 		# timeliness
 		if datestr == 'none':
 			datestr = '0001-01-01T00:00:00'
+		if datestr.endswith('Z'):
+			datestr = datestr[:-1]
 		updated_on = datetime.datetime.strptime(datestr, '%Y-%m-%dT%H:%M:%S')
 		delta = (current_date - updated_on).days
 		rank = max(0, 100000 - delta)
@@ -295,76 +322,21 @@ def sharedAttribution(inputArtist, listOfArtists):
 	return score
 
 
-def getLabel(uri):
-	""" given a uri retrns the label"""
-	label = """
-		PREFIX dcterms: <http://purl.org/dc/terms/>
-		SELECT ?label
-		WHERE { {<"""+uri+"""> rdfs:label ?label .} UNION {<"""+uri+"""> dcterms:title ?label .}}"""
-	try:
-		# exception: fondazione zeri reduced to federico zeri
-		sparql = SPARQLWrapper('http://127.0.0.1:9999/blazegraph/sparql')
-		# query the linkset of artworks: look for equivalences and return a list of equivalences
-		sparql.setQuery(label)
-		sparql.setReturnFormat(JSON)
-		results = sparql.query().convert()
-		for result in (results["results"]["bindings"]): 
-			if result["label"]["value"] != '':
-				urilabel = result["label"]["value"]
-			else:
-				urilabel = 'unknown'
-		return urilabel
-	except:
-		pass
-	
+def hindex(citationsArray):
+	n = len(citationsArray);
+	count = [0] * (n + 1)
+	for x in citationsArray:
+		if x >= n:
+			count[n] += 1
+		else:
+			count[x] += 1
+	h = 0
+	for i in reversed(xrange(0, n + 1)):
+		h += count[i]
+		if h >= i:
+			return i
+	return h
 
-
-
-def rankHistorian(historian):
-	""" given the uri of a historian, look into domain experts' datasets 
-	to see how many times s/he is cited wrt the specified artist and calculate the h-index for an artist. 
-	ATM only Itatti and Zeri are considered """
-	# exception: fondazione zeri reduced to federico zeri
-	
-	citations = """
-	SELECT (count(distinct ?artwork) as ?count) ?artist 
-	WHERE { {?creation <http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by> 
-	               ?artist .} UNION
-		   {?creation <http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by> ?artist . 
-		    	?artist (^owl:sameAs|owl:sameAs)* ?artist .}
-		   
-		  	?creation <http://www.w3.org/ns/prov#wasGeneratedBy> ?attribution .
-			       ?attribution <http://purl.org/emmedi/hico/hasInterpretationType> ?accepted . 
-			       { ?attribution <http://purl.org/spar/cito/agreesWith> <"""+str(historian)+"""> . } UNION
-		   			{ ?attribution <http://purl.org/spar/cito/agreesWith> ?same. ?same (^owl:sameAs|owl:sameAs)* <"""+str(historian)+"""> .}
-			       FILTER regex(str(?accepted),'preferred','i')
-					?artwork <http://www.cidoc-crm.org/cidoc-crm/P94i_was_created_by> ?creation .
-			?artwork <http://www.cidoc-crm.org/cidoc-crm/P94i_was_created_by> ?creation .      
-		  }
-	GROUP BY ?artist
-	"""
-	try:
-		sparql = SPARQLWrapper('http://127.0.0.1:9999/blazegraph/sparql')
-		sparql.setQuery(citations)
-		sparql.setReturnFormat(JSON)
-		results = sparql.query().convert()
-		citationsArray = list(int(result["count"]["value"]) for result in (results["results"]["bindings"]) if result["count"]["value"] != [])
-		# h index
-		n = len(citationsArray);
-		count = [0] * (n + 1)
-		for x in citationsArray:
-			if x >= n:
-				count[n] += 1
-			else:
-				count[x] += 1
-		h = 0
-		for i in reversed(xrange(0, n + 1)):
-			h += count[i]
-			if h >= i:
-				return i
-		return h
-	except:
-		pass
 
 def rankHistorianByArtist(historian, artist):
 	""" given the uri of a historian, look into domain experts' datasets 
@@ -372,33 +344,33 @@ def rankHistorianByArtist(historian, artist):
 	ATM only Itatti and Zeri are considered """
 	
 	number_of_artworks = """
-			SELECT (count(distinct ?artwork) as ?count)
-			WHERE { {?creation <http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by> 
-	                   <"""+str(artist)+"""> .} UNION
-			       {?creation <http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by> ?artist . 
-			        	?artist (^owl:sameAs|owl:sameAs)* <"""+str(artist)+"""> .} .
-			       
-			       ?creation <http://www.w3.org/ns/prov#wasGeneratedBy> ?attribution .
-			       ?attribution <http://purl.org/emmedi/hico/hasInterpretationType> ?accepted.
-			       FILTER regex(str(?accepted),'preferred','i')
-					?artwork <http://www.cidoc-crm.org/cidoc-crm/P94i_was_created_by> ?creation .      
-			      }"""
+		SELECT (count(distinct ?artwork) as ?count)
+		WHERE { {?creation <http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by> 
+                   <"""+str(artist)+"""> .} UNION
+		       {?creation <http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by> ?artist . 
+		        	?artist (^owl:sameAs|owl:sameAs)* <"""+str(artist)+"""> .} .
+		       
+		       ?creation <http://www.w3.org/ns/prov#wasGeneratedBy> ?attribution .
+		       ?attribution <http://purl.org/emmedi/hico/hasInterpretationType> ?accepted.
+		       FILTER regex(str(?accepted),'preferred','i')
+				?artwork <http://www.cidoc-crm.org/cidoc-crm/P94i_was_created_by> ?creation .      
+		      }"""
 
 	number_of_agreements = """
-			SELECT (count(distinct ?artwork) as ?count)
-			WHERE { {?creation <http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by> 
-		               <"""+str(artist)+"""> .} UNION
-			       {?creation <http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by> ?artist . 
-			        	?artist (^owl:sameAs|owl:sameAs)* <"""+str(artist)+"""> .} .
-			       
-			       ?creation <http://www.w3.org/ns/prov#wasGeneratedBy> ?attribution .
-			       ?attribution <http://purl.org/emmedi/hico/hasInterpretationType> ?accepted . 
-			       { ?attribution <http://purl.org/spar/cito/agreesWith> <"""+historian+"""> .} UNION
-			       { ?attribution <http://purl.org/spar/cito/agreesWith> ?historian . 
-			        	?historian (^owl:sameAs|owl:sameAs)* <"""+historian+"""> .} 
-			       FILTER regex(str(?accepted),'preferred','i')
-					?artwork <http://www.cidoc-crm.org/cidoc-crm/P94i_was_created_by> ?creation .      
-			      }"""
+		SELECT (count(distinct ?artwork) as ?count)
+		WHERE { {?creation <http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by> 
+               <"""+str(artist)+"""> .} UNION
+	       {?creation <http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by> ?artist . 
+	        	?artist owl:sameAs ?common . <"""+str(artist)+"""> owl:sameAs ?common .} .
+	       
+	       ?creation <http://www.w3.org/ns/prov#wasGeneratedBy> ?attribution .
+	       ?attribution <http://purl.org/emmedi/hico/hasInterpretationType> ?accepted . 
+	       { ?attribution <http://purl.org/spar/cito/agreesWith> <"""+str(historian)+"""> .} UNION
+	       { ?attribution <http://purl.org/spar/cito/agreesWith> ?historian . 
+	        	?historian owl:sameAs ?commonH . <"""+str(historian)+"""> owl:sameAs ?commonH .} 
+	       FILTER regex(str(?accepted),'preferred','i')
+			?artwork <http://www.cidoc-crm.org/cidoc-crm/P94i_was_created_by> ?creation .      
+	      }"""
 	try:
 		# exception: fondazione zeri reduced to federico zeri
 		sparql = SPARQLWrapper('http://127.0.0.1:9999/blazegraph/sparql')
@@ -435,13 +407,13 @@ def rankHistorianBias(historian, artist):
 		WHERE { {?creation <http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by> 
 	               <"""+str(artist)+"""> .} UNION
 		       {?creation <http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by> ?artist . 
-		        	?artist (^owl:sameAs|owl:sameAs)* <"""+str(artist)+"""> .} .
+		        	?artist (^owl:sameAs|owl:sameAs)+ <"""+str(artist)+"""> .} .
 		       
 		       ?creation <http://www.w3.org/ns/prov#wasGeneratedBy> ?attribution .
 		       ?attribution <http://purl.org/emmedi/hico/hasInterpretationType> ?accepted . 
 		       { ?attribution <http://purl.org/spar/cito/agreesWith> <"""+historian+"""> .} UNION
 		       { ?attribution <http://purl.org/spar/cito/agreesWith> ?historian . 
-		        	?historian (^owl:sameAs|owl:sameAs)* <"""+historian+"""> .} 
+		        	?historian (^owl:sameAs|owl:sameAs)+ <"""+historian+"""> .} 
 				?artwork <http://www.cidoc-crm.org/cidoc-crm/P94i_was_created_by> ?creation .      
 		      }"""
 	try:
@@ -452,6 +424,8 @@ def rankHistorianBias(historian, artist):
 		for result in (results["results"]["bindings"]): 
 			if result["count"]["value"] != '':
 				numberCitations = result["count"]["value"]
+			else:
+				numberCitations = 1.0
 	except:
 		pass
 	
@@ -461,7 +435,7 @@ def rankHistorianBias(historian, artist):
 			WHERE { {?creation <http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by> 
 		               <"""+str(artist)+"""> .} UNION
 			       {?creation <http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by> ?artist . 
-			        	?artist (^owl:sameAs|owl:sameAs)* <"""+str(artist)+"""> .} .
+			        	?artist (^owl:sameAs|owl:sameAs)+ <"""+str(artist)+"""> .} .
 			       
 			       ?creation <http://www.w3.org/ns/prov#wasGeneratedBy> ?attribution ; 
 			       			 <http://www.w3.org/ns/prov#wasGeneratedBy> ?attributionDisc .
@@ -469,7 +443,7 @@ def rankHistorianBias(historian, artist):
 			       ?attributionDisc <http://purl.org/emmedi/hico/hasInterpretationType> ?discarded . 
 			       { ?attribution <http://purl.org/spar/cito/agreesWith> <"""+historian+"""> .} UNION
 			       { ?attribution <http://purl.org/spar/cito/agreesWith> ?historian . 
-			        	?historian (^owl:sameAs|owl:sameAs)* <"""+historian+"""> .} 
+			        	?historian (^owl:sameAs|owl:sameAs)+ <"""+historian+"""> .} 
 			       FILTER regex(str(?accepted),'preferred','i')
 			       FILTER regex(str(?discarded),'discarded','i')
 					?artwork <http://www.cidoc-crm.org/cidoc-crm/P94i_was_created_by> ?creation .      
@@ -483,11 +457,132 @@ def rankHistorianBias(historian, artist):
 		for result in (results["results"]["bindings"]): 
 			if result["count"]["value"] != '':
 				numberMotivatedAgreements = result["count"]["value"]
+			else:
+				numberMotivatedAgreements = 1.0
 		auth_index = float(numberMotivatedAgreements) / float(numberCitations)
-		return float(round(auth_index, 2))
+		if auth_index is not None:
+			return float(round(auth_index, 2))
+		else:
+			return float(0.0)
 	except:
 		pass
 
+
+def rankHistorian():
+	""" given the uri of a historian, look into domain experts' datasets 
+	to see how many times s/he is cited wrt the specified artist and calculate the h-index for an artist. 
+	ATM only Itatti and Zeri are considered. Load triples on a named graph """
+	historiansIndexesGraph = rdflib.ConjunctiveGraph(identifier='http://purl.org/emmedi/mauth/h_index/')
+	
+	# exception: fondazione zeri to be reduced to federico zeri
+	get_historians = """
+			PREFIX owl: <http://www.w3.org/2002/07/owl#>
+			PREFIX cito: <http://purl.org/spar/cito/>
+			SELECT DISTINCT ?h
+			WHERE { ?attr cito:agreesWith ?h }"""
+	try:
+		sparql = SPARQLWrapper('http://127.0.0.1:9999/blazegraph/sparql')
+		sparql.setQuery(get_historians)
+		sparql.setReturnFormat(JSON)
+		results = sparql.query().convert()
+		historians = list(result["h"]["value"] for result in (results["results"]["bindings"]) if result["h"]["value"] != [])
+	except:
+		pass
+
+	for historian in historians:
+		print historian
+		get_artists = """
+			PREFIX owl: <http://www.w3.org/2002/07/owl#>
+			PREFIX mauth: <http://purl.org/emmedi/mauth/>
+			SELECT DISTINCT ?a
+			WHERE { ?obs mauth:hasObservedArtist ?a ; 
+					mauth:agreesWith <"""+historian+""">}"""
+		try:
+			sparqlw = SPARQLWrapper('http://127.0.0.1:9999/blazegraph/sparql')
+			sparqlw.setQuery(get_artists)
+			sparqlw.setReturnFormat(JSON)
+			results = sparqlw.query().convert()
+			artists = list(result["a"]["value"] for result in (results["results"]["bindings"]) if result["a"]["value"] != [])
+		except:
+			pass
+		
+		# H_index (done)
+		# citations = """
+		# SELECT (count(distinct ?artwork) as ?count) ?artist 
+		# WHERE { {?creation <http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by> 
+		#                ?artist .} UNION
+		# 	   {?creation <http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by> ?artist . 
+		# 	    	?artist (^owl:sameAs|owl:sameAs)* ?artist .}
+			   
+		# 	  	?creation <http://www.w3.org/ns/prov#wasGeneratedBy> ?attribution .
+		# 		       ?attribution <http://purl.org/emmedi/hico/hasInterpretationType> ?accepted . 
+		# 		       { ?attribution <http://purl.org/spar/cito/agreesWith> <"""+str(historian)+"""> . } UNION
+		# 	   			{ ?attribution <http://purl.org/spar/cito/agreesWith> ?same. ?same (^owl:sameAs|owl:sameAs)* <"""+str(historian)+"""> .}
+		# 		       FILTER regex(str(?accepted),'preferred','i')
+		# 				?artwork <http://www.cidoc-crm.org/cidoc-crm/P94i_was_created_by> ?creation .
+		# 		?artwork <http://www.cidoc-crm.org/cidoc-crm/P94i_was_created_by> ?creation .      
+		# 	  }
+		# GROUP BY ?artist
+		# """
+		# try:
+		# 	sparql1 = SPARQLWrapper('http://127.0.0.1:9999/blazegraph/sparql')
+		# 	sparql1.setQuery(citations)
+		# 	sparql1.setReturnFormat(JSON)
+		# 	results = sparql1.query().convert()
+
+		# 	citationsArray = list(int(result["count"]["value"]) for result in (results["results"]["bindings"]) if result["count"]["value"] != [])
+		# 	print citationsArray
+		# 	# h index
+		# 	h = hindex(citationsArray)
+		# 	print 'h index:', h
+		# 	historiansIndexesGraph.add(( URIRef(historian), WHY.hasHIndex, Literal(h, datatype=XSD.float) ))
+		# except:
+		# 	pass
+		
+		# Artist_Index
+		for artist in artists:
+			print artist
+			a_index = rankHistorianByArtist(historian, artist)
+			print 'a index:', a_index
+			historiansIndexesGraph.add(( URIRef(historian), WHY.hasArtistIndex, URIRef(historian+'/'+artist) ))
+			historiansIndexesGraph.add(( URIRef(historian+'/'+artist), WHY.hasArtistIndex, Literal(a_index, datatype=XSD.float) ))
+			historiansIndexesGraph.add(( URIRef(historian+'/'+artist), WHY.hasIndexedHistorian, URIRef(historian) ))
+			historiansIndexesGraph.add(( URIRef(historian+'/'+artist), WHY.hasIndexedArtist, URIRef(artist) ))
+			#auth_index = rankHistorianBias(historian, artist)
+			#print 'auth index:', auth_index
+			# if auth_index is not None:
+			# 	historiansIndexesGraph.add(( URIRef(historian), WHY.hasAuthoritativenessIndex, Literal(auth_index, datatype=XSD.float) ))
+			# else:
+			# 	historiansIndexesGraph.add(( URIRef(historian), WHY.hasAuthoritativenessIndex, Literal(0.0, datatype=XSD.float) ))
+			
+	historiansIndexesGraph.serialize(destination='data/statistics_by_artist.nq', format='nquads')
+	server.update('load <file:///Users/marilena/Desktop/mauth/data/statistics_by_artist.nq>')
+
+#rankHistorian()
+
+
+def getLabel(uri):
+	""" given a uri retrns the label"""
+	label = """
+		PREFIX dcterms: <http://purl.org/dc/terms/>
+		SELECT ?label
+		WHERE { {<"""+uri+"""> rdfs:label ?label .} UNION {<"""+uri+"""> dcterms:title ?label .}}"""
+	try:
+		# exception: fondazione zeri reduced to federico zeri
+		sparql = SPARQLWrapper('http://127.0.0.1:9999/blazegraph/sparql')
+		# query the linkset of artworks: look for equivalences and return a list of equivalences
+		sparql.setQuery(label)
+		sparql.setReturnFormat(JSON)
+		results = sparql.query().convert()
+		for result in (results["results"]["bindings"]): 
+			if result["label"]["value"] != '':
+				urilabel = result["label"]["value"]
+			else:
+				urilabel = 'unknown'
+		return urilabel
+	except:
+		pass
+	
 
 def getURI(inputURL):
 	""" given the URL of an online cataloguing record returns the URI of the artwork"""
@@ -512,9 +607,8 @@ def getURI(inputURL):
 					if match.group(1) == photoOnlineURN:
 						iri = 'http://purl.org/emmedi/mauth/itatti/artwork/'+artworkID
 			return iri 
-
-
-
+	else:
+		return inputURL
 
 
 

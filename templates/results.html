@@ -9,7 +9,7 @@
 	    <meta name="msapplication-TileColor" content="#ffffff">
 	    <meta name="msapplication-TileImage" content="https://apostrophe.xyz/wp-content/themes/apostrophe/favicon/ms-icon-144x144.png">
 	    <meta name="theme-color" content="#ffffff"><!-- Global site tag (gtag.js) - Google Analytics -->
-		<title>mAuth | Search</title>
+		<title>mAuth | Results</title>
 		<link rel="stylesheet" id="app-style-css" href="./Apostrophe Copywriters - For the words you&#39;re missing_files/app.css" type="text/css" media="all">
 		<link rel="stylesheet" id="gforms_reset_css-css" href="./Apostrophe Copywriters - For the words you&#39;re missing_files/formreset.min.css" type="text/css" media="all">
 		<link rel="stylesheet" id="gforms_formsmain_css-css" href="./Apostrophe Copywriters - For the words you&#39;re missing_files/formsmain.min.css" type="text/css" media="all">
@@ -50,7 +50,30 @@
 					
 			</header>
 			<div class="main"><!-- {{ searchURL }} -->
-				
+					<div id="niceties" class="home home--white home__niceties">
+			            <div class="half half--white">
+			                <h2 class="title">summary</h2>
+			            </div>
+			            <div class="half half--navy">
+			                <div class="content">
+			                    <p>{{ results|length }} attributions were found. </p>
+			                    <p>The author is likely to be
+			                    	{% set top = results|groupby('score')|maximum %}
+			                    	{% for attribution in results %}
+			                    		{% if attribution['score'] == top %}
+			                    			{{ attribution['artistTitle'][0] }}.
+			                    		{% endif %}
+			                    	{% endfor %} The most reliable attribution is provided by 
+			                    	{% for attribution in results %}
+			                    		{% if attribution['score'] == top %}
+			                    			{{ attribution['provider'] }}.
+			                    		{% endif %}
+			                    	{% endfor %}
+			                    </p>
+			                     
+			                </div>
+			            </div>
+			        </div>	
             		
             		{% for attribution in results %}
             			<div id="about" class="{{ loop.cycle('home home--cream home__process', 'home home--brown home__process') }}">
@@ -89,7 +112,7 @@
 							                    {% if attribution['images'] and attribution['images'][0] != 'none'%}
 							                    	<div class="demo">
 														    {% for image in attribution['images']%}
-														    	<img src={{ image }}>
+														    	<img src={{ image }} alt='a beatutiful picture'>
 														    {% endfor %}
 							                    	</div>
 							                    {% endif %}

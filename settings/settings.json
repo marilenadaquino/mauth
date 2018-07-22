@@ -93,7 +93,7 @@
 		},
 	"http://d-nb.info/gnd/": { 	
 			"label": "deutsche national bibliotek",
-			"content-negotiation": {"(.)$":"\\1\/about\/rdf"}
+			"content-negotiation": {"(.)$":"\\1\/about\/lds"}
 		},
 	"http://data.bnf.fr/ark:/": { 	
 			"label": "Bibliothèque Nationale de France",

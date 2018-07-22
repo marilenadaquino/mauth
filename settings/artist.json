@@ -1,7 +1,9 @@
 {
 	"http://purl.org/emmedi/mauth/zeri/artwork/": { 
 			"label": "Zeri Foundation (University of Bologna)",
+			"artworkTitle": "http://purl.org/dc/terms/title",
 			"artist": "http://www.cidoc-crm.org/cidoc-crm/P94i_was_created_by / http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by",
+			"artistTitle": "http://www.cidoc-crm.org/cidoc-crm/P94i_was_created_by / http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by / http://purl.org/dc/terms/title",
 			"other_artist": "",
 			"other_criterion": "",
 			"source": "http://purl.org/emmedi/oaentry/isDescribedBy" ,
@@ -13,7 +15,9 @@
 		},
 	"http://purl.org/emmedi/mauth/itatti/artwork/": { 
 			"label": "I Tatti - Berenson Library (University of Harvard)",
+			"artworkTitle": "http://purl.org/dc/terms/title",
 			"artist": "http://www.cidoc-crm.org/cidoc-crm/P94i_was_created_by / http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by",
+			"artistTitle": "http://www.cidoc-crm.org/cidoc-crm/P94i_was_created_by / http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by / http://purl.org/dc/terms/title",
 			"other_artist": "",
 			"other_criterion": "",
 			"source": "" ,
@@ -25,7 +29,9 @@
 		},
 	"http://dbpedia.org/resource/": { 
 			"label": "DBpedia",
+			"artworkTitle": "http://www.w3.org/2000/01/rdf-schema#label",
 			"artist": "http://dbpedia.org/ontology/author",
+			"artistTitle": "http://dbpedia.org/ontology/author / http://www.w3.org/2000/01/rdf-schema#label",
 			"other_artist": "",
 			"other_criterion": "",
 			"source": "http://xmlns.com/foaf/0.1/isPrimaryTopicOf",
@@ -37,7 +43,10 @@
 		},
 	"http://it.dbpedia.org/resource/": { 
 			"label": "Italian DBpedia",
+			"artworkTitle": "http://www.w3.org/2000/01/rdf-schema#label",
+			"artistTitle": "http://dbpedia.org/ontology/author / http://www.w3.org/2000/01/rdf-schema#label",			
 			"artist": "http://dbpedia.org/ontology/author",
+			"artistTitle": "http://dbpedia.org/ontology/author / http://www.w3.org/2000/01/rdf-schema#label",
 			"other_artist": "",
 			"other_criterion": "",
 			"source": "http://xmlns.com/foaf/0.1/isPrimaryTopicOf",
@@ -49,7 +58,9 @@
 		},
 	"http://fr.dbpedia.org/resource/": { 
 			"label": "French DBpedia",
+			"artworkTitle": "http://www.w3.org/2000/01/rdf-schema#label",
 			"artist": "http://dbpedia.org/ontology/author",
+			"artistTitle": "http://dbpedia.org/ontology/author / http://www.w3.org/2000/01/rdf-schema#label",
 			"other_artist": "",
 			"other_criterion": "",
 			"source": "http://xmlns.com/foaf/0.1/isPrimaryTopicOf",
@@ -61,7 +72,9 @@
 		},
 	"http://ja.dbpedia.org/resource/": { 
 			"label": "Japanese DBpedia",
+			"artworkTitle": "http://www.w3.org/2000/01/rdf-schema#label",
 			"artist": "http://dbpedia.org/ontology/creator",
+			"artistTitle": "http://dbpedia.org/ontology/author / http://www.w3.org/2000/01/rdf-schema#label",
 			"other_artist": "",
 			"other_criterion": "",
 			"source": "http://xmlns.com/foaf/0.1/isPrimaryTopicOf",
@@ -73,7 +86,9 @@
 		},
 	"http://nl.dbpedia.org/resource/": { 
 			"label": "Dutch DBpedia",	
+			"artworkTitle": "http://www.w3.org/2000/01/rdf-schema#label",
 			"artist": "http://dbpedia.org/ontology/painter" ,
+			"artistTitle": "http://dbpedia.org/ontology/author / http://www.w3.org/2000/01/rdf-schema#label",
 			"other_artist": "",	
 			"other_criterion": "",
 			"source": "http://xmlns.com/foaf/0.1/isPrimaryTopicOf",
@@ -85,7 +100,9 @@
 		},
 	"http://pl.dbpedia.org/resource/": {
 			"label": "Polish DBpedia",	
+			"artworkTitle": "http://www.w3.org/2000/01/rdf-schema#label",
 			"artist": "http://pl.dbpedia.org/property/malarz",	
+			"artistTitle": "http://dbpedia.org/ontology/author / http://www.w3.org/2000/01/rdf-schema#label",
 			"other_artist": "",
 			"other_criterion": "",
 			"source": "http://xmlns.com/foaf/0.1/isPrimaryTopicOf",
@@ -97,7 +114,9 @@
 		},
 	"http://www.wikidata.org/entity/": {
 			"label": "Wikidata", 	
-			"artist": "http://www.wikidata.org/prop/direct/P170", 	
+			"artworkTitle": "http://www.wikidata.org/prop/direct/P373",
+			"artist": "http://www.wikidata.org/prop/direct/P170", 
+			"artistTitle": "http://www.wikidata.org/prop/direct/P170 / http://www.w3.org/2000/01/rdf-schema#label",	
 			"other_artist": "",
 			"other_criterion": "",
 			"source": "http://www.wikidata.org/prop/P170 / http://www.w3.org/ns/prov#wasDerivedFrom / http://www.wikidata.org/prop/reference/P143",
@@ -109,7 +128,9 @@
 		},
 	"http://viaf.org/viaf/": { 
 			"label": "VIAF",
+			"artworkTitle": "http://schema.org/name|http://schema.org/alternateName",
 			"artist": "http://schema.org/author",
+			"artistTitle":"http://schema.org/author / http://schema.org/name|http://schema.org/alternateName",
 			"other_artist": "",
 			"other_criterion": "",
 			"source": "^http://xmlns.com/foaf/0.1/primaryTopic",
@@ -121,7 +142,9 @@
 		},
 	"http://d-nb.info/gnd/": { 
 			"label": "Deutsche National Bibliotek",
+			"artworkTitle": "",
 			"artist": "http://d-nb.info/standards/elementset/gnd#firstArtist",
+			"artistTitle":"http://d-nb.info/standards/elementset/gnd#firstArtist / http://d-nb.info/standards/elementset/gnd#preferredNameForThePerson",
 			"other_artist": "",
 			"other_criterion": "",
 			"source": "",
@@ -133,7 +156,9 @@
 		},
 	"http://data.bnf.fr/ark:/": { 	
 			"label": "Bibliothèque Nationale de France",
+			"artworkTitle": "",
 			"artist": "http://purl.org/dc/terms/creator",
+			"artistTitle":"",
 			"other_artist": "",
 			"other_criterion": "",
 			"source": "^http://purl.org/dc/terms/subject",
@@ -146,7 +171,9 @@
 		,
 	"http://yago-knowledge.org/resource/": { 	
 			"label": "",
+			"artworkTitle": "",
 			"artist": "",
+			"artistTitle":"",
 			"other_artist": "",
 			"other_criterion": "",
 			"source": "",

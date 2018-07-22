@@ -66,8 +66,10 @@ def findAttributions(inputURI, objProperty):
 						if len(data[URIbase][objProperty]) != 0:
 							singleResultsGraph = utils.fetchData(uri=artwork, settingFile="settings/settings.json", inputPattern=str(data[URIbase][objProperty].encode('utf-8', 'replace')), outputPattern=rdflib.term.URIRef(DC.description))
 							for s, p, obj in singleResultsGraph.triples((URIRef(artwork), None, None)):
-								if len(obj) != 0:
+								if len(obj) != 0 and 'http' in str(obj):
 									instanceObj = obj.encode('utf8', 'replace').rsplit('/', 1)[-1]
+									if ' ' in instanceObj:
+										instanceObj = re.sub('\s', '-', instanceObj)
 									resultsGraph.add(( URIRef(artwork), WHY.isSubjectOfObservation, rdflib.term.URIRef(WHY+instance+'-'+objProperty+'-'+instanceObj+'-obs')))
 									resultsGraph.add(( URIRef(obj), WHY.isSubjectOfObservation, rdflib.term.URIRef(WHY+instance+'-'+objProperty+'-'+instanceObj+'-obs')))
 									resultsGraph.add(( URIRef(WHY+instance+'-'+objProperty+'-'+instanceObj+'-obs'), PROV.atTime, Literal(datetime.datetime.now(),datatype=XSD.dateTime) ))
@@ -76,6 +78,14 @@ def findAttributions(inputURI, objProperty):
 									resultsGraph.add(( URIRef(WHY+instance+'-'+objProperty+'-'+instanceObj+'-obs'), WHY.hasObservedArtwork, URIRef(artwork) ))
 									resultsGraph.add(( URIRef(WHY+instance+'-'+objProperty+'-'+instanceObj+'-obs'), RDFS.label, Literal( data[URIbase]['label'] + ' accepted attribution' ) ))
 									resultsGraph.add(( URIRef(WHY+instance+'-'+objProperty+'-'+instanceObj+'-obs'), WHY.hasType, URIRef(WHY+'accepted') ))
+									# artworkTitle
+									artworkTitleGraph = utils.fetchData(uri=artwork, settingFile="settings/settings.json", inputPattern=str(data[URIbase]['artworkTitle'].encode('utf-8', 'replace')), outputPattern=rdflib.term.URIRef(DC.title))							
+									for a, t, title in artworkTitleGraph.triples((URIRef(artwork), None, None)):
+										resultsGraph.add(( URIRef(artwork), RDFS.label, Literal(title) ))
+									# artistTitle
+									artistTitleGraph = utils.fetchData(uri=obj, settingFile="settings/settings.json", inputPattern=str(data[URIbase]['artistTitle'].encode('utf-8', 'replace')), outputPattern=rdflib.term.URIRef(DC.title))							
+									for a, t, title in artistTitleGraph.triples((URIRef(obj), None, None)):
+										resultsGraph.add(( URIRef(obj), RDFS.label, Literal(title) ))
 									# criterion
 									if len(data[URIbase]['criterion']) != 0:
 										singleCriterionGraph = utils.fetchData(uri=artwork, settingFile="settings/settings.json", inputPattern=str(data[URIbase]['criterion'].encode('utf-8', 'replace')), outputPattern=rdflib.term.URIRef(WHY.hasObservedCriterion))
@@ -111,7 +121,9 @@ def findAttributions(inputURI, objProperty):
 									if len(data[URIbase]['other_artist']) != 0:
 										singleOtherResultsGraph = utils.fetchData(uri=artwork, settingFile="settings/settings.json", inputPattern=str(data[URIbase]['other_artist'].encode('utf-8', 'replace')), outputPattern=rdflib.term.URIRef(DC.description))
 										for s, p, obj in singleOtherResultsGraph.triples((URIRef(artwork), None, None)):
-											instanceObj = obj.encode('utf-8').rsplit('/', 1)[-1]
+											instanceObj = obj.encode('utf8', 'replace').rsplit('/', 1)[-1]
+											if ' ' in instanceObj:
+												instanceObj = re.sub('\s', '-', instanceObj)
 											resultsGraph.add(( URIRef(artwork), WHY.isSubjectOfObservation, rdflib.term.URIRef(WHY+instance+'-'+objProperty+'-'+instanceObj+'-obs')))
 											resultsGraph.add(( URIRef(obj), WHY.isSubjectOfObservation, rdflib.term.URIRef(WHY+instance+'-'+objProperty+'-'+instanceObj+'-obs')))
 											resultsGraph.add(( URIRef(WHY+instance+'-'+objProperty+'-'+instanceObj+'-obs'), PROV.atTime, Literal(datetime.datetime.now(),datatype=XSD.dateTime) ))
@@ -195,7 +207,6 @@ def update_linksets():
 	except:
 		pass
 
-
 #update_linksets()
 
 
@@ -255,9 +266,7 @@ def rank(results):
 		# artists
 		for artist in x['artist']:
 			artists.append(str(artist))
-			# 5 attribution shared
 			
-			#print(artist , artistShared)
 		# 1 domain expert
 		if 'Zeri' in x['provider'] or 'I Tatti' in x['provider']:
 			score += 1.00
@@ -270,19 +279,8 @@ def rank(results):
 		# 3 scholar's authoritativeness
 		if x['scholar'][0] != 'none':
 			for scholar in x['scholar']:
-				h_index = utils.rankHistorian(scholar) # h index
-				x[scholar] = [{'h_index': str(h_index)}]
-				for artist in x['artist']:
-					a_index = utils.rankHistorianByArtist(scholar, artist) # degree of acceptance of his/her attributions wrt the specific artist
-					label = utils.getLabel(scholar)
-					# 3.1 authoritativeness and bias : 
-					# the number of times a historian’s attribution is preferred over other listed attributions wrt a specific artist OVER 
-					# the number of times a historian’s attribution is chosen regardless the choice is motivated or not wrt a specific artist - in a photo archive
-					auth_index = utils.rankHistorianBias(scholar, artist)
-					x[scholar][0]['artist'] = artist
-					x[scholar][0]['a_index'] = a_index
-					x[scholar][0]['auth_index'] = auth_index
-					x[scholar][0]['label'] = label
+				label = utils.getLabel(scholar)
+				x[scholar][0]['label'] = label
 					
 		x['score'] = score
 	
@@ -291,11 +289,13 @@ def rank(results):
 	
 	for x in results:
 		for d,r in dateRank:
-			if str(d) in x['date'][0]:
+			if str(d) in x['date'][0]: # multiple dates? pick the highest date among the ones related to a single attr
 				x['score'] += r
 			if x['date'][0] == 'none':
 				pass
 		for artist in x['artist']:
+			
+			# 5 attribution shared
 			artistShared = utils.sharedAttribution(artist, artists) 
 			x['score'] += artistShared
 			x['agreement'] = artistShared
