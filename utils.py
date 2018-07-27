@@ -27,8 +27,15 @@ def splitURI(string):
     	n=7
     elif re.findall(r"^http:\/\/www.idref", string):
     	n=3
+    elif re.findall(r"^http:\/\/ta.sandrart.net", string):
+    	n=3
     else:
     	n=4
+    return str(d.join(string.split(d)[:n])) + '/'
+
+def customSplitURI(string, n):
+    """Return URIbase, string truncated at the n occurrence of the delimiter d"""
+    d = str('/')
     return str(d.join(string.split(d)[:n])) + '/'
 
 
@@ -41,10 +48,10 @@ def fetchData(uri, settingFile, inputPattern, outputPattern):
 	# TODO clean instance matching
 	# exceptions to match URI base 
 	if re.findall(r"^http:\/\/d-nb.info", uri) or re.findall(r"^http:\/\/www.idref", uri):
-		instance = uri.encode('utf-8').rsplit('/', 1)[-2]
+		instance = uri.rsplit('/', 1)[-2]
 	else:
-		instance = uri.encode('utf-8').rsplit('/', 1)[-1]
-	URIbase = splitURI(uri.encode('utf-8'))
+		instance = uri.rsplit('/', 1)[-1]
+	URIbase = splitURI(uri)
 	attributions_graph = 'http://purl.org/emmedi/mauth/attributions/'
 	URIGraph = rdflib.ConjunctiveGraph(identifier=URIRef(attributions_graph))
 	URIGraph.bind("owl", OWL)
@@ -60,36 +67,47 @@ def fetchData(uri, settingFile, inputPattern, outputPattern):
 	# TODO query to be changed 
 	query="""
 			SELECT DISTINCT ?b 
-			WHERE { <"""+uri.encode('utf-8')+"""> """+inputPattern+""" ?b }""" # rewrite SPARQL query
+			WHERE { <"""+uri+"""> """+inputPattern+""" ?b }""" # rewrite SPARQL query
 
 	with open(settingFile) as settings:    
 		data_source = json.load(settings)
-		print ("Fetching data for URI BASE:", URIbase, '\n')
 		if URIbase in data_source:
-			if data_source[URIbase].has_key("endpoint"):
+			print "Fetching data for URI:", uri, '\n'
+			if "endpoint" in data_source[URIbase]:
 				SPARQLendpoint = data_source[URIbase]["endpoint"]
+				print SPARQLendpoint
 				try:
 					sparql = SPARQLWrapper(SPARQLendpoint) # prepare the SPARQL query
-					sparql.setTimeout(15)
+					#sparql.setTimeout(15)
 					sparql.setQuery(query)
-					print(query)
+					print query
 					sparql.setReturnFormat(JSON)
 					results = sparql.query().convert()
 					resultsList = list(result["b"]["value"] for result in (results["results"]["bindings"]) if result["b"]["value"] != [])		
 					for result in resultsList:
-						print (result, '\n'	)
-						URIGraph.add((URIRef(uri), rdflib.term.URIRef(outputPattern), URIRef(u'%s')% result.encode('utf-8') ))
+						print result
+						if 'http' in str(result):
+							URIGraph.add((URIRef(uri), rdflib.term.URIRef(outputPattern), URIRef(u'%s')% result ))
+						else:
+							URIGraph.add((URIRef(uri), rdflib.term.URIRef(outputPattern), Literal(u'%s')% result ))
 					if str(URImatchPattern) == 'http://www.w3.org/2002/07/owl#sameAs':
 						URIGraph.add((URIRef(uri), rdflib.term.URIRef(outputPattern), URIRef(uri)))
 					else:
 						pass
-					print (URIbase.encode('utf-8'), "URI found at SPARQL endpoint ", SPARQLendpoint)
+					print (uri, " found at SPARQL endpoint ", SPARQLendpoint)
 				except Exception as error:
-					print (URIbase.encode('utf-8'), "no results for this SPARQL query at ", SPARQLendpoint , '\n', error)
-			elif data_source[URIbase].has_key("content-negotiation"):
+					print (URIbase, "no results for this SPARQL query at ", SPARQLendpoint , '\n', error)
+			elif "content-negotiation" in data_source[URIbase]:
 				try:
 					for src, dst in data_source[URIbase]["content-negotiation"].items():
-							graphTBL = re.sub(src, dst, uri.encode('utf-8'))
+						if 'sandrart' in str(uri): # does not work
+							prefix = re.match('/[^-]*/', uri).group(1)
+							newPrefix = 'http://ta.sandrart.net/services/rdf'
+							newUri = re.sub('/[^-]*/', newPrefix, uri)
+							graphTBL = re.sub('-', '/', newUri)
+							print graphTBL
+						else:
+							graphTBL = re.sub(src, dst, uri)
 					tempGraph = rdflib.Graph()
 					tempGraph.load(URIRef(graphTBL))
 					# TODO change query
@@ -99,16 +117,18 @@ def fetchData(uri, settingFile, inputPattern, outputPattern):
 					print (q)
 					results = tempGraph.query(q)
 					for result in results:
-						print (result, '\n')
-						URIGraph.add((URIRef(uri), rdflib.term.URIRef(outputPattern), URIRef(u'%s')% result.encode('utf-8') ))
+						if 'http' in str(result):
+							URIGraph.add((URIRef(uri), rdflib.term.URIRef(outputPattern), URIRef(u'%s')% result))
+						else:
+							URIGraph.add((URIRef(uri), rdflib.term.URIRef(outputPattern), Literal(u'%s')% result))
 					if str(URImatchPattern) == 'http://www.w3.org/2002/07/owl#sameAs':
 						URIGraph.add((URIRef(uri), rdflib.term.URIRef(outputPattern), URIRef(uri)))
 					else:
 						pass
-					print (URIbase.encode('utf-8'), "URI content-negotiation", URIRef(uri))
+					print (URIbase, "URI content-negotiation", URIRef(uri))
 				except:
 				  	print ("No content-negotiation supported")
-			elif data_source[URIbase].has_key("linkeddatafragments"):
+			elif "linkeddatafragments" in data_source[URIbase]:
 				try:
 					if len(sys.argv) > 1:
 						LDF = sys.argv[1]
@@ -119,14 +139,17 @@ def fetchData(uri, settingFile, inputPattern, outputPattern):
 						results = LDFGraph.query(query)
 						for result in results:
 							print (result, '\n')
-							URIGraph.add((URIRef(uri), rdflib.term.URIRef(outputPattern), URIRef(u'%s')% result.encode('utf-8') ))
+							if 'http' in str(result):
+								URIGraph.add((URIRef(uri), rdflib.term.URIRef(outputPattern), URIRef(u'%s')% result))
+							else:
+								URIGraph.add((URIRef(uri), rdflib.term.URIRef(outputPattern), result))
 						if str(URImatchPattern) == 'http://www.w3.org/2002/07/owl#sameAs':
-							URIGraph.add((URIRef(uri), rdflib.term.URIRef(outputPattern), URIRef(uri))) # ???
+							URIGraph.add((URIRef(uri), rdflib.term.URIRef(outputPattern), URIRef(uri)))
 						else:
 							pass
-						print (uri.encode('utf-8'), "Linked Data Fragment", URIRef(LDF)	)
+						print (uri, "found in Linked Data Fragment", URIRef(LDF)	)
 					except Exception as error:
-						print (uri.encode('utf-8'), error)	
+						print (uri, error)	
 				except Exception as error:
 				  	print ("ehm...", query , error)
 			else:
@@ -167,6 +190,8 @@ def rebuildResults(results):
 					attrib['artwork'] = attribution["other"]["value"]
 				if  attribution["obsLabel"]["value"] == provider and 'other' in attribution.keys() and 'artworkTitle' in attribution.keys():
 					attrib['artworkTitle'] = attribution["artworkTitle"]["value"]
+				if attribution["obsLabel"]["value"] == provider and 'source' in attribution.keys():
+					attrib['sourceOfInformation'] = attribution["source"]["value"]
 				# artists
 				if  attribution["obsLabel"]["value"] == provider and 'artist' in attribution.keys():
 					artists.add(attribution["artist"]["value"])
@@ -191,11 +216,15 @@ def rebuildResults(results):
 				
 				# scholar
 				if  attribution["obsLabel"]["value"] == provider and 'scholar' in attribution.keys():
-					scholars.add(attribution["scholar"]["value"])	
+					scholars.add(attribution["scholar"]["value"])
 					if 'h_index' in attribution.keys():
 						attrib[attribution["scholar"]["value"]] = [{'h_index': attribution["h_index"]["value"]}]
 					else: 
 						attrib[attribution["scholar"]["value"]] = [{'h_index': 0.0}]
+					if 'scholarLabel' in attribution.keys():
+						attrib[attribution["scholar"]["value"]][0]['label'] = attribution["scholarLabel"]["value"]
+					else: 
+						pass
 					if 'a_index' in attribution.keys():
 						attrib[attribution["scholar"]["value"]][0]['a_index'] = attribution["a_index"]["value"]
 					else: 
@@ -216,18 +245,6 @@ def rebuildResults(results):
 		attrib['criterionLabel'] = list(criteriaLabel) 
 		attrib['scholar'] = list(scholars) 
 		attrib['images'] = list(images) 
-		
-		# for attribution in results["results"]["bindings"]:
-		# 	if attribution["obsLabel"]["value"] == provider:
-		# 		for schol in scholars:
-		# 			indexes = list()
-		# 			for attribution in results["results"]["bindings"]:
-		# 				if 'h_index' in attribution.keys():
-		# 					indexes.append({'h_index': attribution["h_index"]["value"]})
-		# 				if 'a_index' in attribution.keys():
-		# 					indexes.append({'a_index': attribution["a_index"]["value"]})
-		# 			attrib[schol] = list(indexes)
-				
 	
 		attributions.append(attrib)
 	
@@ -281,22 +298,24 @@ def sharedAttribution(inputArtist, listOfArtists):
 	either of the same uri or of equivalent uris, that are deduced by the linkset of artists"""
 	sparql = SPARQLWrapper('http://127.0.0.1:9999/blazegraph/sparql')
 	# query the linkset for equivalences to the input artist uri
+	score = float(0.00)
 	try:
-		score = float(0.00)
+		
 		get_artists = """
 			PREFIX owl: <http://www.w3.org/2002/07/owl#>
 			SELECT DISTINCT ?b 
-			FROM <http://purl.org/emmedi/mauth/artists/>
-			WHERE { {<"""+str(inputArtist)+"""> owl:sameAs ?b } UNION {?b owl:sameAs <"""+str(inputArtist)+""">}}"""
+			WHERE { {<"""+str(inputArtist)+"""> owl:sameAs|owl:sameAs+ ?b } UNION {?b owl:sameAs|owl:sameAs+ <"""+str(inputArtist)+""">}}"""
 		# query the linkset of artworks: look for equivalences and return a list of equivalences
-		
 		sparql.setQuery(get_artists)
 		sparql.setReturnFormat(JSON)
 		results = sparql.query().convert()
 		# create a list of equivalences for the input artist uri
-		inputArtistEquivalenceList = list(str(result["b"]["value"]) for result in (results["results"]["bindings"]) if result["b"]["value"] != [])
+		inputArtistEquivalenceList = list(str(result["b"]["value"].encode('utf-8')) for result in (results["results"]["bindings"]) if result["b"]["value"] != [])
 		inputArtistEquivalenceList.append(inputArtist)
-	except:
+	except Exception as e:
+		exc_type, exc_obj, exc_tb = sys.exc_info()
+		fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+		print('query', exc_type, fname, exc_tb.tb_lineno)
 		pass
 	
 	# query the linkset of artists for each artist in the given list. 
@@ -305,20 +324,23 @@ def sharedAttribution(inputArtist, listOfArtists):
 			get_artistsOfList = """
 				PREFIX owl: <http://www.w3.org/2002/07/owl#>
 				SELECT DISTINCT ?b 
-				FROM <http://purl.org/emmedi/mauth/artists/>
-				WHERE { {<"""+artist+"""> owl:sameAs ?b } UNION {?b owl:sameAs <"""+artist+""">}}"""
+				WHERE { {<"""+artist+"""> owl:sameAs|owl:sameAs+ ?b } UNION {?b owl:sameAs|owl:sameAs+ <"""+artist+""">}}"""
 			# query the linkset of artworks: look for equivalences and return a list of equivalences
 			sparql.setQuery(get_artistsOfList)
 			sparql.setReturnFormat(JSON)
 			results = sparql.query().convert()
 			# create a list of equivalences for each artist
-			artistEquivalenceList = list(str(result["b"]["value"]) for result in (results["results"]["bindings"]) if result["b"]["value"] != [])
+			artistEquivalenceList = list(str(result["b"]["value"].encode('utf-8')) for result in (results["results"]["bindings"]) if result["b"]["value"] != [])
 			artistEquivalenceList.append(artist)
 			if lists_overlap(inputArtistEquivalenceList, artistEquivalenceList):
 				score += 1.00	
-		except:
+		except Exception as e:
+			exc_type, exc_obj, exc_tb = sys.exc_info()
+			fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+			print('query', exc_type, fname, exc_tb.tb_lineno)
 			pass
-	score = score - 1.00 # naive way to remove the equivalence to itself
+	if score >= 1.0:
+		score = score - 1.00 # naive way to remove the equivalence to itself
 	return score
 
 
@@ -490,7 +512,7 @@ def rankHistorian():
 		pass
 
 	for historian in historians:
-		print historian
+		print (historian)
 		get_artists = """
 			PREFIX owl: <http://www.w3.org/2002/07/owl#>
 			PREFIX mauth: <http://purl.org/emmedi/mauth/>
@@ -541,9 +563,9 @@ def rankHistorian():
 		
 		# Artist_Index
 		for artist in artists:
-			print artist
+			print (artist)
 			a_index = rankHistorianByArtist(historian, artist)
-			print 'a index:', a_index
+			print ('a index:', a_index)
 			historiansIndexesGraph.add(( URIRef(historian), WHY.hasArtistIndex, URIRef(historian+'/'+artist) ))
 			historiansIndexesGraph.add(( URIRef(historian+'/'+artist), WHY.hasArtistIndex, Literal(a_index, datatype=XSD.float) ))
 			historiansIndexesGraph.add(( URIRef(historian+'/'+artist), WHY.hasIndexedHistorian, URIRef(historian) ))
@@ -566,7 +588,7 @@ def getLabel(uri):
 	label = """
 		PREFIX dcterms: <http://purl.org/dc/terms/>
 		SELECT ?label
-		WHERE { {<"""+uri+"""> rdfs:label ?label .} UNION {<"""+uri+"""> dcterms:title ?label .}}"""
+		WHERE {<"""+uri+"""> dcterms:title|rdfs:label ?label .}"""
 	try:
 		# exception: fondazione zeri reduced to federico zeri
 		sparql = SPARQLWrapper('http://127.0.0.1:9999/blazegraph/sparql')
@@ -595,8 +617,8 @@ def getURI(inputURL):
 			return iri
 	
 	# i tatti
-	elif 'HVD_IMAGES&imageId=urn-3:VIT.BB:10593338&adaptor=Local%20' in inputURL:
-		oa = re.compile('HVD_IMAGES&imageId=(.*)&adaptor=', re.IGNORECASE|re.DOTALL)
+	elif 'HVD2&imageId=' in inputURL:
+		oa = re.compile('HVD2&imageId=(.*)&adaptor=', re.IGNORECASE|re.DOTALL)
 		match = oa.search(inputURL)
 		if match:
 			with open('data/itatti/ss_assets_811_130578.csv', 'r') as csvfile:
@@ -607,6 +629,28 @@ def getURI(inputURL):
 					if match.group(1) == photoOnlineURN:
 						iri = 'http://purl.org/emmedi/mauth/itatti/artwork/'+artworkID
 			return iri 
+	elif 'it.wikipedia.org' in inputURL:
+		oa = inputURL.encode('utf8', 'replace').rsplit('/', 1)[-1]
+		iri = 'http://it.dbpedia.org/resource/'+oa
+		return iri
+	elif 'fr.wikipedia.org' in inputURL:
+		oa = inputURL.encode('utf8', 'replace').rsplit('/', 1)[-1]
+		iri = 'http://fr.dbpedia.org/resource/'+oa
+		return iri
+	elif 'en.wikipedia.org' in inputURL:
+		oa = inputURL.encode('utf8', 'replace').rsplit('/', 1)[-1]
+		iri = 'http://dbpedia.org/resource/'+oa
+		return iri
+	elif 'https://www.wikidata.org/wiki/' in inputURL:
+		oa = inputURL.encode('utf8', 'replace').rsplit('/', 1)[-1]
+		iri = 'http://www.wikidata.org/entity/'+oa
+	elif 'https://viaf.org/viaf/' in inputURL:
+		if inputURL.endswith('/'):
+			iri = inputURL[:-1]
+		elif '/#' in inputURL:
+			iri = customSplitURI(inputURL, 5)
+		else:
+			iri = inputURL
 	else:
 		return inputURL
 

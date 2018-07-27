@@ -1,4 +1,8 @@
 {
+	"http://ta.sandrart.net/": {
+		"label": "Sandrart",
+		"content-negotiation": {"":""}
+		},
 	"http://purl.org/emmedi/mauth/zeri/artwork/": { 	
 			"label": "Zeri Catalog",
 			"endpoint": "http://127.0.0.1:9999/blazegraph/sparql" 
@@ -58,10 +62,6 @@
 	"http://pl.dbpedia.org/resource/": { 	
 			"label": "pl.dbpedia",
 			"endpoint": "http://pl.dbpedia.org/sparql" 
-		},
-	"http://ja.dbpedia.org/resource/": { 	
-			"label": "ja.dbpedia",
-			"endpoint": "http://ja.dbpedia.org/sparql" 
 		},
 	"http://el.dbpedia.org/resource/": { 	
 			"label": "el.dbpedia",

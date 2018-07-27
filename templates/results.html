@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en-US" prefix="og: http://ogp.me/ns#" class=" no-touchevents no-forcetouch" style="">
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
 	    <meta name="title" content="Title">
 	    <meta name="description" content="Keyswords, etc.">
@@ -23,8 +23,21 @@
 		<script type="text/javascript" src="./Apostrophe Copywriters - For the words you&#39;re missing_files/placeholders.jquery.min.js"></script>
 		<script type="text/javascript" src="./Apostrophe Copywriters - For the words you&#39;re missing_files/js.cookie.js"></script>
 		<script type="text/javascript" src="./Apostrophe Copywriters - For the words you&#39;re missing_files/forms.js"></script>
+		<script type="text/javascript" src="./Apostrophe Copywriters - For the words you&#39;re missing_files/main.js"></script>
 	</head>
 	<body class="home blog">
+		
+		<style type="text/css">
+			.se-pre-con {
+				position: fixed;
+				left: 0px;
+				top: 0px;
+				width: 100%;
+				height: 100%;
+				z-index: 9999;
+				background-color:  blue;
+				}
+		</style>
 		<div class="site">
 			<header class="header">
 				<div class="header__menu">
@@ -57,25 +70,27 @@
 			            <div class="half half--navy">
 			                <div class="content">
 			                    <p>{{ results|length }} attributions were found. </p>
-			                    <p>The author is likely to be
-			                    	{% set top = results|groupby('score')|maximum %}
-			                    	{% for attribution in results %}
-			                    		{% if attribution['score'] == top %}
-			                    			{{ attribution['artistTitle'][0] }}.
-			                    		{% endif %}
-			                    	{% endfor %} The most reliable attribution is provided by 
-			                    	{% for attribution in results %}
-			                    		{% if attribution['score'] == top %}
-			                    			{{ attribution['provider'] }}.
-			                    		{% endif %}
-			                    	{% endfor %}
-			                    </p>
-			                     
+			                    {% if results|length > 0 %}
+				                    <p>The author is likely to be
+				                    	{% set top = results|groupby('score')|maximum %}
+				                    	{% for attribution in results %}
+				                    		{% if attribution['score'] == top %}
+				                    			{{ attribution['artistTitle'][0] }}.
+				                    		{% endif %}
+				                    	{% endfor %} The most reliable attribution is provided by 
+				                    	{% for attribution in results %}
+				                    		{% if attribution['score'] == top %}
+				                    			{{ attribution['provider'] }}.
+				                    		{% endif %}
+				                    	{% endfor %}
+				                    </p>
+
+			                    {% endif %}
 			                </div>
 			            </div>
 			        </div>	
             		
-            		{% for attribution in results %}
+            		{% for attribution in results|sort(attribute='score')|reverse %}
             			<div id="about" class="{{ loop.cycle('home home--cream home__process', 'home home--brown home__process') }}">
 	            			{% for key, value in attribution.items() %}
 								{% if key == 'provider' %}
@@ -94,31 +109,94 @@
 						            </div>
 						            <hr>
 						            <div class="half">
-						            	{% if attribution['artistTitle'] %}
+						            	{% if attribution['artistTitle'] and attribution['artistTitle'][0] != '' %}
 							                {% for artist in attribution['artistTitle'] %}
 							                	<div class="content">
 								                    <h3>{{ artist }}</h3>
 								                </div>
 							                {% endfor %}
+							            {% else %}
+							            	{% for artisturi in attribution['artist'] %}
+							                	<div class="content">
+								                    <h3><a href="{{ artisturi }}">{{ artisturi.rsplit('/', 1)[-1]| replace("_", " ")  }}</a></h3>
+								                </div>
+							                {% endfor %}
 						                {% endif %}
 						            </div>
-						            	<div class="half">
-							                <div class="content">
-							                	{% if attribution['artworkTitle'] %}
-									                	<div class="content">
-										                    <h3>{{ attribution['artworkTitle'] }}</h3>
-										                </div>
-								                {% endif %}
-							                    {% if attribution['images'] and attribution['images'][0] != 'none'%}
-							                    	<div class="demo">
-														    {% for image in attribution['images']%}
-														    	<img src={{ image }} alt='a beatutiful picture'>
-														    {% endfor %}
-							                    	</div>
-							                    {% endif %}
+					            	<div class="half">
+						                <div class="content">
+						                	{% if attribution['artworkTitle'] and attribution['artworkTitle'][0] != '' %}
+								                	<div class="content">
+									                    <h3>{{ attribution['artworkTitle'] }}</h3>
+									                </div>
+									        {% else %}
+								            	<div class="content">
+									                <h3><a href="{{ attribution['artwork'] }}">{{ attribution['artwork'].rsplit('/', 1)[-1]| replace("_", " ") }}</a></h3>
+									            </div>
+							                {% endif %}
+						                    {% if attribution['images'] and attribution['images'][0] != 'none'%}
+						                    	<div class="demo">
+												    {% for image in attribution['images']%}
+												    	<a class='container' href='{{ image }}' target="_blank">
+												    		<img class='zoom' src='{{ image }}' alt='a beatutiful picture'>
+												    		<div class="overlay">
+															    <div class="text">Open in a new tab</div>
+															</div>
+												    	</a>
 
-							                </div>
-						            	</div>
+												    	<style>
+															.container { position: relative; }
+															.zoom {width: 150px;
+															    height: auto;
+															    max-width: 100%;
+															    padding: 0.3em;
+															}
+															.overlay {
+															  margin: 0.3em;
+															  position: absolute;
+															  top: 0;
+															  bottom: 0;
+															  left: 0;
+															  right: 0;
+															  height: 100%;
+															  width: 150px;
+															  opacity: 0;
+															  transition: .5s ease;
+															  background-color: #00c7fe;
+															}
+
+															.container:hover .overlay {
+															  opacity: 1;
+															}
+
+															.text {
+															  color: white;
+															  font-size: 15px;
+															  position: absolute;
+															  padding: 0.3em;
+															  top: 50%;
+															  left: 50%;
+															  -webkit-transform: translate(-50%, -50%);
+															  -ms-transform: translate(-50%, -50%);
+															  transform: translate(-50%, -50%);
+															  text-align: center;
+															}
+														</style>
+												    {% endfor %}
+					                    		</div>
+						                    {% else %}
+						                    	<div class="demo"><p> no images available</p></div>
+						                    {% endif %}
+
+						                </div>
+					            	</div>
+					            	<div class="full">
+							            {% if attribution['sourceOfInformation'] %}
+							            	<div class="content">
+								                <blockquote>More information <u><a href="{{attribution['sourceOfInformation']}}" target='_blank'>here</a></u></blockquote>
+								            </div>
+							            {% endif %}
+						        	</div>
 						            <hr>
 						            <div class="half">
 						                <div class="content">
@@ -153,19 +231,30 @@
 						                    	</ul>
 						                    {% endif %}
 						                    
-				                        	{% if attribution['scholar'] and attribution['scholar'][0] != 'none' %}
+				                        	{% if attribution['scholar']|length == 1 and attribution['scholar'][0] == 'none' %}
+				                        		<p>&nbsp;</p>
+				                        		<p>SOURCE OF ATTRIBUTION: none</p>
+				                        	{% else %}
 				                        		<p>&nbsp;</p>
 				                        		<p>SOURCE OF ATTRIBUTION: </p>
-											    {% for scholarUri in attribution['scholar']%}
-											    	{% for scholar in attribution[scholarUri] %}
-										    			<li>{{ scholar['label'] }} </li>
-											    		<small>// h index: {{ scholar['h_index'] }}</small>
-										    			<small>// citations by artist: {{ scholar['a_index'] }}</small>
-										    			<small>// biased citation: {{ scholar['auth_index'] }}</small>	
-											    	{% endfor %}
-											    {% endfor %}
+				                        		{% if attribution['scholar'] %}
+				                        		<ul>
+				                        			<style type="text/css">
+				                        				small {color: white; background-color: #183150; border-radius: 4px; padding: 0.2em;}
+				                        			</style>
+												    {% for scholarUri in attribution['scholar'] %}
+												    	{% for scholar in attribution[scholarUri] %}
+											    			<li>{{ scholar['label'].encode('utf-8') }} </li>
+												    		<small class="scholarIndex">h index: {{ scholar['h_index'] }}</small>
+											    				<small class="scholarIndex">citations related to the artist: <span>{{ (scholar['a_index']|float*100)|int }}</span>%</small>
+											    			{% if scholar['auth_index'] %}
+											    				<small class="scholarIndex">biased citations: {{ scholar['auth_index'] }}</small>	
+											    			{% endif %}
+												    	{% endfor %}
+												    {% endfor %}
+											   	</ul>
+						                    	{% endif %}
 						                    {% endif %}
-
 							                <p>&nbsp;</p>
 							                <p>NUMBER OF SOURCES IN AGREEMENT: 
 							                	{% if attribution['agreement'] and attribution['agreement'] != '0.0' %}
@@ -180,7 +269,7 @@
 							                           
 						            <div class="full">
 							            <div class="content">
-							                <blockquote>Do you see something wrong? Leave a feedback!</blockquote>
+							                <blockquote>Do you see anything wrong? | Do you want to suggest an improvement? <u><a href="https://goo.gl/forms/Tfr6sEr8FkJfFPOH2" target='_blank'>Leave a feedback!</a></u></blockquote>
 							            </div>
 						        	</div>
 	        					</section>
@@ -196,11 +285,5 @@
 		    margin-top:0.5em;
 		}
 		
-		img {
-			width: 150px;
-		    height: auto;
-		    max-width: 100%;
-		    padding: 0.3em;
-		}
 	</style>
 </html>
