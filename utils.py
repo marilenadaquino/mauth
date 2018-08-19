@@ -1,4 +1,4 @@
-import rdflib , hydra.tpf , SPARQLWrapper , logging , datetime , time , uuid , random , json , re , sys , os.path , csv
+import rdflib , hydra.tpf , SPARQLWrapper , logging , datetime , time , uuid , random , json , re , sys , os.path , csv , urllib
 from rdflib import URIRef , XSD, Namespace , Literal 
 from rdflib.plugins.sparql import prepareQuery
 from rdflib.namespace import OWL, DC , RDF , RDFS
@@ -8,10 +8,12 @@ from pymantic import sparql
 
 logging.basicConfig(level=logging.INFO)
 server = sparql.SPARQLServer('http://127.0.0.1:9999/blazegraph/sparql')
+blaze = 'http://0.0.0.0:9999/blazegraph/sparql'
 
 WHY = Namespace("http://purl.org/emmedi/mauth/")
 PROV = Namespace("http://www.w3.org/ns/prov#")
 CITO = Namespace("http://purl.org/spar/cito/")
+
 
 def lists_overlap(a, b):
 	""" given two lists return true if there is an overlap """
@@ -296,7 +298,7 @@ def rankCriteria(criterion):
 def sharedAttribution(inputArtist, listOfArtists):
 	""" given a list of artists returns, for each artist returns the number of occurrences in the list, 
 	either of the same uri or of equivalent uris, that are deduced by the linkset of artists"""
-	sparql = SPARQLWrapper('http://127.0.0.1:9999/blazegraph/sparql')
+	sparql = SPARQLWrapper(blaze)
 	# query the linkset for equivalences to the input artist uri
 	score = float(0.00)
 	try:
@@ -395,7 +397,7 @@ def rankHistorianByArtist(historian, artist):
 	      }"""
 	try:
 		# exception: fondazione zeri reduced to federico zeri
-		sparql = SPARQLWrapper('http://127.0.0.1:9999/blazegraph/sparql')
+		sparql = SPARQLWrapper(blaze)
 		# query the linkset of artworks: look for equivalences and return a list of equivalences
 		sparql.setQuery(number_of_artworks)
 		sparql.setReturnFormat(JSON)
@@ -407,7 +409,7 @@ def rankHistorianByArtist(historian, artist):
 		pass
 	
 	try:
-		sparqlW = SPARQLWrapper('http://127.0.0.1:9999/blazegraph/sparql')
+		sparqlW = SPARQLWrapper(blaze)
 		sparqlW.setQuery(number_of_agreements)
 		sparqlW.setReturnFormat(JSON)
 		results = sparqlW.query().convert()
@@ -439,7 +441,7 @@ def rankHistorianBias(historian, artist):
 				?artwork <http://www.cidoc-crm.org/cidoc-crm/P94i_was_created_by> ?creation .      
 		      }"""
 	try:
-		sparqlW = SPARQLWrapper('http://127.0.0.1:9999/blazegraph/sparql')
+		sparqlW = SPARQLWrapper(blaze)
 		sparqlW.setQuery(number_of_citations)
 		sparqlW.setReturnFormat(JSON)
 		results = sparqlW.query().convert()
@@ -472,7 +474,7 @@ def rankHistorianBias(historian, artist):
 			      }"""
 	
 	try:
-		sparqlW = SPARQLWrapper('http://127.0.0.1:9999/blazegraph/sparql')
+		sparqlW = SPARQLWrapper(blaze)
 		sparqlW.setQuery(number_of_motivated_agreements)
 		sparqlW.setReturnFormat(JSON)
 		results = sparqlW.query().convert()
@@ -503,7 +505,7 @@ def rankHistorian():
 			SELECT DISTINCT ?h
 			WHERE { ?attr cito:agreesWith ?h }"""
 	try:
-		sparql = SPARQLWrapper('http://127.0.0.1:9999/blazegraph/sparql')
+		sparql = SPARQLWrapper(blaze)
 		sparql.setQuery(get_historians)
 		sparql.setReturnFormat(JSON)
 		results = sparql.query().convert()
@@ -520,13 +522,30 @@ def rankHistorian():
 			WHERE { ?obs mauth:hasObservedArtist ?a ; 
 					mauth:agreesWith <"""+historian+""">}"""
 		try:
-			sparqlw = SPARQLWrapper('http://127.0.0.1:9999/blazegraph/sparql')
+			sparqlw = SPARQLWrapper(blaze)
 			sparqlw.setQuery(get_artists)
 			sparqlw.setReturnFormat(JSON)
 			results = sparqlw.query().convert()
 			artists = list(result["a"]["value"] for result in (results["results"]["bindings"]) if result["a"]["value"] != [])
 		except:
 			pass
+
+		# Artist_Index
+		for artist in artists:
+			print (artist)
+			a_index = rankHistorianByArtist(historian, artist)
+			print ('a index:', a_index)
+			historiansIndexesGraph.add(( URIRef(historian), WHY.hasArtistIndex, URIRef(historian+'/'+artist) ))
+			historiansIndexesGraph.add(( URIRef(historian+'/'+artist), WHY.hasArtistIndex, Literal(a_index, datatype=XSD.float) ))
+			historiansIndexesGraph.add(( URIRef(historian+'/'+artist), WHY.hasIndexedHistorian, URIRef(historian) ))
+			historiansIndexesGraph.add(( URIRef(historian+'/'+artist), WHY.hasIndexedArtist, URIRef(artist) ))
+			#auth_index = rankHistorianBias(historian, artist)
+			#print 'auth index:', auth_index
+			# if auth_index is not None:
+			# 	historiansIndexesGraph.add(( URIRef(historian), WHY.hasAuthoritativenessIndex, Literal(auth_index, datatype=XSD.float) ))
+			# else:
+			# 	historiansIndexesGraph.add(( URIRef(historian), WHY.hasAuthoritativenessIndex, Literal(0.0, datatype=XSD.float) ))
+			
 		
 		# H_index (done)
 		# citations = """
@@ -561,22 +580,7 @@ def rankHistorian():
 		# except:
 		# 	pass
 		
-		# Artist_Index
-		for artist in artists:
-			print (artist)
-			a_index = rankHistorianByArtist(historian, artist)
-			print ('a index:', a_index)
-			historiansIndexesGraph.add(( URIRef(historian), WHY.hasArtistIndex, URIRef(historian+'/'+artist) ))
-			historiansIndexesGraph.add(( URIRef(historian+'/'+artist), WHY.hasArtistIndex, Literal(a_index, datatype=XSD.float) ))
-			historiansIndexesGraph.add(( URIRef(historian+'/'+artist), WHY.hasIndexedHistorian, URIRef(historian) ))
-			historiansIndexesGraph.add(( URIRef(historian+'/'+artist), WHY.hasIndexedArtist, URIRef(artist) ))
-			#auth_index = rankHistorianBias(historian, artist)
-			#print 'auth index:', auth_index
-			# if auth_index is not None:
-			# 	historiansIndexesGraph.add(( URIRef(historian), WHY.hasAuthoritativenessIndex, Literal(auth_index, datatype=XSD.float) ))
-			# else:
-			# 	historiansIndexesGraph.add(( URIRef(historian), WHY.hasAuthoritativenessIndex, Literal(0.0, datatype=XSD.float) ))
-			
+		
 	historiansIndexesGraph.serialize(destination='data/statistics_by_artist.nq', format='nquads')
 	server.update('load <file:///Users/marilena/Desktop/mauth/data/statistics_by_artist.nq>')
 
@@ -591,7 +595,7 @@ def getLabel(uri):
 		WHERE {<"""+uri+"""> dcterms:title|rdfs:label ?label .}"""
 	try:
 		# exception: fondazione zeri reduced to federico zeri
-		sparql = SPARQLWrapper('http://127.0.0.1:9999/blazegraph/sparql')
+		sparql = SPARQLWrapper(blaze)
 		# query the linkset of artworks: look for equivalences and return a list of equivalences
 		sparql.setQuery(label)
 		sparql.setReturnFormat(JSON)
@@ -608,16 +612,35 @@ def getLabel(uri):
 
 def getURI(inputURL):
 	""" given the URL of an online cataloguing record returns the URI of the artwork"""
+	inputURL = urllib.unquote(inputURL)
+	#print inputURL
 	# zeri
-	if 'tipo_scheda=OA&id=' in inputURL:
+	matchOa = re.compile('^[0-9]+$', re.IGNORECASE|re.DOTALL)
+	matchOaDigit = matchOa.match(inputURL)
+	
+	matchOaItatti = re.compile('^urn', re.IGNORECASE|re.DOTALL)
+	matchOaDigitItatti = matchOaItatti.match(inputURL)
+	if 'tipo_scheda=OA&id=' in inputURL: # never
 		oa = re.compile('OA&id=(.*)&titolo=', re.IGNORECASE|re.DOTALL)
 		match = oa.search(inputURL)
 		if match:
 			iri = 'http://purl.org/emmedi/mauth/zeri/artwork/'+match.group(1)
 			return iri
 	
+	elif matchOaDigit:
+		iri = 'http://purl.org/emmedi/mauth/zeri/artwork/'+inputURL
+		return iri
 	# i tatti
-	elif 'HVD2&imageId=' in inputURL:
+	elif matchOaItatti:
+		with open('data/itatti/ss_assets_811_130578.csv', 'r') as csvfile:
+			reader = csv.DictReader(csvfile)
+			for sheetX in reader:
+				artworkID = sheetX['Work[36658]']
+				photoOnlineURN = re.sub('drs:', '', str(sheetX['Filename']))
+				if inputURL == photoOnlineURN:
+					iri = 'http://purl.org/emmedi/mauth/itatti/artwork/'+artworkID
+		return iri 
+	elif 'HVD2&imageId=' in inputURL: # never 
 		oa = re.compile('HVD2&imageId=(.*)&adaptor=', re.IGNORECASE|re.DOTALL)
 		match = oa.search(inputURL)
 		if match:

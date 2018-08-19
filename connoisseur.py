@@ -23,7 +23,8 @@ CITO = Namespace("http://purl.org/spar/cito/")
 attributions_graph = URIRef('http://purl.org/emmedi/mauth/attributions/')
 settingFile = "settings/settings.json"
 # ng = Graph(store, identifier=attributions_graph)
-server = sparql.SPARQLServer('http://127.0.0.1:9999/blazegraph/sparql')
+server = sparql.SPARQLServer('http://0.0.0.0:9999/blazegraph/sparql')
+blaze = 'http://0.0.0.0:9999/blazegraph/sparql'
 
 def findAttributions(inputURI, objProperty):
 	""" given a URI as input, (1) query against the triplestore for equivalences
@@ -40,7 +41,7 @@ def findAttributions(inputURI, objProperty):
 			SELECT DISTINCT ?b 
 			WHERE { graph <http://purl.org/emmedi/mauth/artworks/> { {<"""+inputURI+"""> ?c ?b} UNION {?b ?c <"""+inputURI+""">} } }"""
 		# query the linkset of artworks: look for equivalences and return a list of equivalences
-		sparqlW = SPARQLWrapper('http://127.0.0.1:9999/blazegraph/sparql')
+		sparqlW = SPARQLWrapper(blaze)
 		sparqlW.setQuery(get_artworks)
 		sparqlW.setReturnFormat(JSON)
 		results = sparqlW.query().convert()
@@ -164,7 +165,7 @@ def update_linksets():
 			FROM <http://purl.org/emmedi/mauth/artists/>
 			WHERE {?a ?p ?b }"""
 		# query the linkset of artists: look for equivalences and return a list of equivalences
-		sparqlW1 = SPARQLWrapper('http://127.0.0.1:9999/blazegraph/sparql')
+		sparqlW1 = SPARQLWrapper(blaze)
 		sparqlW1.setQuery(get_artists)
 		sparqlW1.setReturnFormat(JSON)
 		results = sparqlW1.query().convert()
@@ -182,7 +183,7 @@ def update_linksets():
 			FROM <http://purl.org/emmedi/mauth/artworks/>
 			WHERE {?a (^owl:sameAs|owl:sameAs)* ?b }"""
 		# query the linkset of artworks: look for equivalences and return a list of equivalences
-		sparqlW = SPARQLWrapper('http://127.0.0.1:9999/blazegraph/sparql')
+		sparqlW = SPARQLWrapper(blaze)
 		sparqlW.setQuery(get_artworks)
 		sparqlW.setReturnFormat(JSON)
 		results = sparqlW.query().convert()
@@ -200,7 +201,7 @@ def update_linksets():
 			FROM <http://purl.org/emmedi/mauth/historians/>
 			WHERE {?a ?p ?b }"""
 		# query the linkset of historians: look for equivalences and return a list of equivalences
-		sparqlW2 = SPARQLWrapper('http://127.0.0.1:9999/blazegraph/sparql')
+		sparqlW2 = SPARQLWrapper(blaze)
 		sparqlW2.setQuery(get_historians)
 		sparqlW2.setReturnFormat(JSON)
 		results = sparqlW2.query().convert()
@@ -224,7 +225,7 @@ def update_attributions():
 			FROM <http://purl.org/emmedi/mauth/artworks/>
 			WHERE { ?a ?b ?artwork  }"""
 		# query the linkset of artworks: look for equivalences and return a list of equivalences
-		sparqlW = SPARQLWrapper('http://127.0.0.1:9999/blazegraph/sparql')
+		sparqlW = SPARQLWrapper(blaze)
 		#sparqlW.setRequestMethod(URLENCODED)
 		sparqlW.setQuery(get_artworks)
 		sparqlW.setReturnFormat(JSON)
@@ -309,7 +310,7 @@ def rank(results):
 			
 			# 5 attribution shared
 			artistShared = utils.sharedAttribution(artist, artists) 
-			
+
 			x['score'] += artistShared
 			x['agreement'] = int(artistShared)
 			x['scoreagreement'] = int(artistShared)

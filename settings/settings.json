@@ -5,15 +5,15 @@
 		},
 	"http://purl.org/emmedi/mauth/zeri/artwork/": { 	
 			"label": "Zeri Catalog",
-			"endpoint": "http://127.0.0.1:9999/blazegraph/sparql" 
+			"endpoint": "http://0.0.0.0:9999/blazegraph/sparql" 
 		},
 	"http://purl.org/emmedi/mauth/zeri/artist/": { 	
 			"label": "Zeri Catalog",
-			"endpoint": "http://127.0.0.1:9999/blazegraph/sparql" 
+			"endpoint": "http://0.0.0.0:9999/blazegraph/sparql" 
 		},
 	"http://purl.org/emmedi/mauth/zeri/": { 	
 			"label": "Zeri Catalog",
-			"endpoint": "http://127.0.0.1:9999/blazegraph/sparql" 
+			"endpoint": "http://0.0.0.0:9999/blazegraph/sparql" 
 		},
 	"http://yago-knowledge.org/resource/": { 
 			"label": "yago",	

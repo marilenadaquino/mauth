@@ -11,6 +11,7 @@ from rdflib.plugins.sparql import prepareQuery
 from SPARQLWrapper import SPARQLWrapper, JSON 
 from collections import defaultdict
 import urllib , connoisseur , utils , re , requests , json
+from urllib import unquote
 
 app = Flask(__name__, static_url_path='')
 api = Api(app)
@@ -19,6 +20,7 @@ api = Api(app)
 def queryMauth(artwork_iri):
     try:
         # TODO expand the SPARQL query including all the information
+        artwork_iri = artwork_iri.replace('\r','')
         get_history = """ 
         PREFIX mauth: <http://purl.org/emmedi/mauth/>
         PREFIX dcterms: <http://purl.org/dc/terms/>
@@ -82,10 +84,11 @@ def queryMauth(artwork_iri):
 
         VALUES ?artwork {<"""+ artwork_iri +""">}"""
         # TODO change endpoint, or maybe not...
-        sparql = SPARQLWrapper('http://127.0.0.1:9999/blazegraph/sparql')
+        sparql = SPARQLWrapper('http://10.16.36.133:9999/blazegraph/sparql')
         sparql.setQuery(get_history)
         sparql.setReturnFormat(JSON)
         results = sparql.query().convert()
+        print (artwork_iri)
         print ('hello results \n', results)
         #group by provider
         return connoisseur.rank(utils.rebuildResults(results)) 
@@ -113,7 +116,7 @@ def index():
 @app.route('/search', methods=['GET'])
 @accept('text/html')
 def search():
-    # templates/index.html
+    # templates/search.html
     return render_template('search.html')
 
 
@@ -121,14 +124,16 @@ def search():
 @accept('text/html')
 def results():
     # templates/results.html
-    inputURI = request.args['uri_source']
-    artwork = utils.getURI(inputURI)
-    
-    if request.method == 'GET':
-        results = queryMauth(artwork)
-        #sortedResults = sorted( results, key = lambda attr:attr['score'], reverse = False )
-        #response = json.loads(req.content)
-        return render_template('results.html', searchURL=artwork, results=results ) 
+    if request.args.get('uri_source'):
+        artwork = utils.getURI(request.args.get('uri_source'))
+    elif request.args.get('id'):
+        artwork = utils.getURI(request.args('id') )
+    elif request.args.get('imageId'):
+        artwork = utils.getURI(request.args['imageId'])
+    else:
+        artwork = request.args
+    results = queryMauth(artwork)
+    return render_template('results.html', searchURL=artwork, results=results ) 
 
 @app.template_filter()
 def maximum(_list):
@@ -138,4 +143,4 @@ def maximum(_list):
         print(str(e))
 
 if __name__ == '__main__':
-    app.run(debug=False, port=8000)
+    app.run(host='0.0.0.0', debug=False, port=8000)

@@ -55,9 +55,9 @@
             <div class="half half--green">
                 <h2 class="title">Search*</h2>
                 <p>
-                	<form method="GET" action="{{ url_for('results') }}">
+                	<form method="GET" action="{{ url_for('results', uri_source=uri_source) }}">
                 		<textarea name="uri_source"></textarea>
-    					<input type="submit" value="Go!" onclick='getElementById("se-pre-con").fadeIn("slow");'>
+    					<input type="submit" value="Go!">
 					</form>
 				</p>
             </div>

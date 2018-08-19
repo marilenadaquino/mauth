@@ -62,30 +62,31 @@
 		            </nav>
 					
 			</header>
-			<div class="main"><!-- {{ searchURL }} -->
+			{% if results %}
+				<div class="main"><!-- {{ searchURL }} -->
 					<div id="niceties" class="home home--white home__niceties">
 			            <div class="half half--white">
 			                <h2 class="title">summary</h2>
 			            </div>
 			            <div class="half half--navy">
 			                <div class="content">
-			                    <p>{{ results|length }} attributions were found. </p>
-			                    {% if results|length > 0 %}
-				                    <p>The author is likely to be
-				                    	{% set top = results|groupby('score')|maximum %}
-				                    	{% for attribution in results %}
-				                    		{% if attribution['score'] == top %}
-				                    			{{ attribution['artistTitle'][0] }}.
-				                    		{% endif %}
-				                    	{% endfor %} The most reliable attribution is provided by 
-				                    	{% for attribution in results %}
-				                    		{% if attribution['score'] == top %}
-				                    			{{ attribution['provider'] }}.
-				                    		{% endif %}
-				                    	{% endfor %}
-				                    </p>
+				                    <p>{{ results|length }} attributions were found. </p>
+				                    {% if results|length > 0 %}
+					                    <p>The author is likely to be
+					                    	{% set top = results|groupby('score')|maximum %}
+					                    	{% for attribution in results %}
+					                    		{% if attribution['score'] == top %}
+					                    			{{ attribution['artistTitle'][0] }}.
+					                    		{% endif %}
+					                    	{% endfor %} The most reliable attribution is provided by 
+					                    	{% for attribution in results %}
+					                    		{% if attribution['score'] == top %}
+					                    			{{ attribution['provider'] }}.
+					                    		{% endif %}
+					                    	{% endfor %}
+					                    </p>
 
-			                    {% endif %}
+				                    {% endif %}
 			                </div>
 			            </div>
 			        </div>	
@@ -278,6 +279,7 @@
 						</div>
 					{% endfor %}
 				</div>
+			{% endif %}
 	</body>	
 	<style type="text/css">
 		.demo {
