@@ -1,19 +1,17 @@
-import rdflib , hydra.tpf , SPARQLWrapper , logging , datetime , time , uuid , random , json , re , sys , os.path , csv , urllib
+# -*- coding: utf-8 -*-
+import rdflib , hydra.tpf , SPARQLWrapper , logging , datetime , time , uuid , random , json , re , sys , os.path , csv , urllib , config
 from rdflib import URIRef , XSD, Namespace , Literal 
 from rdflib.plugins.sparql import prepareQuery
 from rdflib.namespace import OWL, DC , RDF , RDFS
 from SPARQLWrapper import SPARQLWrapper, JSON 
 from pymantic import sparql
 
+logging.basicConfig()
 
-logging.basicConfig(level=logging.INFO)
-server = sparql.SPARQLServer('http://127.0.0.1:9999/blazegraph/sparql')
-blaze = 'http://0.0.0.0:9999/blazegraph/sparql'
-
+# namespaces
 WHY = Namespace("http://purl.org/emmedi/mauth/")
 PROV = Namespace("http://www.w3.org/ns/prov#")
 CITO = Namespace("http://purl.org/spar/cito/")
-
 
 def lists_overlap(a, b):
 	""" given two lists return true if there is an overlap """
@@ -26,8 +24,8 @@ def splitURI(string):
     if re.findall(r"w3id", string):
     	n=5
     elif re.findall(r"mauth", string):
-    	n=7
-    elif re.findall(r"^http:\/\/www.idref", string):
+    	n=6
+    elif re.findall(r"^http:\/\/www.idref", string) or re.findall(r"^http:\/\/d-nb.info", string):
     	n=3
     elif re.findall(r"^http:\/\/ta.sandrart.net", string):
     	n=3
@@ -35,70 +33,80 @@ def splitURI(string):
     	n=4
     return str(d.join(string.split(d)[:n])) + '/'
 
+
+def splitInstance(uri):
+	"""Extract instance from a URI, truncated at the n occurrence of the delimiter / """
+	if re.findall(r"^http:\/\/d-nb.info", uri) or re.findall(r"^http:\/\/www.idref", uri):
+		uri = uri.rsplit('/', 1)[-2]
+	else:
+		uri = uri.rsplit('/', 1)[-1]
+	return uri
+
+
 def customSplitURI(string, n):
     """Return URIbase, string truncated at the n occurrence of the delimiter d"""
     d = str('/')
     return str(d.join(string.split(d)[:n])) + '/'
 
 
-def fetchData(uri, settingFile, inputPattern, outputPattern):
-	'''uses a method detailed in a setting file 
-	to fetch data having as subject the input URI (subject)
-	and as BGP the specified input pattern.
-	Finally it returns a new graph containing subject and object linked by a outputPattern '''
-	
-	# TODO clean instance matching
-	# exceptions to match URI base 
-	if re.findall(r"^http:\/\/d-nb.info", uri) or re.findall(r"^http:\/\/www.idref", uri):
-		instance = uri.rsplit('/', 1)[-2]
-	else:
-		instance = uri.rsplit('/', 1)[-1]
-	URIbase = splitURI(uri)
-	attributions_graph = 'http://purl.org/emmedi/mauth/attributions/'
-	URIGraph = rdflib.ConjunctiveGraph(identifier=URIRef(attributions_graph))
-	URIGraph.bind("owl", OWL)
-	URIGraph.bind("dc", DC)
-	URIGraph.bind("prov", PROV)
+def subSpace(string):
+	""" substitute space with -"""
+	string = re.sub('\s', '-', string)
+	return string
 
+
+def rewriteQuery(inputPattern):
+	""" given a triple pattern rewrites the URI so as to be included in a SPARQL query"""
 	URImatchPatterns = re.findall(r"https?:\/\/[^\s]*", inputPattern) # match URIs in *.json file and wrap into <> to rewrite the SPARQL query
 	for URImatchPattern in URImatchPatterns:
 		inputPattern = re.sub(URImatchPattern, r'<'+URImatchPattern+'>', inputPattern)
 		inputPattern = re.sub(r'<<', r'<', inputPattern)
 		inputPattern = re.sub(r'>>', r'>', inputPattern)
+	return inputPattern
+
+
+def fetchData(uri, settingFile, inputPattern, outputPattern, outputGraph):
+	'''uses a method detailed in a settings file to fetch data having as subject the input URI (subject)
+	and as BGP the specified input pattern. Returns a graph containing subject and object linked by a outputPattern '''
+
+	# prepare the graph to store results
+	URIGraph = rdflib.ConjunctiveGraph(identifier=URIRef(outputGraph))
+	URIGraph.bind("owl", OWL)
+	URIGraph.bind("dc", DC)
+	URIGraph.bind("prov", PROV)
+
+	# refactor inputs to rewrite the SPARQL query
+	instance = splitInstance(uri)
+	URIbase = splitURI(uri)
+	inputPattern = rewriteQuery(inputPattern) 
 
 	# TODO query to be changed 
-	query="""
+	queryEntity="""
 			SELECT DISTINCT ?b 
 			WHERE { <"""+uri+"""> """+inputPattern+""" ?b }""" # rewrite SPARQL query
 
+	# open the settings file
 	with open(settingFile) as settings:    
 		data_source = json.load(settings)
 		if URIbase in data_source:
-			print "Fetching data for URI:", uri, '\n'
 			if "endpoint" in data_source[URIbase]:
 				SPARQLendpoint = data_source[URIbase]["endpoint"]
-				print SPARQLendpoint
 				try:
-					sparql = SPARQLWrapper(SPARQLendpoint) # prepare the SPARQL query
-					#sparql.setTimeout(15)
-					sparql.setQuery(query)
-					print query
+					sparql = SPARQLWrapper(SPARQLendpoint)
+					sparql.setQuery(queryEntity)
+					print queryEntity
 					sparql.setReturnFormat(JSON)
 					results = sparql.query().convert()
 					resultsList = list(result["b"]["value"] for result in (results["results"]["bindings"]) if result["b"]["value"] != [])		
 					for result in resultsList:
-						print result
 						if 'http' in str(result):
-							URIGraph.add((URIRef(uri), rdflib.term.URIRef(outputPattern), URIRef(u'%s')% result ))
+							URIGraph.add((URIRef(uri), URIRef(outputPattern), URIRef(result) ))
 						else:
-							URIGraph.add((URIRef(uri), rdflib.term.URIRef(outputPattern), Literal(u'%s')% result ))
-					if str(URImatchPattern) == 'http://www.w3.org/2002/07/owl#sameAs':
-						URIGraph.add((URIRef(uri), rdflib.term.URIRef(outputPattern), URIRef(uri)))
-					else:
-						pass
-					print (uri, " found at SPARQL endpoint ", SPARQLendpoint)
+							URIGraph.add((URIRef(uri), URIRef(outputPattern), Literal(result.encode('utf8', 'replace') ) ))
+					if str(inputPattern) == 'http://www.w3.org/2002/07/owl#sameAs':
+						URIGraph.add((URIRef(uri), URIRef(outputPattern), URIRef(uri)))
 				except Exception as error:
-					print (URIbase, "no results for this SPARQL query at ", SPARQLendpoint , '\n', error)
+					print (uri, "no results for this SPARQL query at ", result.encode('utf8', 'replace') , error)
 			elif "content-negotiation" in data_source[URIbase]:
 				try:
 					for src, dst in data_source[URIbase]["content-negotiation"].items():
@@ -112,54 +120,207 @@ def fetchData(uri, settingFile, inputPattern, outputPattern):
 							graphTBL = re.sub(src, dst, uri)
 					tempGraph = rdflib.Graph()
 					tempGraph.load(URIRef(graphTBL))
-					# TODO change query
 					q = """
 						SELECT DISTINCT ?b 
 						WHERE { ?a """+inputPattern+""" ?b }"""
-					print (q)
 					results = tempGraph.query(q)
 					for result in results:
 						if 'http' in str(result):
-							URIGraph.add((URIRef(uri), rdflib.term.URIRef(outputPattern), URIRef(u'%s')% result))
+							URIGraph.add((URIRef(uri), URIRef(outputPattern), URIRef(result)))
 						else:
-							URIGraph.add((URIRef(uri), rdflib.term.URIRef(outputPattern), Literal(u'%s')% result))
-					if str(URImatchPattern) == 'http://www.w3.org/2002/07/owl#sameAs':
+							URIGraph.add((URIRef(uri), URIRef(outputPattern), Literal(result.encode('utf8', 'replace') ) ))
+					if str(inputPattern) == 'http://www.w3.org/2002/07/owl#sameAs':
 						URIGraph.add((URIRef(uri), rdflib.term.URIRef(outputPattern), URIRef(uri)))
-					else:
-						pass
-					print (URIbase, "URI content-negotiation", URIRef(uri))
 				except:
 				  	print ("No content-negotiation supported")
 			elif "linkeddatafragments" in data_source[URIbase]:
 				try:
-					if len(sys.argv) > 1:
-						LDF = sys.argv[1]
 					LDFGraph=rdflib.Graph("TPFStore")
 					LDF = data_source[URIbase]["linkeddatafragments"]
-					try:
-						LDFGraph.open(LDF)
-						results = LDFGraph.query(query)
-						for result in results:
-							print (result, '\n')
-							if 'http' in str(result):
-								URIGraph.add((URIRef(uri), rdflib.term.URIRef(outputPattern), URIRef(u'%s')% result))
-							else:
-								URIGraph.add((URIRef(uri), rdflib.term.URIRef(outputPattern), result))
-						if str(URImatchPattern) == 'http://www.w3.org/2002/07/owl#sameAs':
-							URIGraph.add((URIRef(uri), rdflib.term.URIRef(outputPattern), URIRef(uri)))
+					LDFGraph.open(LDF)
+					results = LDFGraph.query(queryEntity)
+					for result in results:
+						if 'http' in str(result):
+							URIGraph.add(( URIRef(uri), URIRef(outputPattern), URIRef('%s')%result ))
+							
 						else:
-							pass
-						print (uri, "found in Linked Data Fragment", URIRef(LDF)	)
-					except Exception as error:
-						print (uri, error)	
+							URIGraph.add(( URIRef(uri), URIRef(outputPattern), rdflib.term.Literal(result[0])  ))
+						
+					if str(inputPattern) == 'http://www.w3.org/2002/07/owl#sameAs':
+						URIGraph.add((URIRef(uri), URIRef(outputPattern), URIRef(uri)))
 				except Exception as error:
-				  	print ("ehm...", query , error)
+					print (uri, error)	
 			else:
-				print ("this URI has not settings")
+				print ("this URI has no settings")
 		else:
 			print (URIbase, "this URIbase is not in the mapping document")
 	
 	return URIGraph
+
+
+def fetchBindingsData(uri, uriBind, settingFile, inputPattern, inputPattern2, outputPattern, outputGraph):
+	'''uses a method detailed in a settings file to fetch data having as subject the input URI (subject)
+	and as BGP the specified input pattern. Returns a graph containing subject and object linked by a outputPattern '''
+
+	# prepare the graph to store results
+	URIGraph = rdflib.ConjunctiveGraph(identifier=URIRef(outputGraph))
+	URIGraph.bind("owl", OWL)
+	URIGraph.bind("dc", DC)
+	URIGraph.bind("prov", PROV)
+
+	# refactor inputs to rewrite the SPARQL query
+	instance = splitInstance(uri)
+	URIbase = splitURI(uri)
+	inputPattern = rewriteQuery(inputPattern) 
+	inputPattern2 = rewriteQuery(inputPattern2) 
+
+	# TODO query to be changed 
+	queryEntity="""
+			SELECT DISTINCT ?b 
+			WHERE { <"""+uri+"""> """+inputPattern+""" <"""+uriBind+"""> . """+inputPattern2+""" ?b }""" # rewrite SPARQL query
+
+	# open the settings file
+	with open(settingFile) as settings:    
+		data_source = json.load(settings)
+		if URIbase in data_source:
+			if "endpoint" in data_source[URIbase]:
+				SPARQLendpoint = data_source[URIbase]["endpoint"]
+				try:
+					sparql = SPARQLWrapper(SPARQLendpoint)
+					sparql.setQuery(queryEntity)
+					print queryEntity
+					sparql.setReturnFormat(JSON)
+					results = sparql.query().convert()
+					resultsList = list(result["b"]["value"] for result in (results["results"]["bindings"]) if result["b"]["value"] != [])		
+					for result in resultsList:
+						if 'http' in str(result):
+							URIGraph.add((URIRef(uri), URIRef(outputPattern), URIRef(result) ))
+						else:
+							URIGraph.add((URIRef(uri), URIRef(outputPattern), Literal(result.encode('utf8', 'replace') ) ))
+					if str(inputPattern) == 'http://www.w3.org/2002/07/owl#sameAs':
+						URIGraph.add((URIRef(uri), URIRef(outputPattern), URIRef(uri)))
+				except Exception as error:
+					print (uri, "no results for this SPARQL query at ", result.encode('utf8', 'replace') , error)
+			elif "content-negotiation" in data_source[URIbase]:
+				try:
+					for src, dst in data_source[URIbase]["content-negotiation"].items():
+						if 'sandrart' in str(uri): # does not work
+							prefix = re.match('/[^-]*/', uri).group(1)
+							newPrefix = 'http://ta.sandrart.net/services/rdf'
+							newUri = re.sub('/[^-]*/', newPrefix, uri)
+							graphTBL = re.sub('-', '/', newUri)
+							print graphTBL
+						else:
+							graphTBL = re.sub(src, dst, uri)
+					tempGraph = rdflib.Graph()
+					tempGraph.load(URIRef(graphTBL))
+					q = """
+						SELECT DISTINCT ?b 
+						WHERE { ?a """+inputPattern+""" ?b }"""
+					results = tempGraph.query(q)
+					for result in results:
+						if 'http' in str(result):
+							URIGraph.add((URIRef(uri), URIRef(outputPattern), URIRef(result)))
+						else:
+							URIGraph.add((URIRef(uri), URIRef(outputPattern), Literal(result.encode('utf8', 'replace') ) ))
+					if str(inputPattern) == 'http://www.w3.org/2002/07/owl#sameAs':
+						URIGraph.add((URIRef(uri), rdflib.term.URIRef(outputPattern), URIRef(uri)))
+				except:
+				  	print ("No content-negotiation supported")
+			elif "linkeddatafragments" in data_source[URIbase]:
+				try:
+					LDFGraph=rdflib.Graph("TPFStore")
+					LDF = data_source[URIbase]["linkeddatafragments"]
+					LDFGraph.open(LDF)
+					results = LDFGraph.query(queryEntity)
+					for result in results:
+						if 'http' in str(result):
+							URIGraph.add(( URIRef(uri), URIRef(outputPattern), URIRef('%s')%result ))
+							
+						else:
+							URIGraph.add(( URIRef(uri), URIRef(outputPattern), rdflib.term.Literal(result[0])  ))
+						
+					if str(inputPattern) == 'http://www.w3.org/2002/07/owl#sameAs':
+						URIGraph.add((URIRef(uri), URIRef(outputPattern), URIRef(uri)))
+				except Exception as error:
+					print (uri, error)	
+			else:
+				print ("this URI has no settings")
+		else:
+			print (URIbase, "this URIbase is not in the mapping document")
+	
+	return URIGraph
+
+#fetchData('http://dbpedia.org/resource/A_Man_with_a_Quilted_Sleeve', config.settingsFile, 'http://dbpedia.org/ontology/author / http://www.w3.org/2000/01/rdf-schema#label', URIRef('http://dbpedia.org/ontology/author') , URIRef('http://dbpedia.org/resources') )
+
+
+
+
+
+
+
+def rank(results):
+	""" given a JSON reorganized by means of rebuildResults 
+	adds the ranking value"""
+	dates = []
+	artists = []
+	for x in results:
+		# dates 
+		# TODO take the most recent one when there are more than one for an attribution
+		ymd = re.sub('none', '0001-01-01', str(x['date'][0]))
+		ymd = re.sub('.000Z', '', str(x['date'][0]))
+		dates.append(ymd)
+
+		score = float()
+		scorecriteria = float()
+		scoreprovider = float()
+		scoreagreement = float()
+		scoredate = float()
+		# artists
+		for artist in x['artist']:
+			artists.append(str(artist))
+			
+		# 1 domain expert
+		if 'Zeri' in x['provider'] or 'I Tatti' in x['provider'] or 'Frick' in x['provider']:
+			if 'discarded' in x['provider']:
+				pass
+			else:
+				score += 1.00
+				scoreprovider += 1.00
+		x['scoreprovider'] = scoreprovider
+		# 2 criterion
+		for criterion in x['criteria']:
+			rank = rankCriteria(criterion) # look into the graph of criteria and sum the rank
+			score += rank
+			scorecriteria += rank
+		
+		# 3 scholar's authoritativeness
+		# see h index, artist index and auth index in utils
+		x['scorecriteria'] = scorecriteria			
+		x['score'] = score
+	
+	# 4 date
+	dateRank = rankDates(dates)
+	
+	for x in results:
+		for d,r in dateRank:
+			if str(d) in x['date'][0]: # multiple dates? pick the highest date among the ones related to a single attr
+				x['score'] += r
+				scoredate += r
+			if x['date'][0] == 'none':
+				pass
+		x['scoredate'] = scoredate
+		for artist in x['artist']:
+			
+			# 5 attribution shared
+			artistShared = sharedAttribution(artist, artists) 
+
+			x['score'] += artistShared
+			x['agreement'] = int(artistShared)
+			x['scoreagreement'] = int(artistShared)
+	# rerank when a lower attribution agrees with the most authoritative one ?
+	return results
+
 
 
 def rebuildResults(results):
@@ -305,7 +466,7 @@ def rankCriteria(criterion):
 def sharedAttribution(inputArtist, listOfArtists):
 	""" given a list of artists returns, for each artist returns the number of occurrences in the list, 
 	either of the same uri or of equivalent uris, that are deduced by the linkset of artists"""
-	sparql = SPARQLWrapper(blaze)
+	sparql = SPARQLWrapper(config.SPARQLendpoint)
 	# query the linkset for equivalences to the input artist uri
 	score = float(0.00)
 	try:
@@ -416,7 +577,7 @@ def rankHistorianByArtist(historian, artist):
 		pass
 	
 	try:
-		sparqlW = SPARQLWrapper(blaze)
+		sparqlW = SPARQLWrapper(config.SPARQLendpoint)
 		sparqlW.setQuery(number_of_agreements)
 		sparqlW.setReturnFormat(JSON)
 		results = sparqlW.query().convert()
@@ -448,7 +609,7 @@ def rankHistorianBias(historian, artist):
 				?artwork <http://www.cidoc-crm.org/cidoc-crm/P94i_was_created_by> ?creation .      
 		      }"""
 	try:
-		sparqlW = SPARQLWrapper(blaze)
+		sparqlW = SPARQLWrapper(config.SPARQLendpoint)
 		sparqlW.setQuery(number_of_citations)
 		sparqlW.setReturnFormat(JSON)
 		results = sparqlW.query().convert()
@@ -481,7 +642,7 @@ def rankHistorianBias(historian, artist):
 			      }"""
 	
 	try:
-		sparqlW = SPARQLWrapper(blaze)
+		sparqlW = SPARQLWrapper(config.SPARQLendpoint)
 		sparqlW.setQuery(number_of_motivated_agreements)
 		sparqlW.setReturnFormat(JSON)
 		results = sparqlW.query().convert()
@@ -512,7 +673,7 @@ def rankHistorian():
 			SELECT DISTINCT ?h
 			WHERE { ?attr cito:agreesWith ?h }"""
 	try:
-		sparql = SPARQLWrapper(blaze)
+		sparql = SPARQLWrapper(config.SPARQLendpoint)
 		sparql.setQuery(get_historians)
 		sparql.setReturnFormat(JSON)
 		results = sparql.query().convert()
@@ -529,7 +690,7 @@ def rankHistorian():
 			WHERE { ?obs mauth:hasObservedArtist ?a ; 
 					mauth:agreesWith <"""+historian+""">}"""
 		try:
-			sparqlw = SPARQLWrapper(blaze)
+			sparqlw = SPARQLWrapper(config.SPARQLendpoint)
 			sparqlw.setQuery(get_artists)
 			sparqlw.setReturnFormat(JSON)
 			results = sparqlw.query().convert()
@@ -602,7 +763,7 @@ def getLabel(uri):
 		WHERE {<"""+uri+"""> dcterms:title|rdfs:label ?label .}"""
 	try:
 		# exception: fondazione zeri reduced to federico zeri
-		sparql = SPARQLWrapper(blaze)
+		sparql = SPARQLWrapper(config.SPARQLendpoint)
 		# query the linkset of artworks: look for equivalences and return a list of equivalences
 		sparql.setQuery(label)
 		sparql.setReturnFormat(JSON)
@@ -697,10 +858,5 @@ def getURI(inputURL):
 		print 'yes'
 		return iri
 		
-
-
-
-
-
 
 
