@@ -20,6 +20,8 @@ api = Api(app)
 def queryMauth(artwork_iri):
     try:
         # TODO expand the SPARQL query including all the information
+        print "hello mauth"
+        print ("artwork_iri", artwork_iri)
         artwork_iri = artwork_iri.replace('\r','')
         get_history = """ 
         PREFIX mauth: <http://purl.org/emmedi/mauth/>
@@ -32,6 +34,7 @@ def queryMauth(artwork_iri):
                     OPTIONAL {?artwork dcterms:title|rdfs:label ?artworkTitle.} .
                     OPTIONAL {?artist dcterms:title|rdfs:label ?artistTitle.} .
                     OPTIONAL {?obs mauth:hasSourceOfAttribution ?source .} .
+                    OPTIONAL {?obs mauth:citesAsEvidence ?bibl .} .
                     OPTIONAL {?obs mauth:agreesWith ?scholar . ?scholar dcterms:title|rdfs:label ?scholarLabel .} .
                     OPTIONAL {?obs mauth:agreesWith ?scholar . ?scholar mauth:hasHIndex ?h_index .} .
                     OPTIONAL {?obs mauth:agreesWith ?scholar . ?scholar mauth:hasArtistIndex ?a_indexNode . ?a_indexNode mauth:hasIndexedArtist ?artist ; mauth:hasArtistIndex ?a_index} .
@@ -45,6 +48,7 @@ def queryMauth(artwork_iri):
                     OPTIONAL {?other dcterms:title|rdfs:label ?artworkTitle.} .
                     OPTIONAL {?artist dcterms:title|rdfs:label ?artistTitle.} .
                     OPTIONAL {?obs mauth:hasSourceOfAttribution ?source .} .
+                    OPTIONAL {?obs mauth:citesAsEvidence ?bibl .} .
                     OPTIONAL {?obs mauth:agreesWith ?scholar . ?scholar dcterms:title|rdfs:label ?scholarLabel .} .
                     OPTIONAL {?obs mauth:agreesWith ?scholar . ?scholar mauth:hasHIndex ?h_index .} .
                     OPTIONAL {?obs mauth:agreesWith ?scholar . ?scholar mauth:hasArtistIndex ?a_indexNode . ?a_indexNode mauth:hasIndexedArtist ?artist ; mauth:hasArtistIndex ?a_index} .
@@ -59,6 +63,7 @@ def queryMauth(artwork_iri):
                     OPTIONAL {?other dcterms:title|rdfs:label ?artworkTitle.} .
                     OPTIONAL {?artist dcterms:title|rdfs:label ?artistTitle.} .
                     OPTIONAL {?obs mauth:hasSourceOfAttribution ?source .} .
+                    OPTIONAL {?obs mauth:citesAsEvidence ?bibl .} .
                     OPTIONAL {?obs mauth:agreesWith ?scholar . ?scholar dcterms:title|rdfs:label ?scholarLabel .} .
                     OPTIONAL {?obs mauth:agreesWith ?scholar . ?scholar mauth:hasHIndex ?h_index .} .
                     OPTIONAL {?obs mauth:agreesWith ?scholar . ?scholar mauth:hasArtistIndex ?a_indexNode . ?a_indexNode mauth:hasIndexedArtist ?artist ; mauth:hasArtistIndex ?a_index} .
@@ -74,6 +79,7 @@ def queryMauth(artwork_iri):
                     OPTIONAL {?other dcterms:title|rdfs:label ?artworkTitle.} .
                     OPTIONAL {?artist dcterms:title|rdfs:label ?artistTitle.} .
                     OPTIONAL {?obs mauth:hasSourceOfAttribution ?source .} .
+                    OPTIONAL {?obs mauth:citesAsEvidence ?bibl .} .
                     OPTIONAL {?obs mauth:agreesWith ?scholar . ?scholar dcterms:title|rdfs:label ?scholarLabel .} .
                     OPTIONAL {?obs mauth:agreesWith ?scholar . ?scholar mauth:hasHIndex ?h_index .} .
                     OPTIONAL {?obs mauth:agreesWith ?scholar . ?scholar mauth:hasArtistIndex ?a_indexNode . ?a_indexNode mauth:hasIndexedArtist ?artist ; mauth:hasArtistIndex ?a_index} .
@@ -83,13 +89,13 @@ def queryMauth(artwork_iri):
         } 
 
         VALUES ?artwork {<"""+ artwork_iri +""">}"""
-        # TODO change endpoint, or maybe not...
-        sparql = SPARQLWrapper('http://10.16.36.133:9999/blazegraph/sparql')
+        # TODO add bias index
+        sparql = SPARQLWrapper('http://0.0.0.0:9999/blazegraph/sparql')
         sparql.setQuery(get_history)
         sparql.setReturnFormat(JSON)
         results = sparql.query().convert()
-        print (artwork_iri)
-        print ('hello results \n', results)
+        
+        print 'hello results \n', connoisseur.rank(utils.rebuildResults(results))
         #group by provider
         return connoisseur.rank(utils.rebuildResults(results)) 
             
@@ -106,34 +112,63 @@ class FullHistory(Resource):
     
 api.add_resource(FullHistory, '/full/<path:artwork_iri>')
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 @accept('text/html')
 def index():
     # static/index.html
-    return app.send_static_file('index.html')
+    if request.args != '' :
+        print request.args
+        if request.args.get('uri_source'):
+            artwork = utils.getURI(request.args.get('uri_source'))
+        elif request.args.get('id'):
+            artwork = utils.getURI(request.args('id') )
+        elif request.args.get('imageId'):
+            artwork = utils.getURI(request.args['imageId'])
+        else:
+            artwork = request.args
+        results = queryMauth(artwork)
+    else:
+        artwork = ''
+        results = ''
+    return render_template('index.html', results=results, searchURL=artwork)
 
 
 @app.route('/search', methods=['GET'])
 @accept('text/html')
 def search():
     # templates/search.html
-    return render_template('search.html')
-
-
-@app.route('/results', methods=['GET'])
-@accept('text/html')
-def results():
-    # templates/results.html
-    if request.args.get('uri_source'):
-        artwork = utils.getURI(request.args.get('uri_source'))
-    elif request.args.get('id'):
-        artwork = utils.getURI(request.args('id') )
-    elif request.args.get('imageId'):
-        artwork = utils.getURI(request.args['imageId'])
+    if request.args != '' :
+        print request.args
+        if request.args.get('uri_source'):
+            artwork = utils.getURI(request.args.get('uri_source'))
+        elif request.args.get('id'):
+            artwork = utils.getURI(request.args('id') )
+        elif request.args.get('imageId'):
+            artwork = utils.getURI(request.args['imageId'])
+        else:
+            artwork = request.args
+        results = queryMauth(artwork)
     else:
-        artwork = request.args
-    results = queryMauth(artwork)
-    return render_template('results.html', searchURL=artwork, results=results ) 
+        artwork = ''
+        results = ''
+    print artwork , results
+    return render_template('search.html', results=results, searchURL=artwork)
+
+
+# @app.route('/results', methods=['GET'])
+# @accept('text/html')
+# def results():
+#     # templates/results.html
+#     if request.args.get('uri_source'):
+#         artwork = utils.getURI(request.args.get('uri_source'))
+#     elif request.args.get('id'):
+#         artwork = utils.getURI(request.args('id') )
+#     elif request.args.get('imageId'):
+#         artwork = utils.getURI(request.args['imageId'])
+#     else:
+#         artwork = request.args
+#     results = queryMauth(artwork)
+#     return render_template('results.html', searchURL=artwork, results=results ) 
 
 @app.template_filter()
 def maximum(_list):

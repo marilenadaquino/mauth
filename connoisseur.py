@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# python 2! or 3?
 import rdflib, urllib, utils , datetime , sys , re , os.path , logging , csv , json , uuid , time , hydra.tpf
 from rdflib import Graph, Namespace, URIRef , XSD, Namespace , Literal
 from rdflib.namespace import RDF, RDFS , OWL , DC
@@ -12,13 +11,6 @@ from collections import defaultdict
 WHY = Namespace("http://purl.org/emmedi/mauth/")
 PROV = Namespace("http://www.w3.org/ns/prov#")
 CITO = Namespace("http://purl.org/spar/cito/")
-
-# a URI as input
-# query for equivalences in the triple store
-# return a list of URIs
-# open the mapping document
-# fetch data (reuse fetchData)
-# return a graph
 
 attributions_graph = URIRef('http://purl.org/emmedi/mauth/attributions/')
 settingFile = "settings/settings.json"
@@ -79,7 +71,7 @@ def findAttributions(inputURI, objProperty):
 									resultsGraph.add(( URIRef(WHY+instance+'-'+objProperty+'-'+instanceObj+'-obs'), WHY.hasObservedArtwork, URIRef(artwork) ))
 									resultsGraph.add(( URIRef(WHY+instance+'-'+objProperty+'-'+instanceObj+'-obs'), RDFS.label, Literal( data[URIbase]['label'] + ' accepted attribution' ) ))
 									resultsGraph.add(( URIRef(WHY+instance+'-'+objProperty+'-'+instanceObj+'-obs'), WHY.hasType, URIRef(WHY+'accepted') ))
-									# artworkTitle
+									# attribution text field
 									if len(data[URIbase]['notes']) != 0:
 										notesGraph = utils.fetchData(uri=artwork, settingFile="settings/settings.json", inputPattern=str(data[URIbase]['notes']), outputPattern=rdflib.term.URIRef(DC.note))							
 										for a, t, note in notesGraph.triples((URIRef(artwork), DC.note, None)):
@@ -109,11 +101,6 @@ def findAttributions(inputURI, objProperty):
 										singleDateGraph = utils.fetchData(uri=artwork, settingFile="settings/settings.json", inputPattern=str(data[URIbase]['date']), outputPattern=rdflib.term.URIRef(WHY.hasAttributionDate))
 										for s, p, obj in singleDateGraph.triples((URIRef(artwork), WHY.hasAttributionDate, None)):
 											resultsGraph.add(( URIRef(WHY+instance+'-'+objProperty+'-'+instanceObj+'-obs'), WHY.hasAttributionDate, Literal(obj) ))
-									# source
-									if len(data[URIbase]['source']) != 0:
-										singleSourceGraph = utils.fetchData(uri=artwork, settingFile="settings/settings.json", inputPattern=str(data[URIbase]['source']), outputPattern=rdflib.term.URIRef(WHY.hasSourceOfAttribution))
-										for s, p, obj in singleSourceGraph.triples((URIRef(artwork), WHY.hasSourceOfAttribution, None)):
-											resultsGraph.add(( URIRef(WHY+instance+'-'+objProperty+'-'+instanceObj+'-obs'), WHY.hasSourceOfAttribution, URIRef(obj) ))
 									# scholar
 									if len(data[URIbase]['scholar']) != 0:
 										singleSourceGraph = utils.fetchData(uri=artwork, settingFile="settings/settings.json", inputPattern=str(data[URIbase]['scholar']), outputPattern=rdflib.term.URIRef(WHY.agreesWith))
@@ -243,7 +230,8 @@ def update_attributions():
 				else:
 					artworkGraph = findAttributions(artwork, 'artist')
 					print('here we are')
-					resultsGraph += artworkGraph
+					if len(artworkGraph) > 0:
+						resultsGraph += artworkGraph
 		# update triples on blazegraph
 		file_name = str(uuid.uuid4())
 		time = str(datetime.datetime.now()).replace(' ', '').replace(':','').replace('.','').replace('-','')
@@ -280,9 +268,12 @@ def rank(results):
 			artists.append(str(artist))
 			
 		# 1 domain expert
-		if 'Zeri' in x['provider'] or 'I Tatti' in x['provider']:
-			score += 1.00
-			scoreprovider += 1.00
+		if 'Zeri' in x['provider'] or 'I Tatti' in x['provider'] or 'Frick' in x['provider']:
+			if 'discarded' in x['provider']:
+				pass
+			else:
+				score += 1.00
+				scoreprovider += 1.00
 		x['scoreprovider'] = scoreprovider
 		# 2 criterion
 		for criterion in x['criteria']:

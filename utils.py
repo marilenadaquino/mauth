@@ -178,10 +178,11 @@ def rebuildResults(results):
 		date = set()
 		scholars = set()
 		images = set()
+		bibl = set()
 		
 		for attribution in results["results"]["bindings"]:
 			if attribution["obsLabel"]["value"] == provider:
-				attrib['provider'] = re.sub(' accepted attribution','',provider)
+				attrib['provider'] = provider
 				# artwork
 				if attribution["obsLabel"]["value"] == provider and 'artwork' in attribution.keys() and 'other' not in attribution.keys():
 					attrib['artwork'] = attribution["artwork"]["value"]
@@ -204,6 +205,11 @@ def rebuildResults(results):
 					date.add(attribution["date"]["value"])	
 				if  attribution["obsLabel"]["value"] == provider and 'date' not in attribution.keys():
 					date.add('none')
+				# bibl
+				if  attribution["obsLabel"]["value"] == provider and 'bibl' in attribution.keys():
+					bibl.add(attribution["bibl"]["value"])	
+				if  attribution["obsLabel"]["value"] == provider and 'bibl' not in attribution.keys():
+					bibl.add('none')
 				# criteria
 				if  attribution["obsLabel"]["value"] == provider and 'criterion' in attribution.keys():
 					criteria.add(attribution["criterion"]["value"])								
@@ -247,6 +253,7 @@ def rebuildResults(results):
 		attrib['criterionLabel'] = list(criteriaLabel) 
 		attrib['scholar'] = list(scholars) 
 		attrib['images'] = list(images) 
+		attrib['bibl'] = list(bibl) 
 	
 		attributions.append(attrib)
 	
@@ -612,14 +619,16 @@ def getLabel(uri):
 
 def getURI(inputURL):
 	""" given the URL of an online cataloguing record returns the URI of the artwork"""
-	inputURL = urllib.unquote(inputURL)
-	#print inputURL
+	inputURL = urllib.unquote(inputURL).strip()
+	print 'inputURL',inputURL
 	# zeri
 	matchOa = re.compile('^[0-9]+$', re.IGNORECASE|re.DOTALL)
 	matchOaDigit = matchOa.match(inputURL)
 	
 	matchOaItatti = re.compile('^urn', re.IGNORECASE|re.DOTALL)
 	matchOaDigitItatti = matchOaItatti.match(inputURL)
+	
+	# zeri
 	if 'tipo_scheda=OA&id=' in inputURL: # never
 		oa = re.compile('OA&id=(.*)&titolo=', re.IGNORECASE|re.DOTALL)
 		match = oa.search(inputURL)
@@ -630,6 +639,7 @@ def getURI(inputURL):
 	elif matchOaDigit:
 		iri = 'http://purl.org/emmedi/mauth/zeri/artwork/'+inputURL
 		return iri
+	
 	# i tatti
 	elif matchOaItatti:
 		with open('data/itatti/ss_assets_811_130578.csv', 'r') as csvfile:
@@ -639,7 +649,7 @@ def getURI(inputURL):
 				photoOnlineURN = re.sub('drs:', '', str(sheetX['Filename']))
 				if inputURL == photoOnlineURN:
 					iri = 'http://purl.org/emmedi/mauth/itatti/artwork/'+artworkID
-		return iri 
+					return iri 
 	elif 'HVD2&imageId=' in inputURL: # never 
 		oa = re.compile('HVD2&imageId=(.*)&adaptor=', re.IGNORECASE|re.DOTALL)
 		match = oa.search(inputURL)
@@ -652,6 +662,8 @@ def getURI(inputURL):
 					if match.group(1) == photoOnlineURN:
 						iri = 'http://purl.org/emmedi/mauth/itatti/artwork/'+artworkID
 			return iri 
+	
+	# dbpedia
 	elif 'it.wikipedia.org' in inputURL:
 		oa = inputURL.encode('utf8', 'replace').rsplit('/', 1)[-1]
 		iri = 'http://it.dbpedia.org/resource/'+oa
@@ -663,10 +675,15 @@ def getURI(inputURL):
 	elif 'en.wikipedia.org' in inputURL:
 		oa = inputURL.encode('utf8', 'replace').rsplit('/', 1)[-1]
 		iri = 'http://dbpedia.org/resource/'+oa
+		print 'iri', iri
 		return iri
-	elif 'https://www.wikidata.org/wiki/' in inputURL:
-		oa = inputURL.encode('utf8', 'replace').rsplit('/', 1)[-1]
+	
+	# wikidata
+	elif 'wikidata.org/wiki/' in str(inputURL):
 		iri = 'http://www.wikidata.org/entity/'+oa
+		return iri
+
+	# viaf
 	elif 'https://viaf.org/viaf/' in inputURL:
 		if inputURL.endswith('/'):
 			iri = inputURL[:-1]
@@ -674,9 +691,12 @@ def getURI(inputURL):
 			iri = customSplitURI(inputURL, 5)
 		else:
 			iri = inputURL
+		return iri
 	else:
-		return inputURL
-
+		iri = inputURL
+		print 'yes'
+		return iri
+		
 
 
 

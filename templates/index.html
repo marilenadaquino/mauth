@@ -16,7 +16,7 @@ Created by pixpalette.com - online design magazine -->
     <!-- fonts -->
     <link href='http://fonts.googleapis.com/css?family=Nixie+One' rel='stylesheet' type='text/css'>
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,900" rel="stylesheet">
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -49,6 +49,7 @@ Created by pixpalette.com - online design magazine -->
                     Mining Authoritativeness<br> in Art History
                     <span>A crawler of authorship attributions</span>
                     </h2>
+                    <p>created by <a href="https://www.unibo.it/sitoweb/marilena.daquino2/en" target="_blank">MD</a></p>
                 </div>
             </div>
             <div class="col-sm-7 right-wrapper">
@@ -80,8 +81,8 @@ Created by pixpalette.com - online design magazine -->
                           <!-- form -->
                           <div class="col-md-12">
                             <form method="GET" action="{{ url_for('search', uri_source=uri_source) }}">
-                                <textarea  class="form-control" name="uri_source"></textarea>
-                                <input type="submit" class="btn disabled" value="Go!">
+                                <textarea name="uri_source"></textarea>
+                                <input type="submit" value="Go!">
                             </form>
                           </div>
 
@@ -232,7 +233,11 @@ Created by pixpalette.com - online design magazine -->
                                                         {% if attribution['scholar'] %}
                                                           {% for scholarUri in attribution['scholar'] %}
                                                             {% for scholar in attribution[scholarUri] %}
-                                                              <span>{{ scholar['label'].encode('utf-8') }} (</span>
+                                                              {% if scholar['label'] %}
+                                                                <span>{{ scholar['label'].encode('utf-8') }} (</span>
+                                                              {% else %}
+                                                                <span> {{scholarUri.rsplit('/', 1)[-1]| replace("_", " ")}}</span>
+                                                              {% endif %}
                                                               <small class="scholarIndex">h index: {{ scholar['h_index'] }}; </small>
                                                               <small class="scholarIndex">citations related to the artist: <span>{{ (scholar['a_index']|float*100)|int }}</span>%</small>
                                                               {% if scholar['auth_index'] %}
@@ -262,10 +267,9 @@ Created by pixpalette.com - online design magazine -->
                               {% endfor %}
                               
                           {% endif %}
-                    
+                          
+                        </div>
                     </div>
-                    <h4>Do you see anything wrong? | Do you want to suggest an improvement? <a href="https://goo.gl/forms/Tfr6sEr8FkJfFPOH2" target='_blank'>Leave a feedback!</a></h4> 
-                  </div>
                 
                 </div>
                 
