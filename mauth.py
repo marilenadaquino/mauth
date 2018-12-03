@@ -85,7 +85,7 @@ def queryMauth(artwork_iri):
             }        
     } 
 
-    VALUES ?artwork {<"""+ artwork_iri +""">}"""
+    VALUES ?artwork {<"""+ str(artwork_iri) +""">}"""
 	try:
 		artwork_iri = artwork_iri.replace('\r','')
 		print "hello mauth! I'm looking for: ", artwork_iri

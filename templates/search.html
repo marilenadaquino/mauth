@@ -93,21 +93,7 @@ Created by pixpalette.com - online design magazine -->
                             <div class="col-md-12">
                                 <blockquote>
                                   <p>{{ results|length }} attributions found. </p>
-                                      {% if results|length > 0 %}
-                                        <p>The author is likely to be
-                                          {% set top = results|groupby('score')|maximum %}
-                                          {% for attribution in results %}
-                                            {% if attribution['score'] == top %}
-                                              {{ attribution['artistTitle'][0] }}.
-                                            {% endif %}
-                                          {% endfor %} The most documented attribution is provided by 
-                                          {% for attribution in results %}
-                                            {% if attribution['score'] == top %}
-                                              {{ attribution['provider'] }}.
-                                            {% endif %}
-                                          {% endfor %}
-                                        </p>
-                                      {% endif %}
+                                      
                                 </blockquote>
                               </div>
                               <div id="jssor_1" style="position:relative;margin:0.5em auto;top:0px;left:0px;width:600px;height:500px;overflow:hidden;visibility:hidden;">
@@ -119,9 +105,11 @@ Created by pixpalette.com - online design magazine -->
                                   {% for attribution in results %}
                                     {% if attribution['images'] and attribution['images'][0] != 'none'%}
                                       {% for image in attribution['images']%}
-                                        <div>
-                                          <img data-u="image" src='{{ image }}' alt='a beautiful picture' />
-                                        </div>
+                                        {% if 'fondazionezeri' not in image %}
+                                            <div>
+                                              <img data-u="image" src='{{ image }}' alt='a beautiful picture' />
+                                            </div>
+                                        {% endif %}
                                       {% endfor %}
                                     
                                     {% endif %}
@@ -278,10 +266,12 @@ Created by pixpalette.com - online design magazine -->
                                           </div>
                                     </div>
                               {% endfor %}
-                              
+                           
+
                         {% endif %}
                     
                     </div>
+                    <h4>mAuth accepts URLs from the <a href="http://catalogo.fondazionezeri.unibo.it/ricerca.v2.jsp?percorso_ricerca=OA&decorator=layout_resp&apply=true&locale=en&ANNO_INIZIALE=1500&ANNO_FINALE=1600&sortby=LOCALIZZAZIONE&batch=10">online Zeri Catalogue</a>, in particular of artworks belonging to the Modern Art. Copy and paste the URL of a catalogue record in the text area and click Go! See for instance, <a href="http://163.172.177.79:8000/search?uri_source=http%3A%2F%2Fcatalogo.fondazionezeri.unibo.it%2Fscheda.v2.jsp%3Ftipo_scheda%3DOA%26id%3D45087%26titolo%3DVecellio%2520Tiziano%2C%2520Ritratto%2520di%2520gentildonna%26locale%3Den%26decorator%3Dlayout_resp%26apply%3Dtrue"><i>La Schiavona</i></a> </h4>
                     <h4>Do you see anything wrong? | Do you want to suggest an improvement? <a href="https://goo.gl/forms/Tfr6sEr8FkJfFPOH2" target='_blank'>Leave a feedback!</a></h4> 
                 </div>
                 
