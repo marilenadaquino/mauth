@@ -16,7 +16,7 @@ Created by pixpalette.com - online design magazine -->
     <!-- fonts -->
     <link href='http://fonts.googleapis.com/css?family=Nixie+One' rel='stylesheet' type='text/css'>
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,900" rel="stylesheet">
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -47,7 +47,7 @@ Created by pixpalette.com - online design magazine -->
                 
                 	<h2>
                     Mining Authoritativeness<br> in Art History
-                    <span>A crawler of authorship attributions</span>
+                    <span>A crawler of artwork attributions</span>
                     </h2>
                 </div>
             </div>
@@ -67,43 +67,28 @@ Created by pixpalette.com - online design magazine -->
                   <div class="tab-content">
                     <!-- about -->
                     <div role="tabpanel" class="tab-pane fade in active" id="venue">
-                    	<h4> mAuth is a tool for art historians, data collection managers, and curious, who want to collect information - historians' opinions, motivations, bibliographic references, and images - about the history of authorship attributions related to artworks of the Modern Art (15-16th centuries).</h4><br>
+                    	<h4>mAuth is a tool for art historians, data collection managers, and curious, who want to collect information - historians' opinions, motivations, bibliographic references, and images - about artwork attributions related to artworks of the Modern Art (15-16th centuries).</h4><br>
                       <p><strong>WHAT -</strong> mAuth is a semantic crawler designed for harvesting information about authorship attributions in the web of data. The mAuth API - the one that does all the hard job! -  is implemented in Python, using Flask microframework.</p>
                       <p><strong>WHY -</strong> mAuth is a proof of concept. The aim is leveraging Semantic Web technologies to (a) support historians' daily tasks (such as retrieving information and sources), (b) evaluate the methodology underpinning decisions made by art historical data providers, and (c) investigate how concepts like 'authoritativeness' can be automatically interpreted given a set of rules and believes shared in a community.</p>
                       <p><strong>HOW -</strong> Attributions are sorted so as to immediately highlight the most well-documented, updated, and authoritative ones. The ranking is based on common requirements in the art historical methodology - e.g. timeliness of the attribution, completeness of information, and trustworthiness of the source of information.</p>
                       <p><strong>LIMITS -</strong> Attributions are extracted from secondary sources (e.g. cataloguing records, online web pages, bibliographies), hence data providers' authoritativeness is evaluated rather than the goodness of the attribution itself. Data sources currently harvested include art historical photo archives, such as the Federico Zeri Foundation (University of Bologna), the Berenson Library, Villa I Tatti (Univeristy of Harvard), and the Frick Art Reference Library of New York; multipurposes datasets, such as Wikidata, DBpedia, and VIAF; and libraries, such as BNF, LOC, DBN. More data sources will be (hopefully!) added soon.</p>
-                      <h4><a href="https://github.com/marilenadaquino/mauth">Source code and documentation</a></h4>   
+                      <h4><a href="https://github.com/marilenadaquino/mauth">Source code</a> and <a href="./swagger/">API documentation</a></h4>   
                     </div>
                     <!-- search and results -->
                     <div role="tabpanel" class="tab-pane fade" id="buyTicket">
                       <div class="row">
                           <!-- form -->
-                          <div class="col-md-12">
-                            <form method="GET" action="{{ url_for('search', uri_source=uri_source) }}">
-                                <textarea  class="form-control" name="uri_source"></textarea>
-                                <input type="submit" class="btn disabled" value="Go!">
-                            </form>
-                          </div>
+                            <div class="col-md-12">
+                              <form method="GET" action="{{ url_for('search', uri_source=uri_source) }}">
+                                  <textarea  class="form-control" name="uri_source"></textarea>
+                                  <input type="submit" class="go" value="Go!">
+                              </form>
+                            </div>
 
                           {% if results %}
                             <div class="col-md-12">
                                 <blockquote>
                                   <p>{{ results|length }} attributions found. </p>
-                                      {% if results|length > 0 %}
-                                        <p>The author is likely to be
-                                          {% set top = results|groupby('score')|maximum %}
-                                          {% for attribution in results %}
-                                            {% if attribution['score'] == top %}
-                                              {{ attribution['artistTitle'][0] }}.
-                                            {% endif %}
-                                          {% endfor %} The most documented attribution is provided by 
-                                          {% for attribution in results %}
-                                            {% if attribution['score'] == top %}
-                                              {{ attribution['provider'] }}.
-                                            {% endif %}
-                                          {% endfor %}
-                                        </p>
-                                      {% endif %}
                                 </blockquote>
                               </div>
                               <div id="jssor_1" style="position:relative;margin:0.5em auto;top:0px;left:0px;width:600px;height:500px;overflow:hidden;visibility:hidden;">
@@ -115,9 +100,11 @@ Created by pixpalette.com - online design magazine -->
                                   {% for attribution in results %}
                                     {% if attribution['images'] and attribution['images'][0] != 'none'%}
                                       {% for image in attribution['images']%}
-                                        <div>
-                                          <img data-u="image" src='{{ image }}' alt='a beautiful picture' />
-                                        </div>
+                                        {% if 'fondazionezeri' not in image %}
+                                            <div>
+                                              <img data-u="image" src='{{ image }}' alt='a beautiful picture' />
+                                            </div>
+                                        {% endif %}
                                       {% endfor %}
                                     {% else %}
                                       <p> no images available</p>
@@ -232,7 +219,11 @@ Created by pixpalette.com - online design magazine -->
                                                         {% if attribution['scholar'] %}
                                                           {% for scholarUri in attribution['scholar'] %}
                                                             {% for scholar in attribution[scholarUri] %}
-                                                              <span>{{ scholar['label'].encode('utf-8') }} (</span>
+                                                              {% if scholar['label'] %}
+                                                                <span>{{ scholar['label'].encode('utf-8') }} (</span>
+                                                              {% else %}
+                                                                <span> {{scholarUri.rsplit('/', 1)[-1]| replace("_", " ")}}</span>
+                                                              {% endif %}
                                                               <small class="scholarIndex">h index: {{ scholar['h_index'] }}; </small>
                                                               <small class="scholarIndex">citations related to the artist: <span>{{ (scholar['a_index']|float*100)|int }}</span>%</small>
                                                               {% if scholar['auth_index'] %}
@@ -262,11 +253,12 @@ Created by pixpalette.com - online design magazine -->
                               {% endfor %}
                               
                           {% endif %}
-                    
-                    </div>
+                          
+                        </div>
+                        <h4>mAuth accepts URLs from the <a href="http://catalogo.fondazionezeri.unibo.it/ricerca.v2.jsp?percorso_ricerca=OA&decorator=layout_resp&apply=true&locale=en&ANNO_INIZIALE=1500&ANNO_FINALE=1600&sortby=LOCALIZZAZIONE&batch=10">online Zeri Catalogue</a>, in particular of artworks belonging to the Modern Art. Copy and paste the URL of a catalogue record in the text area and click Go! See for instance, <a href="http://163.172.177.79:8000/search?uri_source=http%3A%2F%2Fcatalogo.fondazionezeri.unibo.it%2Fscheda.v2.jsp%3Ftipo_scheda%3DOA%26id%3D39794%26titolo%3DVecellio%2520Tiziano%2C%2520Ritratto%2520di%2520gentildonna%26locale%3Den%26decorator%3Dlayout_resp%26apply%3Dtrue"><i>The Three Graces</i></a> </h4>
                     <h4>Do you see anything wrong? | Do you want to suggest an improvement? <a href="https://goo.gl/forms/Tfr6sEr8FkJfFPOH2" target='_blank'>Leave a feedback!</a></h4> 
-                  </div>
-                
+                    </div>
+                    
                 </div>
                 
                 	<!-- <div class="cart">
@@ -288,57 +280,7 @@ Created by pixpalette.com - online design magazine -->
         </div>
     </div>
 
-<!-- Modal -->
-<div class="modal right fade" id="ticket-details" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <!--<div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Share your contact Details</h4>
-      </div>-->
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        	<img src="images/icons/cancel.png">
-        </button>
-        <h4 class="modal-title">Your Tickets</h4>
-      </div>
-      <div class="modal-body">
-        
-        <div class="cart-information">
-            	<div class="ticket-type"></div>
-          		<ul>
-	                <li>Tickets: <span class="ticket-count"></span></li>
-                    <li>Price: <span class="ticket-amount"></span></li>
-                    <hr>
-                    <li>Total: <span class="total-amount"></span></li>
-    			</ul>
-            </div>
-            
-            <div class="contactForm">	
-                <h3>Share your contact Details</h3>
-                <form>
-                  <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Enter your name">
-                  </div>
-                  
-                  <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Enter your Email ID">
-                  </div>
-                  
-                  <div class="form-group">
-                     <input type="text" class="form-control" placeholder="Enter your Mobile No.">
-                  </div>
-                  
-        		  <a type="submit" class="btn">Proceed to Payment</a>
-                </form>
-            </div>
-        
-        
-        
-      </div>
-    </div>
-  </div>
-</div>
+
     
     
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

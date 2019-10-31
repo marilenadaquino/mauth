@@ -39,13 +39,13 @@ def clean_to_uri(stringa):
 
 
 # 1. create rdf data 
-def frick_to_rdf():
+def to_rdf(initial_csv,frick_rdf):
 	""" extract data from xls file and transform artworks, creation, attributions and artists"""	
 	g=rdflib.ConjunctiveGraph(identifier=URIRef(frick_graph))
 	g.bind('owl', OWL)
 	g.bind('crm', CIDOC)
 	g.bind('hico', HICO)
-	with open('Frick_Photoarchive_Italian_16_century.csv', 'r', encoding='utf-8') as csvfile:
+	with open(initial_csv, 'r', encoding='utf-8') as csvfile:
 		reader = csv.DictReader(csvfile)
 		for sheetX in reader:
 			artworkID = sheetX['RECORD #(BIBLIO)']
@@ -84,20 +84,19 @@ def frick_to_rdf():
 					g.add(( URIRef(base+'artist/anonymous') , DCTERMS.title , Literal('anonymous') ))
 				
 				# alternative attributions
-	return g.serialize(destination='FINAL_frick.nq', format='nquads')
+	return g.serialize(destination=frick_rdf, format='nquads')
 
-frick_to_rdf()
 
 
 # 2. reconcile artists to VIAF and co. and manually double check DONE
-def reconcile_frick_artists_to_viaf():
+def reconcile_artists_to_viaf(artists_frick_viaf, frick_rdf):
 	""" parse the .nq file, get the artists, fuzzy string matching to VIAF, create a csv 'artists_frick_viaf.csv' to be manually double checked"""
 	baseURL = 'http://viaf.org/viaf/search/viaf?query=local.personalNames+%3D+%22'
-	f=csv.writer(open('artists_frick_viaf.csv', 'w', encoding='utf-8'))
+	f=csv.writer(open(artists_frick_viaf, 'w', encoding='utf-8'))
 	f.writerow(['id']+['search']+['result']+['viaf']+['lc']+['isni']+['ratio']+['partialRatio']+['tokenSort']+['tokenSet']+['avg'])
 
 	g=rdflib.ConjunctiveGraph(identifier=URIRef(frick_graph))
-	g.parse("frick.nq", format="nquads")
+	g.parse(frick_rdf, format="nquads")
 	g.bind('owl', OWL)
 	names = set()
 	for s,p,o in g.triples((None, CIDOC.P14_carried_out_by, None)):
@@ -115,7 +114,6 @@ def reconcile_frick_artists_to_viaf():
 		try:
 			response = response[response.index('<recordData xsi:type="ns1:stringOrXmlFragment">')+47:response.index('</recordData>')].replace('&quot;','"')
 			response = json.loads(response)
-			print (response)
 			label = response['mainHeadings']['data'][0]['text']
 			viafid = response['viafID']	
 		except:
@@ -143,15 +141,13 @@ def reconcile_frick_artists_to_viaf():
 			isni = ''
 		f.writerow([idName]+[name.strip()]+[label]+[viafid]+[lc]+[isni]+[ratio]+[partialRatio]+[tokenSort]+[tokenSet]+[avg])
 
-# reconcile_frick_artists_to_viaf()
-
 
 # 3. create the linkset of artists
-def frick_artists_linkset():
+def artists_linkset(FINAL_artists_frick_viaf,linkset_artists_frick):
 	""" read the csv manually double checked, renamed 'FINAL_artists_frick_viaf.csv', and create a linkset for artists."""
 	g=rdflib.ConjunctiveGraph(identifier=URIRef(artists_graph))
 	g.bind('owl', OWL)
-	with open('FINAL_artists_frick_viaf.csv', 'r', encoding='utf-8') as csvfile:
+	with open(FINAL_artists_frick_viaf, 'r', encoding='utf-8') as csvfile:
 		reader = csv.DictReader(csvfile)
 		for row in reader:
 			uri = row['id'].strip()
@@ -166,36 +162,34 @@ def frick_artists_linkset():
 				g.add(( URIRef(uri) , OWL.sameAs , URIRef(lc) ))
 			if isni != '':
 				g.add(( URIRef(uri) , OWL.sameAs , URIRef(isni) ))
-	g.serialize(destination='linkset_artists_frick.nq', format='nquads')
-
-#frick_artists_linkset()
+	g.serialize(destination= linkset_artists_frick, format='nquads')
 
 
-def export_attr():
+def export_attr(initial_csv, tb_revised_csv):
 	""" extract attributions and create a csv to be reviewed manually"""
-	f=csv.writer(open('attributions_frick_viaf.csv', 'w', encoding='utf-8'))
+	f=csv.writer(open(tb_revised_csv, 'w', encoding='utf-8'))
 	f.writerow(['artwork']+['artist_accepted']+['provenance']+['source']+['attribution_tbcleaned']+['accepted_attribution']+['accepted_criterion']+['discarded_attribution1']+['discarded_criterion1']+['discarded_attribution2']+['discarded_criterion2']+['discarded_attribution3']+['discarded_criterion3'])
-	with open('Frick_Photoarchive_Italian_16_century.csv', 'r', encoding='utf-8') as csvfile:
-			reader = csv.DictReader(csvfile)
-			attributions = set()
-			for sheetX in reader:
-				artworkID = sheetX['RECORD #(BIBLIO)']
-				artistLabel = sheetX['FRICK ARTIST NAME']
-				provenance = sheetX['PROVENANCE']
-				source = sheetX['SOURCES']
-				attributionLabel = sheetX['ATTRIBUTION HISTORY']
-				f.writerow([artworkID]+[artistLabel]+[provenance]+[source]+[attributionLabel])
+	with open(initial_csv, 'r', encoding='utf-8') as csvfile:
+		reader = csv.DictReader(csvfile)
+		attributions = set()
+		for sheetX in reader:
+			artworkID = sheetX['RECORD #(BIBLIO)']
+			artistLabel = sheetX['FRICK ARTIST NAME']
+			provenance = sheetX['PROVENANCE']
+			source = sheetX['SOURCES']
+			attributionLabel = sheetX['ATTRIBUTION HISTORY']
+			f.writerow([artworkID]+[artistLabel]+[provenance]+[source]+[attributionLabel])
 
 # 5. get the criteria underpinning the attribution
-def methodology_frick():
+def methodology_frick(frick_rdf,attributions_revised):
 	""" attributions extracted from the manually revised file"""
 	g=rdflib.ConjunctiveGraph(identifier=URIRef(frick_graph))
-	g.parse("FINAL_frick.nq", format="nquads")
+	g.parse(frick_rdf, format="nquads")
 	g.bind('hico', HICO)
 	g.bind('cito', CITO)
 	g.bind('prov', PROV)
 
-	with open('attributions_frick_viaf.csv', encoding='utf-8') as csvfile:
+	with open(attributions_revised, encoding='utf-8') as csvfile:
 		reader = csv.DictReader(csvfile)
 		for row in reader: 
 			artworkID = (row['artwork'])
@@ -344,9 +338,6 @@ def methodology_frick():
 						# date:
 						if str(discarded_date1) != '':
 							g.add(( URIRef(base+'artwork/'+artworkID+'/attribution'+str(n)) , PROV.startedAtTime , Literal(discarded_date1.strip()+'-01-01T00:00:01Z', datatype=XSD.dateTime) ))
-						
-
-
 
 				# discarded 2
 				if str(discarded_attribution2) != '':
@@ -435,13 +426,6 @@ def methodology_frick():
 						if str(discarded_date2) != '':
 							g.add(( URIRef(base+'artwork/'+artworkID+'/attribution'+str(n)) , PROV.startedAtTime , Literal(discarded_date2.strip()+'-01-01T00:00:01Z', datatype=XSD.dateTime) ))
 				
-
-
-
-
-
-
-
 					# discarded 3
 					if str(discarded_attribution3) != '':
 						# multiple discarded 2 
@@ -528,17 +512,5 @@ def methodology_frick():
 							if str(discarded_date3) != '':
 								g.add(( URIRef(base+'artwork/'+artworkID+'/attribution'+str(n)) , PROV.startedAtTime , Literal(discarded_date3.strip()+'-01-01T00:00:01Z', datatype=XSD.dateTime) ))
 
-	return g.serialize(destination='FINAL_frick.nq', format='nquads')	
+	return g.serialize(destination=frick_rdf, format='nquads')	
 
-methodology_frick()
-
-
-
-# with open('attributions_frick_viaf.csv', encoding='utf-8') as csvfile:
-# 	reader = csv.DictReader(csvfile)
-# 	n = 0
-# 	for row in reader: 
-# 		discarded_attribution1 = row['discarded_attribution1']
-# 		if str(discarded_attribution1) != '':
-# 			n += 1
-# print(n)

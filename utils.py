@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
-import rdflib , hydra.tpf , SPARQLWrapper , logging , datetime , time , uuid , random , json , re , sys , os.path , csv , urllib , config
+import rdflib , hydra , tpf , SPARQLWrapper , logging , datetime , time , uuid , random , json , re , sys , os.path , os, csv , config
 from rdflib import URIRef , XSD, Namespace , Literal 
 from rdflib.plugins.sparql import prepareQuery
 from rdflib.namespace import OWL, DC , RDF , RDFS
 from SPARQLWrapper import SPARQLWrapper, JSON 
 from pymantic import sparql
+from urllib.parse import unquote , urlparse
 
 logging.basicConfig()
-
+dirpath = os.getcwd()
 # namespaces
 WHY = Namespace("http://purl.org/emmedi/mauth/")
 PROV = Namespace("http://www.w3.org/ns/prov#")
@@ -94,19 +95,21 @@ def fetchData(uri, settingFile, inputPattern, outputPattern, outputGraph):
 				try:
 					sparql = SPARQLWrapper(SPARQLendpoint)
 					sparql.setQuery(queryEntity)
-					print queryEntity
+					
 					sparql.setReturnFormat(JSON)
 					results = sparql.query().convert()
-					resultsList = list(result["b"]["value"] for result in (results["results"]["bindings"]) if result["b"]["value"] != [])		
-					for result in resultsList:
-						if 'http' in str(result):
-							URIGraph.add((URIRef(uri), URIRef(outputPattern), URIRef(result) ))
-						else:
-							URIGraph.add((URIRef(uri), URIRef(outputPattern), Literal(result.encode('utf8', 'replace') ) ))
-					if str(inputPattern) == 'http://www.w3.org/2002/07/owl#sameAs':
-						URIGraph.add((URIRef(uri), URIRef(outputPattern), URIRef(uri)))
+					resultsList = list(result["b"]["value"] for result in (results["results"]["bindings"]) if len(result["b"]) !=0 and result["b"]["value"] != [])		
+					if len(resultsList) != 0:	
+						for result in resultsList:
+							if 'http' in str(result):
+								URIGraph.add((URIRef(uri), URIRef(outputPattern), URIRef(result) ))
+								print(uri,'endpoint',result)
+							else:
+								URIGraph.add((URIRef(uri), URIRef(outputPattern), Literal(result ) ))
+						if str(inputPattern) == 'http://www.w3.org/2002/07/owl#sameAs':
+							URIGraph.add((URIRef(uri), URIRef(outputPattern), URIRef(uri)))
 				except Exception as error:
-					print (uri, "no results for this SPARQL query at ", result.encode('utf8', 'replace') , error)
+					print (uri, "no results for this SPARQL query " , error)
 			elif "content-negotiation" in data_source[URIbase]:
 				try:
 					for src, dst in data_source[URIbase]["content-negotiation"].items():
@@ -115,7 +118,7 @@ def fetchData(uri, settingFile, inputPattern, outputPattern, outputGraph):
 							newPrefix = 'http://ta.sandrart.net/services/rdf'
 							newUri = re.sub('/[^-]*/', newPrefix, uri)
 							graphTBL = re.sub('-', '/', newUri)
-							print graphTBL
+							print(graphTBL)
 						else:
 							graphTBL = re.sub(src, dst, uri)
 					tempGraph = rdflib.Graph()
@@ -124,30 +127,33 @@ def fetchData(uri, settingFile, inputPattern, outputPattern, outputGraph):
 						SELECT DISTINCT ?b 
 						WHERE { ?a """+inputPattern+""" ?b }"""
 					results = tempGraph.query(q)
-					for result in results:
-						if 'http' in str(result):
-							URIGraph.add((URIRef(uri), URIRef(outputPattern), URIRef(result)))
-						else:
-							URIGraph.add((URIRef(uri), URIRef(outputPattern), Literal(result.encode('utf8', 'replace') ) ))
-					if str(inputPattern) == 'http://www.w3.org/2002/07/owl#sameAs':
-						URIGraph.add((URIRef(uri), rdflib.term.URIRef(outputPattern), URIRef(uri)))
+					if len(results) != 0:
+						for result in results:
+							if 'http' in str(result):
+								URIGraph.add((URIRef(uri), URIRef(outputPattern), URIRef(result)))
+								print(uri,'content-negotiation',result)
+							else:
+								URIGraph.add((URIRef(uri), URIRef(outputPattern), Literal(result ) ))
+						if str(inputPattern) == 'http://www.w3.org/2002/07/owl#sameAs':
+							URIGraph.add((URIRef(uri), rdflib.term.URIRef(outputPattern), URIRef(uri)))
 				except:
-				  	print ("No content-negotiation supported")
+				  	print (uri,"No content-negotiation supported")
 			elif "linkeddatafragments" in data_source[URIbase]:
 				try:
 					LDFGraph=rdflib.Graph("TPFStore")
 					LDF = data_source[URIbase]["linkeddatafragments"]
 					LDFGraph.open(LDF)
 					results = LDFGraph.query(queryEntity)
-					for result in results:
-						if 'http' in str(result):
-							URIGraph.add(( URIRef(uri), URIRef(outputPattern), URIRef('%s')%result ))
+					if len(results) != 0:
+						for result in results:
+							if 'http' in str(result):
+								URIGraph.add(( URIRef(uri), URIRef(outputPattern), URIRef('%s')%result ))
+								print(uri,'linkeddatafragments',result)
+							else:
+								URIGraph.add(( URIRef(uri), URIRef(outputPattern), rdflib.term.Literal(result[0])  ))
 							
-						else:
-							URIGraph.add(( URIRef(uri), URIRef(outputPattern), rdflib.term.Literal(result[0])  ))
-						
-					if str(inputPattern) == 'http://www.w3.org/2002/07/owl#sameAs':
-						URIGraph.add((URIRef(uri), URIRef(outputPattern), URIRef(uri)))
+						if str(inputPattern) == 'http://www.w3.org/2002/07/owl#sameAs':
+							URIGraph.add((URIRef(uri), URIRef(outputPattern), URIRef(uri)))
 				except Exception as error:
 					print (uri, error)	
 			else:
@@ -188,7 +194,7 @@ def fetchBindingsData(uri, uriBind, settingFile, inputPattern, inputPattern2, ou
 				try:
 					sparql = SPARQLWrapper(SPARQLendpoint)
 					sparql.setQuery(queryEntity)
-					print queryEntity
+					print (queryEntity)
 					sparql.setReturnFormat(JSON)
 					results = sparql.query().convert()
 					resultsList = list(result["b"]["value"] for result in (results["results"]["bindings"]) if result["b"]["value"] != [])		
@@ -209,7 +215,7 @@ def fetchBindingsData(uri, uriBind, settingFile, inputPattern, inputPattern2, ou
 							newPrefix = 'http://ta.sandrart.net/services/rdf'
 							newUri = re.sub('/[^-]*/', newPrefix, uri)
 							graphTBL = re.sub('-', '/', newUri)
-							print graphTBL
+							print (graphTBL)
 						else:
 							graphTBL = re.sub(src, dst, uri)
 					tempGraph = rdflib.Graph()
@@ -252,11 +258,6 @@ def fetchBindingsData(uri, uriBind, settingFile, inputPattern, inputPattern2, ou
 	return URIGraph
 
 #fetchData('http://dbpedia.org/resource/A_Man_with_a_Quilted_Sleeve', config.settingsFile, 'http://dbpedia.org/ontology/author / http://www.w3.org/2000/01/rdf-schema#label', URIRef('http://dbpedia.org/ontology/author') , URIRef('http://dbpedia.org/resources') )
-
-
-
-
-
 
 
 def rank(results):
@@ -523,7 +524,7 @@ def hindex(citationsArray):
 		else:
 			count[x] += 1
 	h = 0
-	for i in reversed(xrange(0, n + 1)):
+	for i in reversed(range(0, n + 1)):
 		h += count[i]
 		if h >= i:
 			return i
@@ -553,19 +554,19 @@ def rankHistorianByArtist(historian, artist):
 		WHERE { {?creation <http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by> 
                <"""+str(artist)+"""> .} UNION
 	       {?creation <http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by> ?artist . 
-	        	?artist owl:sameAs ?common . <"""+str(artist)+"""> owl:sameAs ?common .} .
+	        	?artist (^owl:sameAs|owl:sameAs)* <"""+str(artist)+""">  .} .
 	       
 	       ?creation <http://www.w3.org/ns/prov#wasGeneratedBy> ?attribution .
 	       ?attribution <http://purl.org/emmedi/hico/hasInterpretationType> ?accepted . 
 	       { ?attribution <http://purl.org/spar/cito/agreesWith> <"""+str(historian)+"""> .} UNION
 	       { ?attribution <http://purl.org/spar/cito/agreesWith> ?historian . 
-	        	?historian owl:sameAs ?commonH . <"""+str(historian)+"""> owl:sameAs ?commonH .} 
+	        	?historian (^owl:sameAs|owl:sameAs)* <"""+str(historian)+"""> .} 
 	       FILTER regex(str(?accepted),'preferred','i')
 			?artwork <http://www.cidoc-crm.org/cidoc-crm/P94i_was_created_by> ?creation .      
 	      }"""
 	try:
 		# exception: fondazione zeri reduced to federico zeri
-		sparql = SPARQLWrapper(blaze)
+		sparql = SPARQLWrapper(config.SPARQLendpoint)
 		# query the linkset of artworks: look for equivalences and return a list of equivalences
 		sparql.setQuery(number_of_artworks)
 		sparql.setReturnFormat(JSON)
@@ -573,8 +574,8 @@ def rankHistorianByArtist(historian, artist):
 		for result in (results["results"]["bindings"]): 
 			if result["count"]["value"] != '':
 				numberArtworks = result["count"]["value"]
-	except:
-		pass
+	except Exception as error:
+		print('number_of_artworks',error)
 	
 	try:
 		sparqlW = SPARQLWrapper(config.SPARQLendpoint)
@@ -584,10 +585,13 @@ def rankHistorianByArtist(historian, artist):
 		for result in (results["results"]["bindings"]): 
 			if result["count"]["value"] != '':
 				numberAgreements = result["count"]["value"]
-		a_index = float(numberAgreements) / float(numberArtworks)
-		return float(round(a_index, 2))
-	except:
-		pass
+		if numberArtworks !=0:
+			a_index = (float(numberAgreements) / float(numberArtworks))*100
+			return float(round(a_index, 2))
+		else:
+			a_index = float(0)
+	except Exception as error:
+		print('number_of_agreements',error)
 
 
 def rankHistorianBias(historian, artist):
@@ -660,7 +664,7 @@ def rankHistorianBias(historian, artist):
 		pass
 
 
-def rankHistorian():
+def rankHistorian(historiansIndexes_rdf):
 	""" given the uri of a historian, look into domain experts' datasets 
 	to see how many times s/he is cited wrt the specified artist and calculate the h-index for an artist. 
 	ATM only Itatti and Zeri are considered. Load triples on a named graph """
@@ -673,16 +677,16 @@ def rankHistorian():
 			SELECT DISTINCT ?h
 			WHERE { ?attr cito:agreesWith ?h }"""
 	try:
-		sparql = SPARQLWrapper(config.SPARQLendpoint)
-		sparql.setQuery(get_historians)
-		sparql.setReturnFormat(JSON)
-		results = sparql.query().convert()
+		sparq = SPARQLWrapper(config.SPARQLendpoint)
+		sparq.setQuery(get_historians)
+		sparq.setReturnFormat(JSON)
+		results = sparq.query().convert()
 		historians = list(result["h"]["value"] for result in (results["results"]["bindings"]) if result["h"]["value"] != [])
-	except:
+	except Exception as error:
+		print("get_historians",error)
 		pass
 
 	for historian in historians:
-		print (historian)
 		get_artists = """
 			PREFIX owl: <http://www.w3.org/2002/07/owl#>
 			PREFIX mauth: <http://purl.org/emmedi/mauth/>
@@ -695,18 +699,19 @@ def rankHistorian():
 			sparqlw.setReturnFormat(JSON)
 			results = sparqlw.query().convert()
 			artists = list(result["a"]["value"] for result in (results["results"]["bindings"]) if result["a"]["value"] != [])
-		except:
+		except Exception as error:
+			print("get_artists",error)
 			pass
 
 		# Artist_Index
 		for artist in artists:
-			print (artist)
 			a_index = rankHistorianByArtist(historian, artist)
-			print ('a index:', a_index)
-			historiansIndexesGraph.add(( URIRef(historian), WHY.hasArtistIndex, URIRef(historian+'/'+artist) ))
-			historiansIndexesGraph.add(( URIRef(historian+'/'+artist), WHY.hasArtistIndex, Literal(a_index, datatype=XSD.float) ))
-			historiansIndexesGraph.add(( URIRef(historian+'/'+artist), WHY.hasIndexedHistorian, URIRef(historian) ))
-			historiansIndexesGraph.add(( URIRef(historian+'/'+artist), WHY.hasIndexedArtist, URIRef(artist) ))
+			artist_name = artist.rsplit('/', 1)[-1]
+			historiansIndexesGraph.add(( URIRef(historian), WHY.hasArtistIndex, URIRef(historian+'/'+artist_name) ))
+			historiansIndexesGraph.add(( URIRef(historian+'/'+artist_name), WHY.hasArtistIndex, Literal(a_index, datatype=XSD.float) ))
+			historiansIndexesGraph.add(( URIRef(historian+'/'+artist_name), WHY.hasIndexedHistorian, URIRef(historian) ))
+			historiansIndexesGraph.add(( URIRef(historian+'/'+artist_name), WHY.hasIndexedArtist, URIRef(artist) ))
+			
 			#auth_index = rankHistorianBias(historian, artist)
 			#print 'auth index:', auth_index
 			# if auth_index is not None:
@@ -715,44 +720,45 @@ def rankHistorian():
 			# 	historiansIndexesGraph.add(( URIRef(historian), WHY.hasAuthoritativenessIndex, Literal(0.0, datatype=XSD.float) ))
 			
 		
-		# H_index (done)
-		# citations = """
-		# SELECT (count(distinct ?artwork) as ?count) ?artist 
-		# WHERE { {?creation <http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by> 
-		#                ?artist .} UNION
-		# 	   {?creation <http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by> ?artist . 
-		# 	    	?artist (^owl:sameAs|owl:sameAs)* ?artist .}
+		# H_index
+		citations = """
+		SELECT (count(distinct ?artwork) as ?count) ?artist 
+		WHERE { {?creation <http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by> 
+		               ?artist .} UNION
+			   {?creation <http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by> ?artist . 
+			    	?artist (^owl:sameAs|owl:sameAs)* ?artist .}
 			   
-		# 	  	?creation <http://www.w3.org/ns/prov#wasGeneratedBy> ?attribution .
-		# 		       ?attribution <http://purl.org/emmedi/hico/hasInterpretationType> ?accepted . 
-		# 		       { ?attribution <http://purl.org/spar/cito/agreesWith> <"""+str(historian)+"""> . } UNION
-		# 	   			{ ?attribution <http://purl.org/spar/cito/agreesWith> ?same. ?same (^owl:sameAs|owl:sameAs)* <"""+str(historian)+"""> .}
-		# 		       FILTER regex(str(?accepted),'preferred','i')
-		# 				?artwork <http://www.cidoc-crm.org/cidoc-crm/P94i_was_created_by> ?creation .
-		# 		?artwork <http://www.cidoc-crm.org/cidoc-crm/P94i_was_created_by> ?creation .      
-		# 	  }
-		# GROUP BY ?artist
-		# """
-		# try:
-		# 	sparql1 = SPARQLWrapper('http://127.0.0.1:9999/blazegraph/sparql')
-		# 	sparql1.setQuery(citations)
-		# 	sparql1.setReturnFormat(JSON)
-		# 	results = sparql1.query().convert()
+			  	?creation <http://www.w3.org/ns/prov#wasGeneratedBy> ?attribution .
+				       ?attribution <http://purl.org/emmedi/hico/hasInterpretationType> ?accepted . 
+				       { ?attribution <http://purl.org/spar/cito/agreesWith> <"""+str(historian)+"""> . } UNION
+			   			{ ?attribution <http://purl.org/spar/cito/agreesWith> ?same. ?same (^owl:sameAs|owl:sameAs)* <"""+str(historian)+"""> .}
+				       FILTER regex(str(?accepted),'preferred','i')
+						?artwork <http://www.cidoc-crm.org/cidoc-crm/P94i_was_created_by> ?creation .
+				?artwork <http://www.cidoc-crm.org/cidoc-crm/P94i_was_created_by> ?creation .      
+			  }
+		GROUP BY ?artist
+		"""
+		try:
+			sparql1 = SPARQLWrapper(config.SPARQLendpoint)
+			sparql1.setQuery(citations)
+			sparql1.setReturnFormat(JSON)
+			results = sparql1.query().convert()
 
-		# 	citationsArray = list(int(result["count"]["value"]) for result in (results["results"]["bindings"]) if result["count"]["value"] != [])
-		# 	print citationsArray
-		# 	# h index
-		# 	h = hindex(citationsArray)
-		# 	print 'h index:', h
-		# 	historiansIndexesGraph.add(( URIRef(historian), WHY.hasHIndex, Literal(h, datatype=XSD.float) ))
-		# except:
-		# 	pass
+			citationsArray = list(int(result["count"]["value"]) for result in (results["results"]["bindings"]) if result["count"]["value"] != [])
+			
+			# h index
+			h = hindex(citationsArray)
+			print(historian, h)
+			historiansIndexesGraph.add(( URIRef(historian), WHY.hasHIndex, Literal(h, datatype=XSD.float) ))
+		
+		except Exception as error:
+			print("citations",error)
+			pass
 		
 		
-	historiansIndexesGraph.serialize(destination='data/statistics_by_artist.nq', format='nquads')
-	server.update('load <file:///Users/marilena/Desktop/mauth/data/statistics_by_artist.nq>')
-
-#rankHistorian()
+	historiansIndexesGraph.serialize(destination=historiansIndexes_rdf, format='nquads')
+	server = sparql.SPARQLServer(config.SPARQLendpoint) 
+	server.update('load <file://'+dirpath+'/'+historiansIndexes_rdf+'>') 
 
 
 def getLabel(uri):
@@ -780,8 +786,8 @@ def getLabel(uri):
 
 def getURI(inputURL):
 	""" given the URL of an online cataloguing record returns the URI of the artwork"""
-	inputURL = urllib.unquote(inputURL).strip()
-	print 'inputURL',inputURL
+	inputURL = unquote(inputURL).strip()
+	print ('inputURL',inputURL)
 	# zeri
 	matchOa = re.compile('^[0-9]+$', re.IGNORECASE|re.DOTALL)
 	matchOaDigit = matchOa.match(inputURL)
@@ -803,7 +809,7 @@ def getURI(inputURL):
 	
 	# i tatti
 	elif matchOaItatti:
-		with open('data/itatti/ss_assets_811_130578.csv', 'r') as csvfile:
+		with open('data/itatti/csv/ss_assets_811_130578.csv', 'r') as csvfile:
 			reader = csv.DictReader(csvfile)
 			for sheetX in reader:
 				artworkID = sheetX['Work[36658]']
@@ -815,7 +821,7 @@ def getURI(inputURL):
 		oa = re.compile('HVD2&imageId=(.*)&adaptor=', re.IGNORECASE|re.DOTALL)
 		match = oa.search(inputURL)
 		if match:
-			with open('data/itatti/ss_assets_811_130578.csv', 'r') as csvfile:
+			with open('data/itatti/csv/ss_assets_811_130578.csv', 'r') as csvfile:
 				reader = csv.DictReader(csvfile)
 				for sheetX in reader:
 					artworkID = sheetX['Work[36658]']
@@ -836,7 +842,7 @@ def getURI(inputURL):
 	elif 'en.wikipedia.org' in inputURL:
 		oa = inputURL.encode('utf8', 'replace').rsplit('/', 1)[-1]
 		iri = 'http://dbpedia.org/resource/'+oa
-		print 'iri', iri
+		print ('iri', iri)
 		return iri
 	
 	# wikidata
@@ -855,7 +861,7 @@ def getURI(inputURL):
 		return iri
 	else:
 		iri = inputURL
-		print 'yes'
+		print ('yes')
 		return iri
 		
 

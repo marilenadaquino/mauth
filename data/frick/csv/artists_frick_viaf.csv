@@ -1,0 +1,371 @@
+id,search,result,viaf,lc,isni,ratio,partialRatio,tokenSort,tokenSet,avg
+http://purl.org/emmedi/mauth/frick/artist/veronese-copy-after,"Veronese, -, copy after.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/fei-di-vincenzio-alessandro,"Fei di Vincenzio, Alessandro, -.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/foschi-pier-francesco,"Foschi, Pier Francesco, -.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/puligo-domenico-ubaldini,"Puligo, Domenico Ubaldini, -.","Puligo, Domenico, 1492-1527",http://viaf.org/viaf/62439603,http://id.loc.gov/authorities/names/nr00034057,http://isni.org/isni/0000000116567392,68,67,61,77,68.25
+http://purl.org/emmedi/mauth/frick/artist/tommaso-th-c-attributed-to,"Tommaso, th C.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/titian,"Titian, /-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/messina-school-th-century-th-c,"Messina School , th C.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/bertelli-cristofano-active-th-century,"Bertelli, Cristofano, active th century.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/luini-aurelio-cc,"Luini, Aurelio, c.-c..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/minga-andrea-del-p,"Minga, Andrea del, -p./.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/grazia-leonardo-cop,"Grazia, Leonardo, c.-op..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/michele-dargenta-op,"Michele d'Argenta, op..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/ghisi-giorgio-attributed-to,"Ghisi, Giorgio, -.","Michelangelo Buonarroti, 1475-1564",http://viaf.org/viaf/24585191,http://id.loc.gov/authorities/names/n80152368,http://isni.org/isni/0000000121243640,19,24,17,17,19.25
+http://purl.org/emmedi/mauth/frick/artist/cellini-benvenuto,"Cellini, Benvenuto, -.","Cellini, Benvenuto, 1500-1571.",http://viaf.org/viaf/56629983,http://id.loc.gov/authorities/names/n79064913,http://isni.org/isni/000000012101539X,85,91,77,100,88.25
+http://purl.org/emmedi/mauth/frick/artist/moro-marco-angelo-del-th-c,"Moro, Marco Angelo del, th C..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/pistojese-school-th-century-th-c-attributed-to,"Pistojese School , th C..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/bronzino,"Bronzino, -.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/florentine-school-th-century-after-the-antique,"Florentine School , after the Antique.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/sangallo-francesco-da,"Sangallo, Francesco da, -.","Sangallo, Francesco &#x98;da&#x9C; 1494-1576",http://viaf.org/viaf/67374715,http://id.loc.gov/authorities/names/n87905492,http://isni.org/isni/000000006683851X,69,77,70,100,79.0
+http://purl.org/emmedi/mauth/frick/artist/giulio-romano-contributor,"Giulio Romano, -, contributor.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/andrea-del-sarto-cm-sixteenth-century-copy-of,"Andrea del Sarto, c./-m., sixteenth century copy of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/salviati-il-cecchino-del-attributed-to,"Salviati, Il Cecchino del, -.","Salviati, Francesco, 1510-1563",http://viaf.org/viaf/12395550,http://id.loc.gov/authorities/names/no93014332,http://isni.org/isni/0000000121209741,54,55,50,50,52.25
+http://purl.org/emmedi/mauth/frick/artist/giovanni-battista-di-piero-da-carona-th-c-attributed-to,"Giovanni Battista di Piero da Carona, th C..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/giampietrino-op-school-of,"Giampietrino, op.-, school of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/tanzio-da-varallo-antonio-denrico-ca,"Tanzio da Varallo, Antonio d'Enrico, c.-a..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/ballini-camillo-c,"Ballini, Camillo, c./-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/danti-vincenzo,"Danti, Vincenzo, -.","Danti, Vincenzo, 1530-1576",http://viaf.org/viaf/62342520,http://id.loc.gov/authorities/names/nr96041631,http://isni.org/isni/0000000066301253,80,89,74,100,85.75
+http://purl.org/emmedi/mauth/frick/artist/farinato-paolo-p,"Farinato, Paolo, -p.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/antonio-del-ceraiolo-th-c,"Antonio del Ceraiolo, th C.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/angelo-battista-dell,"Angelo, Battista dell', -.","Del Moro, Battista",http://viaf.org/viaf/37771338,http://id.loc.gov/authorities/names/nr97010729,http://isni.org/isni/0000000117587061,59,72,65,65,65.25
+http://purl.org/emmedi/mauth/frick/artist/santacroce-francesco-di-girolamo-da,"Santacroce, Francesco di Girolamo da, -.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/moroni-giovanni-battista-c-school-of-attributed-to,"Moroni, Giovanni Battista, c.-, school of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/antonio-da-milano-opc-attributed-to,"Antonio da Milano, op.c..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/gherardi-cristofano,"Gherardi, Cristofano, -.","Gherardi, Cristofano, 1508-1556",http://viaf.org/viaf/10696507,http://id.loc.gov/authorities/names/nr90022241,http://isni.org/isni/0000000117426997,84,92,79,100,88.75
+http://purl.org/emmedi/mauth/frick/artist/girolamo-da-treviso-the-younger,"Girolamo da Treviso the Younger, -.","Girolamo, da Treviso, 1498-1544",http://viaf.org/viaf/95730747,http://id.loc.gov/authorities/names/no2012068145,http://isni.org/isni/0000000116903827,67,65,63,79,68.5
+http://purl.org/emmedi/mauth/frick/artist/melone-altobello-op-attributed-to,"Melone, Altobello, op.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/montelupo-raffaele-da-attributed-to,"Montelupo, Raffaele da, -.","Raffaello, da Montelupo, 1504-1566",http://viaf.org/viaf/47604238,http://id.loc.gov/authorities/names/n88086345,http://isni.org/isni/0000000066347526,40,52,75,75,60.5
+http://purl.org/emmedi/mauth/frick/artist/sabbatini-lorenzo-c,"Sabbatini, Lorenzo, c.-.","Sabatini, Lorenzo, ca. 1530-1576",http://viaf.org/viaf/44573125,http://id.loc.gov/authorities/names/no2010097899,http://isni.org/isni/0000000079744619,79,88,75,75,79.25
+http://purl.org/emmedi/mauth/frick/artist/campagnola-giulio-attributed-to,"Campagnola, Giulio, -.","Campagnola, Giulio, 1482?-1515?",http://viaf.org/viaf/39650159,http://id.loc.gov/authorities/names/no93021424,http://isni.org/isni/0000000066312286,79,91,77,100,86.75
+http://purl.org/emmedi/mauth/frick/artist/tuscan-school-th-century-th-c,"Tuscan School , th C.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/salviati-francesco,"Salviati, Francesco, -.","Salviati, Francesco, 1510-1563",http://viaf.org/viaf/12395550,http://id.loc.gov/authorities/names/no93014332,http://isni.org/isni/0000000121209741,83,91,78,100,88.0
+http://purl.org/emmedi/mauth/frick/artist/roman-school-th-century,Roman School .,"Saka&#x159;, Josef, 1870-1937",http://viaf.org/viaf/8859832,http://id.loc.gov/authorities/names/n86022763,http://isni.org/isni/0000000055604996,9,14,16,16,13.75
+http://purl.org/emmedi/mauth/frick/artist/piedmontese-school-th-century-th-c-attributed-to,"Piedmontese School , th C..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/parmigianino-school-of,"Parmigianino, /-, school of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/guglielmo-de-grandi-op,"Guglielmo de Grandi, op..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/magnasco-alessandro,"Magnasco, Alessandro, -.","Magnasco, Alessandro, 1667?-1749?",http://viaf.org/viaf/62343833,http://id.loc.gov/authorities/names/nr87000716,http://isni.org/isni/0000000066301261,81,92,79,100,88.0
+http://purl.org/emmedi/mauth/frick/artist/tintoretto-jacopo-robusti-il-copy-of-attributed-to,"Tintoretto, Jacopo Robusti, Il, /-, copy of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/manzuoli-tommaso-copy-of,"Manzuoli, Tommaso, -, copy of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/mazzolabedoli-girolamo-c,"Mazzola-Bedoli, Girolamo, c.-.","Bedoli, Girolamo 1500-1569",http://viaf.org/viaf/57425974,http://id.loc.gov/authorities/names/nr91028761,http://isni.org/isni/0000000120264335,64,75,60,75,68.5
+http://purl.org/emmedi/mauth/frick/artist/romanino-girolamo-approximately-approximately,"Romanino, Girolamo, approximately -approximately .","Romanino, Girolamo, approximately 1485-approximately 1566",http://viaf.org/viaf/95837076,http://id.loc.gov/authorities/names/nr89003433,http://isni.org/isni/0000000120966855,92,92,90,100,93.5
+http://purl.org/emmedi/mauth/frick/artist/vincenza-school-th-century-th-c-attributed-to,"Vincenza School , th C..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/savin-da-venezia-pier-paolo-op,"Savin da Venezia, Pier Paolo, op.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/moietta-da-caravaggio-nicola-op,"Moietta da Caravaggio, Nicola, op..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/parmigianino-follower-of,"Parmigianino, /-, follower of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/tintoretto-jacopo-robusti-il-and-assistants,"Tintoretto, Jacopo Robusti, Il, /-, and assistants.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/campagnola-giulio,"Campagnola, Giulio, -.","Campagnola, Giulio, 1482?-1515?",http://viaf.org/viaf/39650159,http://id.loc.gov/authorities/names/no93021424,http://isni.org/isni/0000000066312286,79,91,77,100,86.75
+http://purl.org/emmedi/mauth/frick/artist/vasari-the-younger-giorgio,"Vasari the Younger, Giorgio, -.","Vasari, Giorgio, 1562-1625",http://viaf.org/viaf/59133107,http://id.loc.gov/authorities/names/n90638740,http://isni.org/isni/0000000116516296,63,58,56,74,62.75
+http://purl.org/emmedi/mauth/frick/artist/barbiere-domenico-del-c,"Barbiere, Domenico del, c.-/.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/anguisciola-luigi-op,"Anguisciola, Luigi, op..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/caprioli-domenico-di-bernardino-op-attributed-to,"Caprioli, Domenico di Bernardino, -op.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/buglioni-benedetto,"Buglioni, Benedetto, -.",Benedetto Buglioni sculpteur italien,http://viaf.org/viaf/12159649,http://id.loc.gov/authorities/names/nr91000689,http://isni.org/isni/0000000117429186,34,43,67,100,61.0
+http://purl.org/emmedi/mauth/frick/artist/apollodoro-francesco-opc-attributed-to,"Apollodoro, Francesco, op.c.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/bronzino-copy-of,"Bronzino, -, copy of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/mazzuoli-giuseppe-c,"Mazzuoli, Giuseppe, c.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/piccolpasso-cipriano-circle-of,"Piccolpasso, Cipriano, -, circle of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/florentine-school-th-century,Florentine School .,,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/lombardo-lodovico-c,"Lombardo, Lodovico, c.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/parmigianino-after,"Parmigianino, /-, after.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/muziano-girolamo-attributed-to,"Muziano, Girolamo, /-.","Muziano, Girolamo, 1532-1592",http://viaf.org/viaf/31578727,http://id.loc.gov/authorities/names/no95021489,http://isni.org/isni/0000000118561330,80,86,76,100,85.5
+http://purl.org/emmedi/mauth/frick/artist/tamagni-da-san-gimignano-vincenzo-c-school-of,"Tamagni da San Gimignano, Vincenzo, -c., school of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/pontormo-jacopo-carucci-da-attributed-to,"Pontormo, Jacopo Carucci da, -.","Pontormo, Jacopo da, 1494-1556",http://viaf.org/viaf/110043526,http://id.loc.gov/authorities/names/n85800632,http://isni.org/isni/0000000109340923,72,73,70,82,74.25
+http://purl.org/emmedi/mauth/frick/artist/torrigiano-pietro-school-of,"Torrigiano, Pietro, -, school of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/pierino-da-vinci-cc,"Pierino da Vinci, c.-c..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/bronzino-attributed-to,"Bronzino, -.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/orsi-da-novellara-lelio-circle-of,"Orsi da Novellara, Lelio, -, circle of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/paris-da-milano,Paris da Milano.,,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/tintoretto-jacopo-robusti-il-studio-of,"Tintoretto, Jacopo Robusti, Il, /-, studio of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/foschi-sigismondo-opmp-attributed-to,"Foschi, Sigismondo, op.-m.p..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/lombardi-alfonso,"Lombardi, Alfonso, -.","Baruffaldi, Girolamo, 1740-1817",http://viaf.org/viaf/76306690,http://id.loc.gov/authorities/names/n85813596,http://isni.org/isni/0000000061260704,42,43,27,27,34.75
+http://purl.org/emmedi/mauth/frick/artist/daniele-da-volterra,"Daniele da Volterra, -.",Daniele da Volterra,http://viaf.org/viaf/19954714,http://id.loc.gov/authorities/names/n85053261,http://isni.org/isni/0000000083625620,90,100,100,100,97.5
+http://purl.org/emmedi/mauth/frick/artist/italobyzantine-school-th-century-th-c,"Italo-Byzantine School , th C.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/ferrari-defendente-cp-school-of-attributed-to,"Ferrari, Defendente, c.-p., school of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/luini-bernardino-copy-of,"Luini, Bernardino, -, copy of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/raphael-and-assistants,"Raphael, -, and assistants.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/zanfurnari-emanuele-th-c,"Zanfurnari, Emanuele, th C.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/campagnola-domenico-op,"Campagnola, Domenico, /-op..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/castello-giovanni-battista,"Castello, Giovanni Battista, -.","Castello, Giovanni Battista, 1509-1569",http://viaf.org/viaf/62418761,http://id.loc.gov/authorities/names/no00035389,http://isni.org/isni/0000000081423128,87,94,84,100,91.25
+http://purl.org/emmedi/mauth/frick/artist/giulio-romano-follower-of,"Giulio Romano, -, follower of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/sienese-school-th-century-th-c,"Sienese School , th C.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/tintoretto-jacopo-robusti-il-follower-of,"Tintoretto, Jacopo Robusti, Il, /-, follower of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/brescianino-andrea-del-op-school-of-attributed-to,"Brescianino, Andrea del, op.-, school of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/tibaldi-pellegrino,"Tibaldi, Pellegrino, -.","Tibaldi, Pellegrino, 1527-1596",http://viaf.org/viaf/9896213,http://id.loc.gov/authorities/names/n87882102,http://isni.org/isni/0000000080763083,83,91,78,100,88.0
+http://purl.org/emmedi/mauth/frick/artist/cesare-magni-op-attributed-to,"Cesare, Magni, op.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/orsi-da-novellara-lelio-attributed-to,"Orsi da Novellara, Lelio, -.","Orsi, Lelio, 1511-1587",http://viaf.org/viaf/13105395,http://id.loc.gov/authorities/names/n85158424,http://isni.org/isni/0000000115975490,56,59,51,67,58.25
+http://purl.org/emmedi/mauth/frick/artist/bronzino-follower-of,"Bronzino, -, follower of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/cantarini-simone,"Cantarini, Simone, -.","Cantarini, Simone, 1612-1648",http://viaf.org/viaf/59231254,http://id.loc.gov/authorities/names/n83063653,http://isni.org/isni/0000000066314775,82,90,76,100,87.0
+http://purl.org/emmedi/mauth/frick/artist/correggio-c-school-of,"Correggio, c.-, school of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/agostino-da-mozzanega-op,"Agostino da Mozzanega, op..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/beccafumi-domenico-shop-of,"Beccafumi, Domenico, -, shop of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/tuscan-school-th-century-th-c,"Tuscan School , th C..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/garofalo-benvenuto-tisio-da-c,"Garofalo, Benvenuto Tisio da, c.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/aliprandi-michelangelo,"Aliprandi, Michelangelo, -.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/titian-and-assistants,"Titian, /-, and assistants.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/gambara-lattanzio-c,"Gambara, Lattanzio, c.-/.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/dente-marco-m,"Dente, Marco, -m..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/raphael-shop-of-attributed-to,"Raphael, -, shop of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/brescianino-andrea-del-op-attributed-to,"Brescianino, Andrea del, op.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/mazzolabedoli-girolamo-c-attributed-to,"Mazzola-Bedoli, Girolamo, c.-.","Bedoli, Girolamo 1500-1569",http://viaf.org/viaf/57425974,http://id.loc.gov/authorities/names/nr91028761,http://isni.org/isni/0000000120264335,64,75,60,75,68.5
+http://purl.org/emmedi/mauth/frick/artist/vasari-giorgio-circle-of,"Vasari, Giorgio, -, circle of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/salviati-il-cecchino-del,"Salviati, Il Cecchino del, -.","Salviati, Francesco, 1510-1563",http://viaf.org/viaf/12395550,http://id.loc.gov/authorities/names/no93014332,http://isni.org/isni/0000000121209741,54,55,50,50,52.25
+http://purl.org/emmedi/mauth/frick/artist/garofalo-benvenuto-tisio-da-c-school-of-attributed-to,"Garofalo, Benvenuto Tisio da, c.-, school of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/tommaso-di-stefano-c-attributed-to,"Tommaso di Stefano, c.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/vecellio-orazio-ca,"Vecellio, Orazio, c.-a..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/anonymous,anonymous,"Krasi&#x144;ski, Zygmunt, 1812-1859.",http://viaf.org/viaf/64038850,http://id.loc.gov/authorities/names/n50081521,http://isni.org/isni/0000000109087219,9,22,10,10,12.75
+http://purl.org/emmedi/mauth/frick/artist/arcimboldo-giuseppe,"Arcimboldo, Giuseppe, -.","Arcimboldi, Giuseppe, 1527?-1593",http://viaf.org/viaf/22412735,http://id.loc.gov/authorities/names/n80038259,http://isni.org/isni/0000000115621633,79,88,75,75,79.25
+http://purl.org/emmedi/mauth/frick/artist/raphael-follower-of,"Raphael, -, follower of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/raffaele-fra-op,"Raffaele, Fra, op..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/peruzzi-baldassare-possibly-follower-of,"Peruzzi, Baldassare, -, possibly follower of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/campagnola-giulio-copy-of,"Campagnola, Giulio, -, copy of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/raphael-copy-after,"Raphael, -, copy after.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/luini-bernardino-school-of,"Luini, Bernardino, -, school of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/florentine-school-th-century-th-c-copy-of,"Florentine School , th C., copy of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/rossi-properzia-de-a,"Rossi, Properzia de, a.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/sicilian-school-th-century-th-c-attributed-to,"Sicilian School , th C..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/roman-school-th-century-th-c,"Roman School , th C..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/beccafumi-domenico,"Beccafumi, Domenico, -.","Beccafumi, Domenico, 1486-1551",http://viaf.org/viaf/10120260,http://id.loc.gov/authorities/names/nr90011126,http://isni.org/isni/0000000121204967,83,91,78,100,88.0
+http://purl.org/emmedi/mauth/frick/artist/cambiaso-luca-circle-of,"Cambiaso, Luca, -, circle of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/sansovino-andrea-contucci,"Sansovino, Andrea Contucci, /-.","Sansovino, Andrea, 1460?-1529",http://viaf.org/viaf/20476698,http://id.loc.gov/authorities/names/no99067453,http://isni.org/isni/0000000116049800,67,66,63,78,68.5
+http://purl.org/emmedi/mauth/frick/artist/polidoro-veneziano,"Polidoro Veneziano, -.",Polidoro da Lanciano pittore italiano,http://viaf.org/viaf/89128782,http://id.loc.gov/authorities/names/no2002035678,http://isni.org/isni/0000000062462076,51,68,29,62,52.5
+http://purl.org/emmedi/mauth/frick/artist/galeazzo-da-milano-op,"Galeazzo da Milano, op..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/severo-da-ravenna-th-c-circle-of,"Severo da Ravenna, th C., circle of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/brusasorci-domenico,"Brusasorci, Domenico, -.","Brusasorzi, Domenico 1516-1567",http://viaf.org/viaf/77198859,http://id.loc.gov/authorities/names/nr2001003415,http://isni.org/isni/0000000083448644,78,83,75,75,77.75
+http://purl.org/emmedi/mauth/frick/artist/gavasio-giovanni-giacomo-op-attributed-to,"Gavasio, Giovanni Giacomo, op..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/bregno-cristoforo-di-ambrogio-opc,"Bregno, Cristoforo di Ambrogio, op.c..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/penni-luca-cc-attributed-to,"Penni, Luca, c.-c..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/musi-agostino-cp,"Musi, Agostino, c.-p..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/veronese-circle-of,"Veronese, -, circle of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/sodoma-giovanni-antonio-debazzi-il,"Sodoma, Giovanni Antonio de'Bazzi, Il, -.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/bertucci-the-elder-giovanni-battista-opmp-school-of,"Bertucci the Elder, Giovanni Battista, op.-m.p., school of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/parmigianino-shop-of,"Parmigianino, /-, shop of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/comi-girolamo,"Comi, Girolamo, -.","Comi, Girolamo, 1890-1968",http://viaf.org/viaf/12435152,http://id.loc.gov/authorities/names/n93072446,http://isni.org/isni/0000000061269282,79,89,72,100,85.0
+http://purl.org/emmedi/mauth/frick/artist/roman-school-th-century-th-c,"Roman School , th C.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/italian-school-th-century-th-c-after-the-antique,"Italian School , th C., after the Antique.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/dosso-dossi-giovanni-de-lutero-a-copy-of,"Dosso Dossi, Giovanni de Lutero, -a., copy of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/ramenghi-bartolomeo,"Ramenghi, Bartolomeo, -.","Ramenghi, Bartolomeo, 1484-1542",http://viaf.org/viaf/71663115,http://id.loc.gov/authorities/names/nr91029676,http://isni.org/isni/0000000117697148,84,92,79,100,88.75
+http://purl.org/emmedi/mauth/frick/artist/italian-school-th-century-th-c,"""Italian School , th C.""",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/buglioni-santi,"Buglioni, Santi, -.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/jacopino-del-conte,"Jacopino del Conte, -.","Del Conte, Jacopino 1513-1598",http://viaf.org/viaf/34728844,http://id.loc.gov/authorities/names/no2011046942,http://isni.org/isni/0000000117576987,43,45,78,100,66.5
+http://purl.org/emmedi/mauth/frick/artist/master-of-the-fitzwilliam-deposition-th-c,"Master of the Fitzwilliam Deposition, th C.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/avantino-dal-borgo-th-c-attributed-to,"Avantino dal Borgo, th C..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/viterbo-school-th-century-th-c,"Viterbo School , th C.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/cellini-benvenuto-attributed-to,"Cellini, Benvenuto, -.","Cellini, Benvenuto, 1500-1571.",http://viaf.org/viaf/56629983,http://id.loc.gov/authorities/names/n79064913,http://isni.org/isni/000000012101539X,85,91,77,100,88.25
+http://purl.org/emmedi/mauth/frick/artist/florentine-school-th-century-th-c-after-the-antique,"Florentine School , th C., after the Antique.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/carpi-girolamo-da,"Carpi, Girolamo da, -.","Carpi, Girolamo &#x98;da&#x9C; 1501-1556",http://viaf.org/viaf/90631414,http://id.loc.gov/authorities/names/n50077313,http://isni.org/isni/0000000081634689,65,73,65,100,75.75
+http://purl.org/emmedi/mauth/frick/artist/longhi-jacobino-c,"Longhi, Jacobino, -c..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/fontana-orazio-c,"Fontana, Orazio, c.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/caravaggio,"Caravaggio, -.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/bolognese-school-th-century-th-c,"Bolognese School , th C.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/vasari-giorgio-shop-of,"Vasari, Giorgio, -, shop of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/umbroroman-school-th-century-th-c-attributed-to,"Umbro-Roman School , th C..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/fogolino-marcello-mp,"Fogolino, Marcello, /-m.p..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/palma-il-vecchio-jacopo,"Palma il Vecchio, Jacopo, -.","Palma, il Vecchio, 1480?-1528",http://viaf.org/viaf/88790846,http://id.loc.gov/authorities/names/n82050333,http://isni.org/isni/0000000107853397,67,68,65,82,70.5
+http://purl.org/emmedi/mauth/frick/artist/raphael-and-workshop,"Raphael, -, and workshop.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/roman-school-th-century-th-cent,"Roman School , th cent.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/bandinelli-baccio-copy-of,"Bandinelli, Baccio, -, copy of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/montemezzano-francesco-c,"Montemezzano, Francesco, c.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/palma-il-giovane-jacopo,"Palma il Giovane, Jacopo, -.","Palma, il Giovane, 1544-1628",http://viaf.org/viaf/90630874,http://id.loc.gov/authorities/names/n84155958,http://isni.org/isni/0000000108031600,68,68,65,82,70.75
+http://purl.org/emmedi/mauth/frick/artist/lotto-lorenzo-attributed-to,"Lotto, Lorenzo, -.","Lotto, Lorenzo, 1480?-1556?",http://viaf.org/viaf/22165049,http://id.loc.gov/authorities/names/n50042418,http://isni.org/isni/0000000123200265,76,89,72,100,84.25
+http://purl.org/emmedi/mauth/frick/artist/veronese-attributed-to,"Veronese, -.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/stella-fermo-op,"Stella, Fermo, op.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/bassano-jacopo-da-ponte-il-c-circle-of,"Bassano, Jacopo da Ponte, Il, c./-, circle of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/lorenzi-stoldo-di-gino-copy-of,"Lorenzi, Stoldo di Gino, -, copy of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/montelupo-baccio-da,"Montelupo, Baccio da, -.","Raffaello, da Montelupo, 1504-1566",http://viaf.org/viaf/47604238,http://id.loc.gov/authorities/names/n88086345,http://isni.org/isni/0000000066347526,41,55,51,77,56.0
+http://purl.org/emmedi/mauth/frick/artist/circignano-niccolo-c-copy-of,"Circignano, Niccolò, -c., copy of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/andrea-da-salerno,"Andrea da Salerno, -.","Andrea, da Salerno, approximately 1484-1530",http://viaf.org/viaf/305409727,http://id.loc.gov/authorities/names/n85255377,,62,90,59,100,77.75
+http://purl.org/emmedi/mauth/frick/artist/peruzzi-baldassare-attributed-to,"Peruzzi, Baldassare, -.","Peruzzi, Baldassare, 1481-1536",http://viaf.org/viaf/39646794,http://id.loc.gov/authorities/names/n83032025,http://isni.org/isni/000000008118944X,83,91,78,100,88.0
+http://purl.org/emmedi/mauth/frick/artist/veronese-school-of,"Veronese, -, school of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/ridolfi-bartolomeo-before,"Ridolfi, Bartolomeo, - before .",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/bezzi-giovanni-filippo-opc-contributor,"Bezzi, Giovanni Filippo, op.c., contributor.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/dandi-da-san-gimignano-giuliano-op,"Dandi da San Gimignano, Giuliano, op..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/giovenone-giovanni-battista-op-attributed-to,"Giovenone, Giovanni Battista, op.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/giulio-romano-copy-of,"Giulio Romano, -, copy of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/borghi-fabrizio-th-c,"Borghi, Fabrizio, th C.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/pacchia-pseudo-th-c,"Pacchia, Pseudo, th C.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/giovanni-da-udine,"Giovanni da Udine, -.","Giovanni, da Udine, 1487-1564",http://viaf.org/viaf/17255996,http://id.loc.gov/authorities/names/nr88006866,http://isni.org/isni/0000000115610475,80,90,77,100,86.75
+http://purl.org/emmedi/mauth/frick/artist/amalteo-pomponio,"Amalteo, Pomponio, -.","Amalteo, Pomponio, 1505-1588",http://viaf.org/viaf/77222575,http://id.loc.gov/authorities/names/n82101751,http://isni.org/isni/0000000066291139,82,90,76,100,87.0
+http://purl.org/emmedi/mauth/frick/artist/masegne-jacobello-dalle-active,"Masegne, Jacobello dalle, active -.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/zuccaro-taddeo-copy-of,"Zuccaro, Taddeo, -, copy of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/palermo-school-th-century-th-c,"Palermo School , th C.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/genoese-school-th-century-th-c-attributed-to,"Genoese School , th C..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/italian-school-th-century-th-c-copy-of-attributed-to,"Italian School , th C., copy of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/montelupo-raffaele-da,"Montelupo, Raffaele da, -.","Raffaello, da Montelupo, 1504-1566",http://viaf.org/viaf/47604238,http://id.loc.gov/authorities/names/n88086345,http://isni.org/isni/0000000066347526,40,52,75,75,60.5
+http://purl.org/emmedi/mauth/frick/artist/cremonese-school-th-century-th-c,"Cremonese School , th C.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/porta-guglielmo-della-opm,"Porta, Guglielmo della, op.-m..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/brea-francesco-op-attributed-to-contributor,"Brea, Francesco, op.-, contributor.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/primaticcio-francesco,"Primaticcio, Francesco, /-.","Primaticcio, Francesco, 1504-1570",http://viaf.org/viaf/19687875,http://id.loc.gov/authorities/names/n85383678,http://isni.org/isni/0000000121229881,83,89,81,100,88.25
+http://purl.org/emmedi/mauth/frick/artist/zuccaro-taddeo-school-of,"Zuccaro, Taddeo, -, school of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/bassano-jacopo-da-ponte-il-c,"Bassano, Jacopo da Ponte, Il, c./-.","Bassano, Jacopo",http://viaf.org/viaf/24792862,http://id.loc.gov/authorities/names/n85042732,http://isni.org/isni/0000000374441987,60,100,67,100,81.75
+http://purl.org/emmedi/mauth/frick/artist/veronese-school-th-century-c,"Veronese School ,  C.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/rosso-fiorentino-circle-of,"Rosso Fiorentino, -, circle of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/pulzone-gaetano-scipione,"Pulzone Gaetano, Scipione, -/.","Polzone, Scipione 1546?-1598",http://viaf.org/viaf/171272281,http://id.loc.gov/authorities/names/no97036847,http://isni.org/isni/0000000120376097,62,64,64,64,63.5
+http://purl.org/emmedi/mauth/frick/artist/giulio-romano-copy-after,"Giulio Romano, -, copy after.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/venetian-school-th-century-th-c,"Venetian School , th C..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/parmigianino-imitator-of,"Parmigianino, /-, imitator of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/umbrian-school-th-century-th-c-attributed-to,"Umbrian School , th C..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/franco-giovanni-battista-attributed-to,"Franco, Giovanni Battista, -.","Franco, Battista, 1510?-1561",http://viaf.org/viaf/100197023,http://id.loc.gov/authorities/names/nr2002043786,http://isni.org/isni/0000000081694606,67,68,61,77,68.25
+http://purl.org/emmedi/mauth/frick/artist/bandinelli-baccio,"Bandinelli, Baccio, -.","Bandinelli, Baccio, 1493-1560",http://viaf.org/viaf/88820562,http://id.loc.gov/authorities/names/n88217150,http://isni.org/isni/0000000080606651,82,91,77,100,87.5
+http://purl.org/emmedi/mauth/frick/artist/casanova-agostino-di-op,"Casanova, Agostino di, op..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/lotto-lorenzo-copy-of,"Lotto, Lorenzo, -, copy of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/ferrarese-school-th-century-th-c,"Ferrarese School , th C.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/giulio-romano-after,"Giulio Romano, -, after.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/muziano-girolamo,"Muziano, Girolamo, /-.","Muziano, Girolamo, 1532-1592",http://viaf.org/viaf/31578727,http://id.loc.gov/authorities/names/no95021489,http://isni.org/isni/0000000118561330,80,86,76,100,85.5
+http://purl.org/emmedi/mauth/frick/artist/rimpatta-antonio-opc,"Rimpatta, Antonio, op.c.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/castello-giovanni-battista-attributed-to,"Castello, Giovanni Battista, -.","Castello, Giovanni Battista, 1509-1569",http://viaf.org/viaf/62418761,http://id.loc.gov/authorities/names/no00035389,http://isni.org/isni/0000000081423128,87,94,84,100,91.25
+http://purl.org/emmedi/mauth/frick/artist/marco-da-siena-cc-attributed-to,"Marco da Siena, c.-c..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/caliari-carlo,"Caliari, Carlo, -.","Caliari, Carlo",http://viaf.org/viaf/17496884,http://id.loc.gov/authorities/names/nr98035023,http://isni.org/isni/0000000080970963,88,100,100,100,97.0
+http://purl.org/emmedi/mauth/frick/artist/parigi-giulio-contributor,"Parigi, Giulio, -, contributor.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/rota-martino,"Rota, Martino, -.","Koluni&#x107; Rota, Martin",http://viaf.org/viaf/7531326,http://id.loc.gov/authorities/names/n84235469,http://isni.org/isni/0000000080868125,56,83,63,63,66.25
+http://purl.org/emmedi/mauth/frick/artist/picchi-giorgio-th-c,"Picchi, Giorgio, th C.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/sienese-school-th-century-th-c,"Sienese School , th C..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/adrechi-stefano-op,"Adrechi, Stefano, op.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/veronese-attributed-to-alternate-attribution,"Veronese, -, alternate attribution.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/veronese-school-th-century,Veronese School .,,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/umbro-florentine-school-th-century-th-c,"Umbro Florentine School , th C.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/beccaruzzi-francesco-cc-attributed-to,"Beccaruzzi, Francesco, c.-c..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/franco-giovanni-battista,"Franco, Giovanni Battista, -.","Franco, Battista, 1510?-1561",http://viaf.org/viaf/100197023,http://id.loc.gov/authorities/names/nr2002043786,http://isni.org/isni/0000000081694606,67,68,61,77,68.25
+http://purl.org/emmedi/mauth/frick/artist/tiepolo-giovanni-domenico,"Tiepolo, Giovanni Domenico, -.","Canaletto, 1697-1768.",http://viaf.org/viaf/88652637,http://id.loc.gov/authorities/names/n79065963,http://isni.org/isni/0000000121428397,24,42,23,23,28.0
+http://purl.org/emmedi/mauth/frick/artist/primaticcio-francesco-copy-of,"Primaticcio, Francesco, /-, copy of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/galizzi-giovanni-opcm,"Galizzi, Giovanni, op.c.-m..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/bandinelli-baccio-circle-of,"Bandinelli, Baccio, -, circle of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/bronzino-school-of,"Bronzino, -, school of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/giulio-romano-attributed-to,"Giulio Romano, -.","Caccini, Giulio, 1551-1618",http://viaf.org/viaf/10032703,http://id.loc.gov/authorities/names/n79113024,http://isni.org/isni/0000000118857377,42,53,32,63,47.5
+http://purl.org/emmedi/mauth/frick/artist/raphael-attributed-contributor,"Raphael, -, attributed, contributor.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/cariani-giovanni-debusi-p,"Cariani, Giovanni de'Busi, /-p..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/macri-gaspare-di-gerolamo-op-attributed-to,"Macri, Gaspare di Gerolamo, op.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/frangipane-niccolo-op-attributed-to,"Frangipane, Niccolò, op.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/primaticcio-francesco-attributed-to,"Primaticcio, Francesco, /-.","Primaticcio, Francesco, 1504-1570",http://viaf.org/viaf/19687875,http://id.loc.gov/authorities/names/n85383678,http://isni.org/isni/0000000121229881,83,89,81,100,88.25
+http://purl.org/emmedi/mauth/frick/artist/balducci-matteo-opmp-attributed-to,"Balducci, Matteo, op.-m.p..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/valdre-vincenzo,"Valdre, Vincenzo, -.","Valdr&#xE9;, Vincenzo 1740-1814",http://viaf.org/viaf/246909970,http://id.loc.gov/authorities/names/no2014030516,http://isni.org/isni/0000000369364526,67,70,65,70,68.0
+http://purl.org/emmedi/mauth/frick/artist/sebastiano-del-piombo-attributed-to,"Sebastiano del Piombo, -.","Sebastiano, del Piombo, 1485-1547",http://viaf.org/viaf/34727713,http://id.loc.gov/authorities/names/n80093545,http://isni.org/isni/0000000120237396,83,92,81,100,89.0
+http://purl.org/emmedi/mauth/frick/artist/rivello-galeazzo-op,"Rivello, Galeazzo, op.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/florentine-school-th-century-th-c,"Florentine School , th c.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/maturino-da-firenze-attributed-to,"Maturino da Firenze, -.","Maturino, da Firenze, 1490-1528",http://viaf.org/viaf/288357059,http://id.loc.gov/authorities/names/no2016108889,http://isni.org/isni/0000000393966105,81,91,79,100,87.75
+http://purl.org/emmedi/mauth/frick/artist/monogrammist-rm-op,"Monogrammist R.M., op..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/tosini-michele-copy-of,"Tosini, Michele, -, copy of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/ferrari-defendente-cp,"Ferrari, Defendente, c.-p..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/bergamo-school-th-century-th-c-attributed-to,"Bergamo School , th C..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/rossi-vincenzo-de,"Rossi, Vincenzo de, -.","Rossi, Vincenzo &#x98;de&#x9C; 1525-1587",http://viaf.org/viaf/5776239,http://id.loc.gov/authorities/names/no99018557,http://isni.org/isni/0000000066798888,65,73,65,100,75.75
+http://purl.org/emmedi/mauth/frick/artist/italobyzantine-school-th-century-th-c-attributed-to,"Italo-Byzantine School , th C..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/bassano-the-younger-francesco-da-ponte-c-school-of-attributed-to,"Bassano the Younger, Francesco da Ponte, c.-, school of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/detti-bernardino-di-antonio,"Detti, Bernardino di Antonio, -.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/campagnola-domenico-op-follower-of,"Campagnola, Domenico, /-op., follower of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/angelo-battista-dell-attributed-to,"Angelo, Battista dell', -.","Del Moro, Battista",http://viaf.org/viaf/37771338,http://id.loc.gov/authorities/names/nr97010729,http://isni.org/isni/0000000117587061,59,72,65,65,65.25
+http://purl.org/emmedi/mauth/frick/artist/passerotti-bartolomeo,"Passerotti, Bartolomeo, -.","Passarotti, Bartolomeo, 1529-1592",http://viaf.org/viaf/61818880,http://id.loc.gov/authorities/names/n88092771,http://isni.org/isni/000000006633117X,81,88,77,77,80.75
+http://purl.org/emmedi/mauth/frick/artist/torbido-francesco-c,"Torbido, Francesco, c./-/.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/garofalo-benvenuto-tisio-da-c-shop-of,"Garofalo, Benvenuto Tisio da, c.-, shop of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/dente-girolamo-nmc,"Dente, Girolamo, n.-m.c..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/parigi-giulio-a-contributor,"Parigi, Giulio, a.-, contributor.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/garofalo-benvenuto-tisio-da-c-attributed-to,"Garofalo, Benvenuto Tisio da, c.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/ligurian-school-th-century-th-c-attributed-to,"Ligurian School , th C..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/anonymous-italian-school-active-th-century-alternate-attribution,"""Anonymous, Italian School, active th century, alternate attribution.""",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/tintoretto-domenico-robusti-il-attributed-to,"Tintoretto, Domenico Robusti, Il, -.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/barocci-federigo,"Barocci, Federigo, /-.","Barocci, Federigo, 1528-1612",http://viaf.org/viaf/41865190,http://id.loc.gov/authorities/names/n50067722,http://isni.org/isni/0000000123691850,80,86,76,100,85.5
+http://purl.org/emmedi/mauth/frick/artist/conegliano-cesare-da-op-attributed-to,"Conegliano, Cesare da, op.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/bronzino-school-of-attributed-to,"Bronzino, -, school of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/girolamo-sordo,"Girolamo Sordo, -.","Girolamo, dal Santo, approximately 1480-1561?",http://viaf.org/viaf/4809253,http://id.loc.gov/authorities/names/nr93052300,,44,56,39,73,53.0
+http://purl.org/emmedi/mauth/frick/artist/tironi-antonio-de,"Tironi, Antonio de', -.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/parmigianino-copy-of,"Parmigianino, /-, copy of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/vasari-giorgio-attributed-to-copy-of,"Vasari, Giorgio, -, copy of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/spagna-giovanni-di-pietro-lo-op,"Spagna, Giovanni di Pietro, Lo, op.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/parmesan-school-th-century-th-c,"Parmesan School , th C.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/franciabigio,"Franciabigio, /-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/crespi-raffaello-op-attributed-to,"Crespi, Raffaello, op..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/bartolomeo-veneto-opm-copy-of,"Bartolomeo Veneto, op.-m./, copy of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/brea-francesco-op-school-of-attributed-to,"Brea, Francesco, op.-, school of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/moretto-da-brescia-cc-and-assistants,"Moretto da Brescia, c.-c./, and assistants.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/gaja-giovanni-antonio-della-op,"Gaja, Giovanni Antonio della, op..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/girolamo-da-treviso-the-younger-attributed-to,"Girolamo da Treviso the Younger, -.","Girolamo, da Treviso, 1498-1544",http://viaf.org/viaf/95730747,http://id.loc.gov/authorities/names/no2012068145,http://isni.org/isni/0000000116903827,67,65,63,79,68.5
+http://purl.org/emmedi/mauth/frick/artist/tamagni-da-san-gimignano-vincenzo-c-attributed-to,"Tamagni da San Gimignano, Vincenzo, -c..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/giulio-romano,"Giulio Romano, -.","Caccini, Giulio, 1551-1618",http://viaf.org/viaf/10032703,http://id.loc.gov/authorities/names/n79113024,http://isni.org/isni/0000000118857377,42,53,32,63,47.5
+http://purl.org/emmedi/mauth/frick/artist/gherardi-cristofano-attributed-to,"Gherardi, Cristofano, -.","Gherardi, Cristofano, 1508-1556",http://viaf.org/viaf/10696507,http://id.loc.gov/authorities/names/nr90022241,http://isni.org/isni/0000000117426997,84,92,79,100,88.75
+http://purl.org/emmedi/mauth/frick/artist/giulio-romano-shop-of,"Giulio Romano, -, shop of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/ferrarese-school-th-century-th-c-attributed-to,"Ferrarese School , th C..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/gavasio-giovanni-giacomo-op,"Gavasio, Giovanni Giacomo, op..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/mosca-simone,"Mosca, Simone, -.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/zanetti-da-bugnate-antonio-op,"Zanetti da Bugnate, Antonio, op..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/ponteghini-giulio-c,"Ponteghini, Giulio, c.-/.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/milanese-school-th-century-th-c-attributed-to,"Milanese School , th C..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/arzere-stefano-dall-c-attributed-to,"Arzere, Stefano dall', c.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/bernardo-da-passignano-op,"Bernardo da Passignano, op..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/zucchi-jacopo-cc,"Zucchi, Jacopo, c.-c..","Zucchi, Jacopo, ca.1541-ca.1589",http://viaf.org/viaf/76183688,http://id.loc.gov/authorities/names/nr92041481,http://isni.org/isni/0000000067892657,79,82,70,93,81.0
+http://purl.org/emmedi/mauth/frick/artist/rinaldo-mantovano-opmp,"Rinaldo Mantovano, op.-m.p..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/abruzzi-school-th-century-th-c-attributed-to,"Abruzzi School , th C..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/antonio-del-ceraiolo-th-c,"Antonio del Ceraiolo, th C..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/piazzetta-giovanni-battista-attributed-to,"Piazzetta, Giovanni Battista, -.","Piazzetta, Giovanni Battista, 1682-1754",http://viaf.org/viaf/109273119,http://id.loc.gov/authorities/names/n83190325,http://isni.org/isni/0000000116980080,87,94,84,100,91.25
+http://purl.org/emmedi/mauth/frick/artist/paolino-da-pistoja-fra,"Paolino da Pistoja, Fra, -.","Paolino, fra, 1488-1547",http://viaf.org/viaf/26968145,http://id.loc.gov/authorities/names/nr97006395,,56,48,56,69,57.25
+http://purl.org/emmedi/mauth/frick/artist/manajoli-f-a-th-century,"Manajoli, F. A., th century.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/semplicio-de-verona-fra,"Semplicio de Verona, Fra, -.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/roman-school-th-century-th-c-attributed-to,"Roman School , th C..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/grammorseo-pietro-op,"Grammorseo, Pietro, op.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/cavazzola-paolo-morando-il,"Cavazzola, Paolo Morando, Il, -.","Cavazzola, 1486-1522",http://viaf.org/viaf/10636955,http://id.loc.gov/authorities/names/nr95014293,http://isni.org/isni/0000000066749939,46,55,40,64,51.25
+http://purl.org/emmedi/mauth/frick/artist/giulio-romano-manner-of,"Giulio Romano, -, manner of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/fantoni-giacomo-mc,"Fantoni, Giacomo, -m.c..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/abruzzi-school-th-century-th-c,"Abruzzi School , th C.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/italian-school-th-century-th-c-manner-of,"Italian School , th C., manner of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/bronzino-formerly-attributed-to,"Bronzino, -, formerly attributed to.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/tatti-francesco-dei-op,"Tatti, Francesco dei, op..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/florentine-school-th-century-th-c,"Florentine School , th C.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/bonifazio-veronese-school-of,"Bonifazio Veronese, -, school of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/scalabrino-lo-p,"Scalabrino, Lo, -p..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/saccaccini-da-carpi-op,"Saccaccini da Carpi, op..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/cioli-valerio-di-simone,"Cioli, Valerio di Simone, -.","Cioli, Valerio 1529?-1599",http://viaf.org/viaf/19953744,http://id.loc.gov/authorities/names/nr2002004041,http://isni.org/isni/0000000066608634,60,60,57,72,62.25
+http://purl.org/emmedi/mauth/frick/artist/giulio-romano-opy-of,"Giulio Romano, -, opy of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/veronese-school-th-century-th-c-attributed-to,"Veronese School , th C,.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/andrea-del-sarto-cm-school-of,"Andrea del Sarto, c./-m., school of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/bertucci-the-elder-giovanni-battista-opmp,"Bertucci the Elder, Giovanni Battista, op.-m.p..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/pedrini-domenico,"Pedrini, Domenico, -.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/veronese,"Veronese, -.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/bassano-jacopo-da-ponte-il-c-shop-of,"Bassano, Jacopo da Ponte, Il, c./-, shop of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/grandi-giovanni-girolamo,"Grandi, Giovanni Girolamo, -.","Grandi, Gian Girolamo, 1508-1560",http://viaf.org/viaf/52541799,http://id.loc.gov/authorities/names/nr98028935,http://isni.org/isni/0000000049428869,79,83,74,77,78.25
+http://purl.org/emmedi/mauth/frick/artist/titian-school-of,"Titian, /-, school of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/bronzino-shop-of-attributed-to,"Bronzino, -, shop of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/sardinian-school-th-century-th-c,"Sardinian School , th C.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/campi-giulio-c-attributed-to,"Campi, Giulio, c.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/previtali-andrea-cc-attributed-to,"Previtali, Andrea, c.-c..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/raphael-copy-of-shop-of,"Raphael, -, copy of, shop of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/pontormo-jacopo-carucci-da-copy-of,"Pontormo, Jacopo Carucci da, -, copy of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/veronese-school-of-attributed-to,"Veronese, -, school of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/rosi-alessandro,"Rosi, Alessandro, -.","Rosi, Alessandro, 1627?-1707?",http://viaf.org/viaf/50032495,http://id.loc.gov/authorities/names/nr95007217,http://isni.org/isni/0000000066774317,78,90,75,100,85.75
+http://purl.org/emmedi/mauth/frick/artist/bagni-giulio-th-c,"Bagni, Giulio, th C..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/bandinelli-baccio-school-of,"Bandinelli, Baccio, -, school of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/beccaruzzi-francesco-cc,"Beccaruzzi, Francesco, c.-c..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/rosso-fiorentino-attributed-to,"Rosso Fiorentino, -.","Rosso Fiorentino, 1494-1540",http://viaf.org/viaf/107532392,http://id.loc.gov/authorities/names/n85221402,http://isni.org/isni/000000012032385X,81,90,76,100,86.75
+http://purl.org/emmedi/mauth/frick/artist/savin-da-venezia-pier-paolo-op-attributed-to,"Savin da Venezia, Pier Paolo, op.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/vaga-perino-del,"Vaga, Perino del, -.","Perino, del Vaga",http://viaf.org/viaf/79398871,http://id.loc.gov/authorities/names/n79035517,http://isni.org/isni/0000000108021779,61,73,100,100,83.5
+http://purl.org/emmedi/mauth/frick/artist/italofranco-school-th-century-th-c,"Italo-Franco School , th C.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/roman-school-th-century-th-c,"Roman School , th c.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/tommaso-da-bologna-opmc,"Tommaso da Bologna, op.-m.c..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/bartolomeo-fra,"Bartolomeo, Fra, -.","Bartolomeo, fra, 1472-1517",http://viaf.org/viaf/89128949,http://id.loc.gov/authorities/names/n85042709,http://isni.org/isni/0000000107854437,76,84,74,100,83.5
+http://purl.org/emmedi/mauth/frick/artist/vicenza-school-th-century-th-c-attributed-to,"Vicenza School , th C..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/genoese-school-th-century-th-c,"Genoese School , th C.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/campi-giulio-c-shop-of,"Campi, Giulio, c.-, shop of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/cambiaso-luca-copy-of,"Cambiaso, Luca, -, copy of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/north-italian-school-th-century-th-c-attributed-to,"North Italian School , th C..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/perugian-school-th-century-th-c-attributed-to,"Perugian School , th C..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/cavazzola-paolo-morando-il-attributed-to,"Cavazzola, Paolo Morando, Il, -.","Cavazzola, 1486-1522",http://viaf.org/viaf/10636955,http://id.loc.gov/authorities/names/nr95014293,http://isni.org/isni/0000000066749939,46,55,40,64,51.25
+http://purl.org/emmedi/mauth/frick/artist/bonifazio-veronese-circle-of,"Bonifazio Veronese, -, circle of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/bontulli-paolo-op,"Bontulli, Paolo, op.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/mantuan-school-th-century-th-c,"Mantuan School , th C.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/leonardo-da-vinci,"Leonardo da Vinci, -.","Michelangelo Buonarroti, 1475-1564",http://viaf.org/viaf/24585191,http://id.loc.gov/authorities/names/n80152368,http://isni.org/isni/0000000121243640,36,43,36,36,37.75
+http://purl.org/emmedi/mauth/frick/artist/peruzzi-baldassarre,"Peruzzi, Baldassarre, -.","Peruzzi, Baldassare, 1481-1536",http://viaf.org/viaf/39646794,http://id.loc.gov/authorities/names/n83032025,http://isni.org/isni/000000008118944X,81,88,77,77,80.75
+http://purl.org/emmedi/mauth/frick/artist/mazzuoli-giuseppe-c-circle-of,"Mazzuoli, Giuseppe, c.-, circle of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/umbroroman-school-th-century-th-c,"Umbro-Roman School , th C.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/sansovino-jacopo-tatti-attributed-to,"Sansovino, Jacopo Tatti, -.","Sansovino, Iacopo, 1486-1570",http://viaf.org/viaf/77111998,http://id.loc.gov/authorities/names/n87881471,http://isni.org/isni/0000000121405734,69,70,62,62,65.75
+http://purl.org/emmedi/mauth/frick/artist/lotti-lorenzetto,"Lotti, Lorenzetto, -.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/orsi-da-novellara-lelio,"Orsi da Novellara, Lelio, -.","Orsi, Lelio, 1511-1587",http://viaf.org/viaf/13105395,http://id.loc.gov/authorities/names/n85158424,http://isni.org/isni/0000000115975490,56,59,51,67,58.25
+http://purl.org/emmedi/mauth/frick/artist/beccafumi-domenico-attributed-to,"Beccafumi, Domenico, -.","Beccafumi, Domenico, 1486-1551",http://viaf.org/viaf/10120260,http://id.loc.gov/authorities/names/nr90011126,http://isni.org/isni/0000000121204967,83,91,78,100,88.0
+http://purl.org/emmedi/mauth/frick/artist/leonbruno-lorenzo-attributed-to,"Leonbruno, Lorenzo, -.","Leonbruno, Lorenzo, 1489-1537?",http://viaf.org/viaf/30344167,http://id.loc.gov/authorities/names/nr96009232,http://isni.org/isni/0000000083686925,81,91,77,100,87.25
+http://purl.org/emmedi/mauth/frick/artist/apollodoro-francesco-opc-copy-of-attributed-to,"Apollodoro, Francesco, op.c.-, copy of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/parmigianino-attributed-to,"Parmigianino, /-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/marsili-sebastiano-opc,"Marsili, Sebastiano, op.c..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/giovanni-da-udine-copy-of,"Giovanni da Udine, - copy of.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/avantino-dal-borgo-th-c,"Avantino dal Borgo, th C.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/pastorini-pastorino-c,"Pastorini, Pastorino, c.-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/porta-guglielmo-della-opm-attributed-to,"Porta, Guglielmo della, op.-m..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/abbate-niccolo-dell-ncm-contributor,"Abbate, Niccolò dell', n.c.-m., contributor.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/paduan-school-th-century-th-c-attributed-to,"Paduan School , th C..",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/savoldo-giovanni-girolamo-c,"Savoldo, Giovanni Girolamo, c./-.",,,,,0,0,0,0,0.0
+http://purl.org/emmedi/mauth/frick/artist/schiavone-andrea,"Schiavone, Andrea, -.","Meduli&#x107;, Andrija",http://viaf.org/viaf/47558168,http://id.loc.gov/authorities/names/n80084600,http://isni.org/isni/0000000122795789,37,42,40,40,39.75
+http://purl.org/emmedi/mauth/frick/artist/bolognese-school-th-century,Bolognese School .,,,,,0,0,0,0,0.0

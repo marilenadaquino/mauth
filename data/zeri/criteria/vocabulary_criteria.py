@@ -42,13 +42,13 @@ g.add(( URIRef(base+'scholar-attribution'), RDF.type, URIRef(HICO.Interpretation
 g.add(( URIRef(base+'scholar-attribution'), RDFS.label, Literal('scholar\'s attribution') ))
 g.add(( URIRef(base+'scholar-attribution'), DBO.rating, Literal('6.0', datatype=XSD.float) ))
 
-g.add(( URIRef(base+'museum-attribution'), RDF.type, URIRef(HICO.InterpretationCriterion) ))
-g.add(( URIRef(base+'museum-attribution'), RDFS.label, Literal('museum attribution') ))
-g.add(( URIRef(base+'museum-attribution'), DBO.rating, Literal('5.0', datatype=XSD.float) ))
-
 g.add(( URIRef(base+'scholar-note-on-photo'), RDF.type, URIRef(HICO.InterpretationCriterion) ))
 g.add(( URIRef(base+'scholar-note-on-photo'), RDFS.label, Literal('scholar\'s note on the photograph') ))
 g.add(( URIRef(base+'scholar-note-on-photo'), DBO.rating, Literal('5.0', datatype=XSD.float) ))
+
+g.add(( URIRef(base+'museum-attribution'), RDF.type, URIRef(HICO.InterpretationCriterion) ))
+g.add(( URIRef(base+'museum-attribution'), RDFS.label, Literal('museum attribution') ))
+g.add(( URIRef(base+'museum-attribution'), DBO.rating, Literal('5.0', datatype=XSD.float) ))
 
 g.add(( URIRef(base+'inscription'), RDF.type, URIRef(HICO.InterpretationCriterion) ))
 g.add(( URIRef(base+'inscription'), RDFS.label, Literal('inscription') ))

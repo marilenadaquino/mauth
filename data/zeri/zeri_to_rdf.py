@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: UTF-8
-import requests , time , csv , sys , rdflib , hashlib, logging , json , urllib , re , string ,io , codecs , uuid
+import requests , time , csv , sys , rdflib , hashlib, logging , json , urllib , re , string ,io , codecs , uuid , os
 from rdflib import URIRef , XSD, Namespace , Literal 
 from rdflib.namespace import OWL, DCTERMS , RDF , RDFS , DCTERMS
 from fuzzywuzzy import fuzz
@@ -21,6 +21,7 @@ artists_graph = URIRef('http://purl.org/emmedi/mauth/artists/')
 artworks_graph = URIRef('http://purl.org/emmedi/mauth/artworks/')
 criterion = 'http://purl.org/emmedi/mauth/criteria/'
 
+dirpath = os.getcwd()+'/data/zeri/'
 # utils
 def clean_to_uri(stringa):
     """ given a string return a partial URI"""
@@ -87,7 +88,7 @@ def get_criteria(text):
 		criteria.add('none')
 	return criteria
 
-
+# methods for criteria
 def get_cited_entity(text):
 	""" given a string returns the keyword representing the criterion"""
 	criteria = set()
@@ -202,7 +203,7 @@ def reconcile_two(graph_name, file_name, final_file_name, field_one, field_check
     return g.serialize(destination=final_file_name + '.nq', format='nquads')
 
 # 1. create rdf data
-def zeri_to_rdf():
+def zeri_to_rdf(initial_xml,zeri_rdf):
 	""" extract data from xls file and transform artworks, creation, attributions and artists"""	
 	# prepare graph
 	g=rdflib.ConjunctiveGraph(identifier=base)
@@ -211,7 +212,7 @@ def zeri_to_rdf():
 	g.bind('hico', HICO)
 
 	# open XML dump
-	tree = ET.parse('fzeri_OA_2015_11_26_175351.xml')
+	tree = ET.parse(initial_xml)
 	root = tree.getroot()
 
 	autmSet = set()
@@ -283,13 +284,15 @@ def zeri_to_rdf():
 					aat = paragraph.find('AAT')
 					if aat is not None and 'Zeri' not in aat.text:
 						g.add(( URIRef(artworkAttributionURI), HICO.hasInterpretationCriterion, URIRef(criterion+'archival-classification') ))
+						g.add(( URIRef(artworkAttributionURI), HICO.hasInterpretationCriterion, URIRef(criterion+'scholar-attribution') ))
+						g.add(( URIRef(artworkAttributionURI), CITO.agreesWith, URIRef(base+'f-zeri') ))
 						g.add(( URIRef(artworkAttributionURI), PROV.startedAtTime , Literal('1990-01-01T00:00:01Z', datatype=XSD.dateTime) ))		
 			for bibl in scheda.findall('PARAGRAFO[@etichetta="BIBLIOGRAPHY"]/RIPETIZIONE'): # multiple artists
 				brid = str(uuid.uuid4())
-				br = " ".join(bibl.itertext()).encode('utf-8')
+				br = " ".join(bibl.itertext())
 				g.add(( URIRef(artworkAttributionURI), CITO.citesAsEvidence, URIRef(base+'br/'+brid ) ))
 				g.add(( URIRef(base+'br/'+brid ), RDFS.label, Literal(br) ))
-				print br
+				
 		# discarded attributions
 		naat= 0
 		for paragraph in scheda.findall('PARAGRAFO[@etichetta="DIFFERENT ATTRIBUTIONS"]/RIPETIZIONE'): # multiple artists
@@ -346,16 +349,14 @@ def zeri_to_rdf():
 							for yearOne in year:
 								g.add(( URIRef(artworkAttributionURI), PROV.startedAtTime , Literal(yearOne+'-01-01T00:00:01Z', datatype=XSD.dateTime) ))
 	
-	return g.serialize(destination='FINAL_zeri.nq', format='nquads')
-
-zeri_to_rdf()
+	return g.serialize(destination=zeri_rdf, format='nquads')
 
 # 2. create the linkset of artists
-def zeri_artists_linkset():
+def artists_linkset(authority,sandrart,linkset_artists_zeri):
 	""" read the authority file, including links to ULAN, WD, DBPedia, and VIAF, and reconciled artists to Sandrart, and create a linkset for artists."""
 	g=rdflib.ConjunctiveGraph(identifier=URIRef(artists_graph))
 	g.bind('owl', OWL)
-	auth = ET.parse('Authority-Artist-updated.xml')
+	auth = ET.parse(authority)
 	authRoot = auth.getroot()
 	# VIAF, DB, WD, ULAN
 	for row in authRoot.findall('./ROW'):	
@@ -378,30 +379,27 @@ def zeri_artists_linkset():
 			g.add(( URIRef(uri) , OWL.sameAs , URIRef(viaf.text) ))
 			g.add(( URIRef(viaf.text) , OWL.sameAs , URIRef(uri) ))
 	# Sandrart
-	sandrart = rdflib.Graph()
-	sandrart = sandrart.parse('FINAL_artists_sandrart_reconciled.rdf', format="n3")
-	for s,p,o in sandrart.triples(( None, OWL.sameAs, None )):
-		g.add(( URIRef(s) , OWL.sameAs , URIRef(o) ))
-		g.add(( URIRef(o) , OWL.sameAs , URIRef(s) ))
-	return g.serialize(destination='linkset_artists_zeri.nq', format='nquads')
+	# sandrart = rdflib.Graph()
+	# sandrart = sandrart.parse(sandrart, format="n3")
+	# for s,p,o in sandrart.triples(( None, OWL.sameAs, None )):
+	# 	g.add(( URIRef(s) , OWL.sameAs , URIRef(o) ))
+	# 	g.add(( URIRef(o) , OWL.sameAs , URIRef(s) ))
+	return g.serialize(destination=linkset_artists_zeri, format='nquads')
 
-#zeri_artists_linkset()
-
+# 3. create linksets artworks
 def reconcile_zeri_artworks_to_all():
 	"""call the utils method for all the final csv with data reconciled"""
-	reconcile_two(artworks_graph, 'FINAL_artworks_db_reconciled.csv', 'linkset_artworks_zeri_dbpedia', 'zeriArtwork', 'include', 'dbArtwork')
-	reconcile_two(artworks_graph, 'FINAL_artworks_sandrart_reconciled.csv', 'linkset_artworks_zeri_sandrart', 'zeriArtwork','include', 'sandrartArtwork')
-	reconcile_two(artworks_graph, 'FINAL_artworks_viaf_reconciled.csv', 'linkset_artworks_zeri_viaf', 'zeriArtwork', 'include', 'viafArtwork')
-	reconcile_two(artworks_graph, 'FINAL_artworks_wd_reconciled.csv', 'linkset_artworks_zeri_wikidata', 'zeriArtwork', 'include', 'wdArtwork')
+	reconcile_two(artworks_graph, dirpath+'csv/FINAL_artworks_db_reconciled.csv', dirpath+'rdf/linkset_artworks_zeri_dbpedia', 'zeriArtwork', 'include', 'dbArtwork')
+	reconcile_two(artworks_graph, dirpath+'csv/FINAL_artworks_sandrart_reconciled.csv', dirpath+'rdf/linkset_artworks_zeri_sandrart', 'zeriArtwork','include', 'sandrartArtwork')
+	reconcile_two(artworks_graph, dirpath+'csv/FINAL_artworks_viaf_reconciled.csv', dirpath+'rdf/linkset_artworks_zeri_viaf', 'zeriArtwork', 'include', 'viafArtwork')
+	reconcile_two(artworks_graph, dirpath+'csv/FINAL_artworks_wd_reconciled.csv', dirpath+'rdf/linkset_artworks_zeri_wikidata', 'zeriArtwork', 'include', 'wdArtwork')
 
-#reconcile_zeri_artworks_to_all()
-
-
-def zeri_historians_linkset():
+# 4. create linkset historians
+def historians_linkset(historians_revised,linkset_arthistorians_zeri):
 	""" given a csv with art historians already reconciled to VIAF creates the linkset"""
 	g=rdflib.ConjunctiveGraph(identifier=URIRef(arthistorians_graph))
 	g.bind('owl', OWL)
-	with open('FINAL_critics_all_reconciled.csv', 'rb') as csvfile:
+	with open(historians_revised, 'r', encoding='utf-8') as csvfile:
 		reader = csv.DictReader(csvfile)
 		for row in reader:
 			uri = 'http://purl.org/emmedi/mauth/zeri/'+clean_to_uri(row['name'].strip())
@@ -416,29 +414,27 @@ def zeri_historians_linkset():
 			# if altName != '':
 			#  	g.add(( URIRef(uri.decode('utf-8')) , RDFS.label , Literal( altName.decode('utf-8') ) ))
 			if firstName != '':
-				g.add(( URIRef(uri.encode('utf-8')) , RDFS.label , Literal( firstName ) ))
+				g.add(( URIRef(uri) , RDFS.label , Literal( firstName ) ))
 			if viaf != '':
-				g.add(( URIRef(uri.encode('utf-8')) , OWL.sameAs , URIRef(viaf.encode('utf-8')) ))
-				g.add(( URIRef(viaf.encode('utf-8')) , OWL.sameAs , URIRef(uri.encode('utf-8')) ))
+				g.add(( URIRef(uri) , OWL.sameAs , URIRef(viaf) ))
+				g.add(( URIRef(viaf) , OWL.sameAs , URIRef(uri) ))
 			if lc != '':
-				g.add(( URIRef(uri.encode('utf-8')) , OWL.sameAs , URIRef(lc.encode('utf-8')) ))
-				g.add(( URIRef(lc.encode('utf-8')) , OWL.sameAs , URIRef(uri.encode('utf-8')) ))
+				g.add(( URIRef(uri) , OWL.sameAs , URIRef(lc) ))
+				g.add(( URIRef(lc) , OWL.sameAs , URIRef(uri) ))
 			if isni != '':
-				g.add(( URIRef(uri.encode('utf-8')) , OWL.sameAs , URIRef(isni.encode('utf-8')) ))
-				g.add(( URIRef(isni.encode('utf-8')) , OWL.sameAs , URIRef(uri.encode('utf-8')) ))
+				g.add(( URIRef(uri) , OWL.sameAs , URIRef(isni) ))
+				g.add(( URIRef(isni) , OWL.sameAs , URIRef(uri) ))
 			if bnf != '':
 				if 'http' in bnf :
-					g.add(( URIRef(uri.encode('utf-8')) , OWL.sameAs , URIRef(bnf.encode('utf-8')) ))
-					g.add(( URIRef(bnf.encode('utf-8')) , OWL.sameAs , URIRef(uri.encode('utf-8')) ))
+					g.add(( URIRef(uri) , OWL.sameAs , URIRef(bnf) ))
+					g.add(( URIRef(bnf) , OWL.sameAs , URIRef(uri) ))
 				else: 
-					g.add(( URIRef(uri.encode('utf-8')) , OWL.sameAs , URIRef('http://data.bnf.fr/ark:/'+bnf.encode('utf-8')) ))
-					g.add(( URIRef('http://data.bnf.fr/ark:/'+bnf.encode('utf-8')) , OWL.sameAs , URIRef(uri.encode('utf-8')) ))
+					g.add(( URIRef(uri) , OWL.sameAs , URIRef('http://data.bnf.fr/ark:/'+bnf) ))
+					g.add(( URIRef('http://data.bnf.fr/ark:/'+bnf) , OWL.sameAs , URIRef(uri) ))
 			if dnb != '':
-				g.add(( URIRef(uri.encode('utf-8')) , OWL.sameAs , URIRef(dnb.encode('utf-8')) ))
-				g.add(( URIRef(dnb.encode('utf-8')) , OWL.sameAs , URIRef(uri.encode('utf-8')) ))
+				g.add(( URIRef(uri) , OWL.sameAs , URIRef(dnb) ))
+				g.add(( URIRef(dnb) , OWL.sameAs , URIRef(uri) ))
 			if wd != '':
-				g.add(( URIRef(uri.encode('utf-8')) , OWL.sameAs , URIRef(wd.encode('utf-8')) ))
-				g.add(( URIRef(wd.encode('utf-8')) , OWL.sameAs , URIRef(uri.encode('utf-8')) ))
-	return g.serialize(destination='linkset_arthistorians_zeri.nq', format='nquads')
-
-#zeri_historians_linkset()
+				g.add(( URIRef(uri) , OWL.sameAs , URIRef(wd) ))
+				g.add(( URIRef(wd) , OWL.sameAs , URIRef(uri) ))
+	return g.serialize(destination=linkset_arthistorians_zeri, format='nquads')

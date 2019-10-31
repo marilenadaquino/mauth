@@ -1,0 +1,4 @@
+<http://purl.org/emmedi/mauth/frick/artwork/b11074966> <http://www.w3.org/2002/07/owl#sameAs> <http://purl.org/emmedi/mauth/zeri/artwork/39794> <http://purl.org/emmedi/mauth/artworks/> .
+<http://purl.org/emmedi/mauth/frick/artwork/b11074966> <http://www.w3.org/2002/07/owl#sameAs> <http://purl.org/emmedi/mauth/itatti/artwork/8000852449> <http://purl.org/emmedi/mauth/artworks/> .
+<http://purl.org/emmedi/mauth/zeri/peruzzi-baldassarre> <http://www.w3.org/2002/07/owl#sameAs> <http://purl.org/emmedi/mauth/itatti/artist/peruzzi-baldassare--italian-artist> <http://purl.org/emmedi/mauth/artists/> .
+<http://purl.org/emmedi/mauth/zeri/asta-christies> <http://www.w3.org/2002/07/owl#sameAs> <http://purl.org/emmedi/mauth/itatti/christies> <http://purl.org/emmedi/mauth/historians/> .

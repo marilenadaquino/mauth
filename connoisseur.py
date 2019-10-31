@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import utils , config , rdflib , urllib, datetime , sys , re , os.path , logging , csv , json , uuid , time , hydra.tpf
+import utils , config , rdflib , urllib, datetime , sys , re , os.path , logging , csv , json , uuid , time , hydra , tpf
 from rdflib import Graph, Namespace, URIRef , XSD, Namespace , Literal
 from rdflib.namespace import RDF, RDFS , OWL , DC
 from rdflib.plugins.stores import sparqlstore 
@@ -8,6 +8,7 @@ from pymantic import sparql
 from collections import defaultdict
 
 logging.basicConfig()
+dirpath = os.getcwd()
 currPath = os.path.dirname(os.path.abspath(__file__))
 time = str(datetime.datetime.now()).replace(' ', '').replace(':','').replace('.','').replace('-','')
 
@@ -18,10 +19,7 @@ CITO = Namespace("http://purl.org/spar/cito/")
 
 class Connoisseur(object):
 	""" given a collection of URIs identifying artworks, a list of trusted providers, a mapping document, and a settings file,
-	the crawling process retrieves authorship attributions and uploads results on the triplestore in the Observation Graph
-
-	Attributes:
-
+	retrieve attributions and upload results on the triplestore in the Observation Graph
 	"""
 	def __init__(self, uris, graph):
 		""" Returns a Connoisseur object for the input URI"""
@@ -31,30 +29,65 @@ class Connoisseur(object):
 	def updateLinksets(self, linkset, settingFile, fileName):
 		""" given a linkset fetches data to find equivalences and updates the graph with the new found equivalneces"""
 		try:
-			get_artists = """
+			thisGraph=rdflib.ConjunctiveGraph(identifier=URIRef(linkset))
+			get_entities = """
 				PREFIX owl: <http://www.w3.org/2002/07/owl#>
-				SELECT DISTINCT ?b 
+				SELECT DISTINCT ?a ?b 
 				FROM <"""+linkset+""">
-				WHERE { ?a (^owl:sameAs|owl:sameAs)* ?b }"""
-			# query the linkset of artists: look for equivalences and return a list of equivalences
+				WHERE { {?b owl:sameAs ?a} UNION {?a owl:sameAs ?b} }"""
 			sparqlW1 = SPARQLWrapper(config.SPARQLendpoint)
-			sparqlW1.setQuery(get_artists)
+			sparqlW1.setQuery(get_entities)
 			sparqlW1.setReturnFormat(JSON)
 			results = sparqlW1.query().convert()
-			inputList = list(result["b"]["value"] for result in (results["results"]["bindings"]) if result["b"]["value"] != [])
-			for inputURI in inputList:
-				singleResultsGraph = utils.fetchData(uri=inputURI, settingFile=settingFile, inputPattern='http://www.w3.org/2002/07/owl#sameAs', outputPattern=rdflib.term.URIRef(OWL.sameAs))
-				artistsGraph += singleResultsGraph
-			artistsGraph.serialize(destination='data/recursive_linkset_'+fileName+'.nq', format='nquads')
-			config.server.update('load <'+currPath+'/data/recursive_linkset_'+fileName+'.nq>')
-		except:
-			pass
+			inputList = list((result["a"]["value"], result["b"]["value"]) for result in (results["results"]["bindings"]) if result["b"]["value"] != [])
+			inputList = {item for tup in inputList for item in tup}
+			# recursive sameAs
+			for a in inputList:
+				singleResultsGraph = utils.fetchData(uri=a, settingFile=settingFile, inputPattern='http://www.w3.org/2002/07/owl#sameAs', outputPattern=rdflib.term.URIRef(OWL.sameAs), outputGraph=URIRef(linkset) )
+				thisGraph += singleResultsGraph
+			thisGraph.serialize(destination='data/recursive_linkset_'+fileName+'.nq', format='nquads')
+			print("[DONE] created recursive linkset"+linkset)
+			server = sparql.SPARQLServer(config.SPARQLendpoint)
+			server.update('load <file://'+dirpath+'/data/recursive_linkset_'+fileName+'.nq>')
+			print("[DONE] uploaded recursive linkset")
+		except Exception as error:
+			print("[EHM] problems with recursive "+linkset)
+			print(Exception, error)
 
-	# usage
-	# updateLinksets(config.artworks_linkset, 'settings/settings.json', 'artworks')
-	# updateLinksets(config.artists_linkset, 'settings/settings.json', 'artists')
-	# updateLinksets(config.historians_linkset, 'settings/settings.json', 'historians')
-	
+		try:
+			get_tran_entities = """
+				PREFIX owl: <http://www.w3.org/2002/07/owl#>
+				SELECT DISTINCT ?a ?b 
+				FROM <"""+linkset+""">
+				WHERE { {?a owl:sameAs ?c . ?c owl:sameAs ?b .} UNION {?b owl:sameAs ?c . ?a owl:sameAs ?c .} UNION {?b owl:sameAs ?c . ?c owl:sameAs ?a .} UNION {?b owl:sameAs ?c . ?a owl:sameAs ?c .} }"""	
+			# transitive sameAs
+			sparqlW2 = SPARQLWrapper(config.SPARQLendpoint)
+			sparqlW2.setQuery(get_tran_entities)
+			sparqlW2.setReturnFormat(JSON)
+			results = sparqlW2.query().convert()
+			linkList = list((result["a"]["value"], result["b"]["value"]) for result in (results["results"]["bindings"]) if result["b"]["value"] != [])
+			# make set
+			linksetGraph=rdflib.ConjunctiveGraph(identifier=URIRef(linkset))
+			for a,b in linkList:
+				linksetGraph.add(( URIRef(a), OWL.sameAs, URIRef(b) ))
+				linksetGraph.add(( URIRef(b), OWL.sameAs, URIRef(a) ))
+			linksetGraph.serialize(destination='data/transitive_linkset_'+fileName+'.nq', format='nquads')
+			print("[DONE] created transitive linkset"+linkset)
+			server = sparql.SPARQLServer(config.SPARQLendpoint)
+			server.update('load <file://'+dirpath+'/data/transitive_linkset_'+fileName+'.nq>')
+			print("[DONE] uploaded transitive linkset")
+		except:
+			print("[EHM] problems with transitive "+linkset)
+		try:
+			queryString = """WITH <"""+linkset+"""> INSERT { ?subj owl:sameAs ?obj . ?obj owl:sameAs ?subj . } WHERE {?subj owl:sameAs/owl:sameAs ?obj .}"""
+			sparqlW3 = SPARQLWrapper(config.SPARQLendpoint)
+			sparqlW3.setQuery(queryString) 
+			sparqlW3.method = 'POST'
+			sparqlW3.query()
+			print("[DONE] UPDATE linkset")
+		except:
+			print("[EHM] problems with UPDATE"+linkset)
+
 
 	def findAttributions(self, artwork):
 		""" given an inputURI identifying an artwork, looks for all the equivalent URIs in the linkset of artworks and fetches attributions """
@@ -207,38 +240,23 @@ class Connoisseur(object):
 				URIbase = utils.splitURI(artwork)
 				with open(config.settingsFile) as settings:    
 					data_source = json.load(settings)
-					print str(n), ": Fetching data for URI:", artwork.encode('utf-8')
+					print (str(n), ": Fetching data for URI:", artwork.encode('utf-8'))
 					if URIbase not in data_source:
-						print 'NOT FOUND', artwork.encode('utf-8')
+						print ('NOT FOUND', artwork.encode('utf-8'))
 					else:
 						artworkGraph = self.findAttributions(artwork)
-						print 'YEE FOUND', artwork.encode('utf-8')
+						print ('FOUND', artwork.encode('utf-8'))
 						if artworkGraph is not None:
-								resultsGraph += artworkGraph
+							resultsGraph += artworkGraph
 						
 			
 			# update triples on blazegraph
 			resultsGraph.serialize('observations/observations-'+time+'.nq', format='nquads')
-			config.server.update('load <'+currPath+'/observations/observations-'+time+'.nq>')
+			config.server.update('load <file://'+currPath+'/observations/observations-'+time+'.nq>')
 		except Exception as e:
 			exc_type, exc_obj, exc_tb = sys.exc_info()
 			fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
 			print('updateAttributions', exc_type, fname, exc_tb.tb_lineno, e)
 
-	# usage
-	# get_artworks = """
-	# 	PREFIX owl: <http://www.w3.org/2002/07/owl#>
-	# 	SELECT DISTINCT ?artwork
-	# 	FROM <"""+config.artworks_linkset+""">
-	# 	WHERE { {?a ?b ?artwork } UNION {?artwork ?b ?c } }"""
-	# # query the linkset of artworks: look for equivalences and return a list of equivalences
-	# sparqlW = SPARQLWrapper(config.SPARQLendpoint)
-	# sparqlW.setQuery(get_artworks)
-	# sparqlW.setReturnFormat(JSON)
-	# results = sparqlW.query().convert()
-	# artworkList = list( result["artwork"]["value"] for result in (results["results"]["bindings"]))
-				
-	# kb = Connoisseur(artworkList, config.attributions_graph)
-	# kb.updateAttributions()
 
 

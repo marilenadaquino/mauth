@@ -10,8 +10,8 @@ Created by pixpalette.com - online design magazine -->
     <title>mAuth - Mining AUTHoritativeness in art history</title>
 
     <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/custom.css" rel="stylesheet">
+    <link href="static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/css/custom.css" rel="stylesheet">
     
     <!-- fonts -->
     <link href='http://fonts.googleapis.com/css?family=Nixie+One' rel='stylesheet' type='text/css'>
@@ -35,7 +35,7 @@ Created by pixpalette.com - online design magazine -->
   	
     <div class="loader">
        <div>
-        <img src="images/icons/preloader.gif" />
+        <img src="static/images/icons/preloader.gif" />
        </div>
     </div>
     
@@ -49,7 +49,7 @@ Created by pixpalette.com - online design magazine -->
                 
                 	<h2>
                     Mining Authoritativeness<br> in Art History
-                    <span>A crawler of authorship attributions</span>
+                    <span>A crawler of artwork attributions</span>
                     </h2>
                 </div>
             </div>
@@ -70,12 +70,12 @@ Created by pixpalette.com - online design magazine -->
 
                     <!-- about -->
                     <div role="tabpanel" class="tab-pane fade" id="venue">
-                      <h4> mAuth is a tool for art historians, data collection managers, and curious, who want to collect information - historians' opinions, motivations, bibliographic references, and images - about the history of authorship attributions related to artworks of the Modern Art (15-16th centuries).</h4><br>
+                      <h4>mAuth is a tool for art historians, data collection managers, and curious, who want to collect information - historians' opinions, motivations, bibliographic references, and images - about artwork attributions related to artworks of the Modern Art (15-16th centuries).</h4><br>
                       <p><strong>WHAT -</strong> mAuth is a semantic crawler designed for harvesting information about authorship attributions in the web of data. The mAuth API - the one that does all the hard job! -  is implemented in Python, using Flask microframework.</p>
                       <p><strong>WHY -</strong> mAuth is a proof of concept. The aim is leveraging Semantic Web technologies to (a) support historians' daily tasks (such as retrieving information and sources), (b) evaluate the methodology underpinning decisions made by art historical data providers, and (c) investigate how concepts like 'authoritativeness' can be automatically interpreted given a set of rules and believes shared in a community.</p>
                       <p><strong>HOW -</strong> Attributions are sorted so as to immediately highlight the most well-documented, updated, and authoritative ones. The ranking is based on common requirements in the art historical methodology - e.g. timeliness of the attribution, completeness of information, and trustworthiness of the source of information.</p>
                       <p><strong>LIMITS -</strong> Attributions are extracted from secondary sources (e.g. cataloguing records, online web pages, bibliographies), hence data providers' authoritativeness is evaluated rather than the goodness of the attribution itself. Data sources currently harvested include art historical photo archives, such as the Federico Zeri Foundation (University of Bologna), the Berenson Library, Villa I Tatti (Univeristy of Harvard), and the Frick Art Reference Library of New York; multipurposes datasets, such as Wikidata, DBpedia, and VIAF; and libraries, such as BNF, LOC, DBN. More data sources will be (hopefully!) added soon.</p>
-                      <h4><a href="https://github.com/marilenadaquino/mauth">Source code and documentation</a></h4>   
+                      <h4><a href="https://github.com/marilenadaquino/mauth">Source code</a> and <a href="./swagger/">API documentation</a></h4>   
                     </div>
                     
                     <!-- search and results -->
@@ -226,13 +226,13 @@ Created by pixpalette.com - online design magazine -->
                                                           {% for scholarUri in attribution['scholar'] %}
                                                             {% for scholar in attribution[scholarUri] %}
                                                               {% if scholar['label'] %}
-                                                                <span>{{ scholar['label'].encode('utf-8') }} (</span>
+                                                                <span>{{ scholar['label']  }} (</span>
                                                               {% else %}
                                                                 <span> {{scholarUri.rsplit('/', 1)[-1]| replace("_", " ")}}</span>
                                                               {% endif %}
                                                               <small class="scholarIndex">h index: {{ scholar['h_index'] }}; </small>
                                                               {% if scholar['a_index'] %}
-                                                                <small class="scholarIndex">acceptance rating: <span>{{ (scholar['a_index']|float*100)|int }}</span>%</small>
+                                                                <small class="scholarIndex">acceptance rating: <span>{{ (scholar['a_index'])|int }}</span>%</small>
                                                               {% endif %}
                                                               {% if scholar['auth_index'] %}
                                                                 <small class="scholarIndex">; biased citations: {{ scholar['auth_index'] }}</small> 
@@ -247,7 +247,7 @@ Created by pixpalette.com - online design magazine -->
                                                     {% if attribution['bibl'] and attribution['bibl'][0] != 'none' %}
                                                       <strong title="bibliography">bibliography: </strong>
                                                       {% for br in attribution['bibl'] %}
-                                                        <span>{{ br.encode('utf-8') }}; </span><br/>
+                                                        <span>{{ br.encode('ascii', 'ignore').decode('ascii') }}; </span><br/>
                                                       {% endfor %}
                                                     {% endif %}
 
@@ -256,8 +256,6 @@ Created by pixpalette.com - online design magazine -->
                                                     <br/>
                                                     {% if attribution['sourceOfInformation'] %}
                                                       <strong><a href="{{attribution['sourceOfInformation']}}" target='_blank'>see more</a></strong>
-                                                      {% else %}
-                                                      <strong><a href="{{attribution['artwork']}}" target='_blank'>see more</a></strong>
                                                     {% endif %}
                                                 </p>
 
@@ -271,7 +269,7 @@ Created by pixpalette.com - online design magazine -->
                         {% endif %}
                     
                     </div>
-                    <h4>mAuth accepts URLs from the <a href="http://catalogo.fondazionezeri.unibo.it/ricerca.v2.jsp?percorso_ricerca=OA&decorator=layout_resp&apply=true&locale=en&ANNO_INIZIALE=1500&ANNO_FINALE=1600&sortby=LOCALIZZAZIONE&batch=10">online Zeri Catalogue</a>, in particular of artworks belonging to the Modern Art. Copy and paste the URL of a catalogue record in the text area and click Go! See for instance, <a href="http://163.172.177.79:8000/search?uri_source=http%3A%2F%2Fcatalogo.fondazionezeri.unibo.it%2Fscheda.v2.jsp%3Ftipo_scheda%3DOA%26id%3D45087%26titolo%3DVecellio%2520Tiziano%2C%2520Ritratto%2520di%2520gentildonna%26locale%3Den%26decorator%3Dlayout_resp%26apply%3Dtrue"><i>La Schiavona</i></a> </h4>
+                    <h4>mAuth accepts URLs from the <a href="http://catalogo.fondazionezeri.unibo.it/ricerca.v2.jsp?percorso_ricerca=OA&decorator=layout_resp&apply=true&locale=en&ANNO_INIZIALE=1500&ANNO_FINALE=1600&sortby=LOCALIZZAZIONE&batch=10">online Zeri Catalogue</a>, in particular of artworks belonging to the Modern Art. Copy and paste the URL of a catalogue record in the text area and click Go! See for instance, <a href="http://163.172.177.79:8000/search?uri_source=http%3A%2F%2Fcatalogo.fondazionezeri.unibo.it%2Fscheda.v2.jsp%3Ftipo_scheda%3DOA%26id%3D39794%26titolo%3DVecellio%2520Tiziano%2C%2520Ritratto%2520di%2520gentildonna%26locale%3Den%26decorator%3Dlayout_resp%26apply%3Dtrue"><i>The Three Graces</i></a> </h4>
                     <h4>Do you see anything wrong? | Do you want to suggest an improvement? <a href="https://goo.gl/forms/Tfr6sEr8FkJfFPOH2" target='_blank'>Leave a feedback!</a></h4> 
                 </div>
                 
@@ -294,63 +292,12 @@ Created by pixpalette.com - online design magazine -->
         </div>
     </div>
 
-<!-- Modal -->
-<div class="modal right fade" id="ticket-details" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <!--<div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Share your contact Details</h4>
-      </div>-->
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        	<img src="images/icons/cancel.png">
-        </button>
-        <h4 class="modal-title">Your Tickets</h4>
-      </div>
-      <div class="modal-body">
-        
-        <div class="cart-information">
-            	<div class="ticket-type"></div>
-          		<ul>
-	                <li>Tickets: <span class="ticket-count"></span></li>
-                    <li>Price: <span class="ticket-amount"></span></li>
-                    <hr>
-                    <li>Total: <span class="total-amount"></span></li>
-    			</ul>
-            </div>
-            
-            <div class="contactForm">	
-                <h3>Share your contact Details</h3>
-                <form>
-                  <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Enter your name">
-                  </div>
-                  
-                  <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Enter your Email ID">
-                  </div>
-                  
-                  <div class="form-group">
-                     <input type="text" class="form-control" placeholder="Enter your Mobile No.">
-                  </div>
-                  
-        		  <a type="submit" class="btn">Proceed to Payment</a>
-                </form>
-            </div>
-        
-        
-        
-      </div>
-    </div>
-  </div>
-</div>
     
     
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/allscript.js"></script>
+    <script src="static/js/bootstrap.min.js"></script>
+    <script src="static/js/allscript.js"></script>
   </body>
 </html>

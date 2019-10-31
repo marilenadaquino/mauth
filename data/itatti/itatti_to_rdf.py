@@ -1227,6 +1227,7 @@ def get_other_criteria_and_artist(attribution):
 
 	return criteria	
 
+
 def get_year(text):
 	""" match four digits in the string if lower that 2018 and attributes default value to others"""
 	criteria = set()
@@ -1237,14 +1238,14 @@ def get_year(text):
 	return criteria
 
 
-# 1. create rdf data DONE
-def itatti_to_rdf():
+# 1. create rdf data 
+def itatti_to_rdf(initial_csv,itatti_rdf):
 	""" extract data from xls file and transform artworks, creation, attributions and artists"""	
 	g=rdflib.ConjunctiveGraph(identifier=URIRef(itatti_graph))
 	g.bind('owl', OWL)
 	g.bind('crm', CIDOC)
 	g.bind('hico', HICO)
-	with open('ss_assets_811_130578.csv', 'r', encoding='utf-8') as csvfile:
+	with open(initial_csv, 'r', encoding='utf-8') as csvfile:
 		reader = csv.DictReader(csvfile)
 		for sheetX in reader:
 			artworkID = sheetX['Work[36658]']
@@ -1282,24 +1283,22 @@ def itatti_to_rdf():
 					g.add(( URIRef(base+'artist/anonymous') , DCTERMS.title , Literal('anonymous') ))
 				# attribution 
 				g.add(( URIRef(base+'artwork/'+artworkID+'/creation') , PROV.wasGeneratedBy , URIRef(base+'artwork/'+artworkID+'/attribution') ))
-				g.add(( URIRef(base+'artwork/'+artworkID+'/attribution') , CIDOC.P3_has_note , Literal(attributionLabel.encode('utf-8')) ))
+				g.add(( URIRef(base+'artwork/'+artworkID+'/attribution') , CIDOC.P3_has_note , Literal(attributionLabel) ))
 				g.add(( URIRef(base+'artwork/'+artworkID+'/attribution') , HICO.hasInterpretationType , URIRef(HICO+'authorship-attribution') ))
 				g.add(( URIRef(base+'artwork/'+artworkID+'/attribution') , HICO.hasInterpretationType , URIRef(base+'itatti-preferred-attribution') ))
 
-	return g.serialize(destination='FINAL_itatti.nq', format='nquads')
-
-#itatti_to_rdf()
+	return g.serialize(destination=itatti_rdf, format='nquads')
 
 
 # 2. reconcile artists to VIAF and co. and manually double check DONE
-def reconcile_itatti_artists_to_viaf():
+def reconcile_artists_to_viaf(itatti_rdf,artists_csv):
 	""" parse the .nq file, get the artists, fuzzy string matching to VIAF, create a csv 'artists_itatti_viaf.csv' to be manually double checked"""
 	baseURL = 'http://viaf.org/viaf/search/viaf?query=local.personalNames+%3D+%22'
-	f=csv.writer(open('artists_itatti_viaf.csv', 'w', encoding='utf-8'))
+	f=csv.writer(open(artists_csv, 'w', encoding='utf-8'))
 	f.writerow(['id']+['search']+['result']+['viaf']+['lc']+['isni']+['ratio']+['partialRatio']+['tokenSort']+['tokenSet']+['avg'])
 
 	g=rdflib.ConjunctiveGraph(identifier=URIRef(itatti_graph))
-	g.parse("FINAL_itatti.nq", format="nquads")
+	g.parse(itatti_rdf, format="nquads")
 	g.bind('owl', OWL)
 	names = set()
 	for s,p,o in g.triples((None, CIDOC.P14_carried_out_by, None)):
@@ -1343,15 +1342,13 @@ def reconcile_itatti_artists_to_viaf():
 			isni = ''
 		f.writerow([idName]+[name.strip()]+[label]+[viafid]+[lc]+[isni]+[ratio]+[partialRatio]+[tokenSort]+[tokenSet]+[avg])
 
-# reconcile_itatti_artists_to_viaf()
-
 
 # 3. create the linkset of artists
-def itatti_artists_linkset():
+def artists_linkset(artists_csv_revised, linkset_artists_itatti):
 	""" read the csv manually double checked, renamed 'FINAL_artists_itatti_viaf.csv', and create a linkset for artists."""
 	g=rdflib.ConjunctiveGraph(identifier=URIRef(artists_graph))
 	g.bind('owl', OWL)
-	with open('FINAL_artists_itatti_viaf.csv', 'r', encoding='utf-8') as csvfile:
+	with open(artists_csv_revised, 'r', encoding='utf-8') as csvfile:
 		reader = csv.DictReader(csvfile)
 		for row in reader:
 			uri = row['id'].strip()
@@ -1369,16 +1366,14 @@ def itatti_artists_linkset():
 			if isni != '':
 				g.add(( URIRef(uri) , OWL.sameAs , URIRef(isni) ))
 				g.add(( URIRef(isni) , OWL.sameAs , URIRef(uri) ))
-	g.serialize(destination='linkset_artists_itatti.nq', format='nquads')
-
-#itatti_artists_linkset()
+	g.serialize(destination=linkset_artists_itatti, format='nquads')
 
 
 # 4. create the linkset of artworks - reconciliation to zeri's via pastec DONE (partially)
-def reconcile_itatti_artworks_to_zeri():
+def reconcile_itatti_artworks_to_zeri(pastec_data, zeri_data, itatti_rdf,linkset_itatti_zeri_artworks):
 	""" get the match obtained from pastec, get the URI of artworks in zeri and itatti and create sameAs links """
 	# get artwork URI and photo filenames from zeri dataset
-	tree = ET.parse('fzeri_OA_2015_11_26_175351.xml')
+	tree = ET.parse(zeri_data)
 	root = tree.getroot()
 	zeriURIandImages = []
 	for scheda in root.findall('./SCHEDA'):	
@@ -1390,17 +1385,15 @@ def reconcile_itatti_artworks_to_zeri():
 
 	# get artwork URI and photo filenames from itatti dataset
 	g=rdflib.ConjunctiveGraph(identifier=URIRef(itatti_graph))	
-	g.parse("FINAL_itatti.nq", format="nquads")
+	g.parse(itatti_rdf, format="nquads")
 	itattiURIandImages = []
 	for s,p,o in g.triples((None, FOAF.depiction, None)):
 		for o1, p1, name in g.triples((o, DCTERMS.title, None )):
 			itattiURIandImages.append((str(s), str(name)))
-	for x,y in itattiURIandImages:
-		print(x,' - ',y)
 	# create the new graph
 	linkset=rdflib.ConjunctiveGraph(identifier=URIRef('http://purl.org/emmedi/mauth/artworks/'))
 	linkset.bind('owl', OWL)
-	with open('images_zeri_itatti_matched.csv','r') as csvfile:
+	with open(pastec_data,'r') as csvfile:
 		reader = csv.DictReader(csvfile)
 		for row in reader:
 			zeriImg = row['zeri'].strip()
@@ -1413,20 +1406,17 @@ def reconcile_itatti_artworks_to_zeri():
 				if y == zeriImg:
 					for z,w in itattiURIandImages:
 						if w == itattiImg:
-							print('zeri',x, '-',y,' -- itatti',z,'-',w)
 							linkset.add(( URIRef(x), OWL.sameAs, URIRef(z) ))
 							linkset.add(( URIRef(z), OWL.sameAs, URIRef(x) ))
-	return linkset.serialize(destination='linkset_itatti_zeri_artworks.nq', format='nquads')
-
-reconcile_itatti_artworks_to_zeri()
+	return linkset.serialize(destination=linkset_itatti_zeri_artworks, format='nquads')
 
 
 # 5. get the criteria underpinning the attribution
-def methodology_itatti():
+def methodology_itatti(itatti_rdf, initial_csv):
 	""" extract from each attribution the criterion and define a controlled vocabulary (reuse the zeri one). 
 	Secondly, update the itatti.nq file adding the interpretation criterion to each attribution."""
 	g=rdflib.ConjunctiveGraph(identifier=URIRef(itatti_graph))
-	g.parse("FINAL_itatti.nq", format="nquads")
+	g.parse(itatti_rdf, format="nquads")
 	g.bind('hico', HICO)
 	g.bind('cito', CITO)
 	g.bind('prov', PROV)
@@ -1434,7 +1424,7 @@ def methodology_itatti():
 	# pattern = re.compile(r"\.(?![^(]*\))") # dot outside parentesis indicate several criteria are provided BUT not always...
 	# date = re.compile(r"((18|19|20)\d{2})")
 	
-	with open('ss_assets_811_130578.csv', encoding='utf-8') as csvfile:
+	with open(initial_csv, encoding='utf-8') as csvfile:
 		reader = csv.DictReader(csvfile)
 		disc = 0
 		for row in reader: 
@@ -1510,7 +1500,7 @@ def methodology_itatti():
 								n += 1
 								g.add(( URIRef(base+'artwork/'+artworkID) , CIDOC.P94i_was_created_by , URIRef(base+'artwork/'+artworkID+'/creation'+str(n) ) ))	
 								g.add(( URIRef(base+'artwork/'+artworkID+'/creation'+str(n)) , PROV.wasGeneratedBy , URIRef(base+'artwork/'+artworkID+'/attribution'+str(n)) ))						
-								g.add(( URIRef(base+'artwork/'+artworkID+'/attribution'+str(n)) , CIDOC.P3_has_note , Literal(attribu.encode('utf-8')) ))
+								g.add(( URIRef(base+'artwork/'+artworkID+'/attribution'+str(n)) , CIDOC.P3_has_note , Literal(attribu) ))
 								g.add(( URIRef(base+'artwork/'+artworkID+'/attribution'+str(n)) , HICO.hasInterpretationType , URIRef(HICO+'authorship-attribution') ))
 								g.add(( URIRef(base+'artwork/'+artworkID+'/attribution'+str(n)) , HICO.hasInterpretationType , URIRef(base+'itatti-discarded-attribution') ))
 
@@ -1536,7 +1526,7 @@ def methodology_itatti():
 					else:
 						g.add(( URIRef(base+'artwork/'+artworkID) , CIDOC.P94i_was_created_by , URIRef(base+'artwork/'+artworkID+'/creation1') ))	
 						g.add(( URIRef(base+'artwork/'+artworkID+'/creation1') , PROV.wasGeneratedBy , URIRef(base+'artwork/'+artworkID+'/attribution1') ))						
-						g.add(( URIRef(base+'artwork/'+artworkID+'/attribution1') , CIDOC.P3_has_note , Literal(otherAttribution.encode('utf-8')) ))
+						g.add(( URIRef(base+'artwork/'+artworkID+'/attribution1') , CIDOC.P3_has_note , Literal(otherAttribution) ))
 						g.add(( URIRef(base+'artwork/'+artworkID+'/attribution1') , HICO.hasInterpretationType , URIRef(HICO+'authorship-attribution') ))
 						g.add(( URIRef(base+'artwork/'+artworkID+'/attribution1') , HICO.hasInterpretationType , URIRef(base+'itatti-discarded-attribution') ))
 
@@ -1563,22 +1553,19 @@ def methodology_itatti():
 			else:
 				pass
 		
-		#return g.serialize(destination='FINAL_itatti.nq', format='nquads')
-		print(disc)
-
-#methodology_itatti()
-
+		return g.serialize(destination=itatti_rdf, format='nquads')
+		
 
 # 6. reconcile historians to VIAF and co. and manually double check
-def reconcile_itatti_historians_to_viaf():
+def reconcile_historians_to_viaf(itatti_rdf, historians_itatti_viaf):
 	""" extract from each attribution the historian cited, fuzzy string matching to VIAF, create a csv 'historians_itatti_viaf.csv' to be manually double checked
 	Secondly, update the itatti.nq file adding the historian cited to each attribution."""
 	baseURL = 'http://viaf.org/viaf/search/viaf?query=local.names+%3D+%22'
-	f=csv.writer(open('historians_organizations_itatti_viaf.csv', 'w', encoding='utf-8'))
+	f=csv.writer(open(historians_itatti_viaf, 'w', encoding='utf-8'))
 	f.writerow(['id']+['search']+['result']+['viaf']+['lc']+['isni']+['ratio']+['partialRatio']+['tokenSort']+['tokenSet']+['avg'])
 
 	g=rdflib.ConjunctiveGraph(identifier=URIRef(itatti_graph))
-	g.parse("FINAL_itatti.nq", format="nquads")
+	g.parse(itatti_rdf, format="nquads")
 	g.bind('cito', CITO)
 	names = set()
 	for s,p,o in g.triples((None, CITO.agreesWith, None)):
@@ -1591,7 +1578,6 @@ def reconcile_itatti_historians_to_viaf():
 		try:
 			response = response[response.index('<recordData xsi:type="ns1:stringOrXmlFragment">')+47:response.index('</recordData>')].replace('&quot;','"')
 			response = json.loads(response)
-			print (response)
 			label = response['mainHeadings']['data'][0]['text']
 			viafid = response['viafID']	
 		except:
@@ -1619,17 +1605,15 @@ def reconcile_itatti_historians_to_viaf():
 			isni = ''
 		f.writerow([idName]+[name.strip()]+[label]+[viafid]+[lc]+[isni]+[ratio]+[partialRatio]+[tokenSort]+[tokenSet]+[avg])
 
-#reconcile_itatti_historians_to_viaf()
-
 
 # 7. create the linkset of historians
-def itatti_historians_linkset():
-	""" read the csv manually double-checked, renamed 'FINAL_historians_organizations_itatti_viaf.csv', and create a linkset for historians."""
+def historians_linkset(itatti_rdf,historians_revised,linkset_arthistorians_itatti):
+	""" read the csv manually double-checked, renamed 'FINAL_historians_itatti_viaf.csv', and create a linkset for historians."""
 	g=rdflib.ConjunctiveGraph(identifier=URIRef(arthistorians_graph))
 	g.bind('owl', OWL)
 	ok=rdflib.ConjunctiveGraph(identifier=URIRef(itatti_graph))
-	ok.parse("FINAL_itatti.nq", format="nquads")
-	with open('FINAL_historians_organizations_itatti_viaf.csv', encoding='utf-8') as csvfile:
+	ok.parse(itatti_rdf, format="nquads")
+	with open(historians_revised, 'r', encoding='utf-8') as csvfile:
 		reader = csv.DictReader(csvfile)
 		for row in reader:
 			uri = row['id'].strip()
@@ -1649,19 +1633,5 @@ def itatti_historians_linkset():
 				if s1 == uri:
 					ok.remove(( s1, RDFS.label, None ))
 					ok.add(( URIRef(s1), RDFS.label, Literal(firstName) ))
-	g.serialize(destination='linkset_arthistorians_itatti.nq', format='nquads')
-	ok.serialize(destination='FINAL_itatti.nq', format='nquads')
-
-#itatti_historians_linkset()
-
-
-# 8. upload everything on the TS
-def upload():
-	""" upload all the files created on the local triplestore"""
-	server = sparql.SPARQLServer('http://127.0.0.1:9999/blazegraph/sparql')
-	server.update('load <file:///Users/marilena/Desktop/mauth/data/itatti/FINAL_itatti.nq>') 
-	server.update('load <file:///Users/marilena/Desktop/mauth/data/itatti/linkset_itatti_zeri_artworks.nq>') 
-	server.update('load <file:///Users/marilena/Desktop/mauth/data/itatti/linkset_arthistorians_itatti.nq>') 
-	server.update('load <file:///Users/marilena/Desktop/mauth/data/itatti/linkset_artists_itatti.nq>') 
-
-# upload()
+	g.serialize(destination=linkset_arthistorians_itatti, format='nquads')
+	ok.serialize(destination=itatti_rdf, format='nquads')

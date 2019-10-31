@@ -1,0 +1,69 @@
+institution,critLabel,count,total,percentage
+zeri,documentation,195,19061,1
+zeri,artist's signature,1183,19061,6
+zeri,archive creator's attribution,5279,19061,27.7
+zeri,archive creator's bibliography,285,19061,1.5
+zeri,bibliography,9387,19061,49
+zeri,archival classification,5685,19061,29.8
+zeri,archive creator's note on photograph,1291,19061,6.7
+zeri,scholar's attribution,247,19061,1.3
+zeri,scholar's note on photograph,1,19061,0.005
+zeri,museum attribution,9,19061,0.04
+zeri,inscription,14,19061,0.07
+zeri,sigla,75,19061,0.4
+zeri,auction attribution,358,19061,1.8
+zeri,collection attribution,34,19061,1.2
+zeri,market attribution,135,19061,0.7
+zeri,traditional attribution,1,19061,0.005
+zeri,stylistic analysis,41,19061,0.2
+zeri,anonymous note on photograph,499,19061,2.6
+zeri,false signature,1,19061,0.005
+zeri,caption on photograph,15,19061,0.07
+zeri,other,362,19061,1.9
+zeri,none,434,19061,2.3
+
+i tatti,documentation,35,12256,0.3
+i tatti,artist's signature,146,12256,1.2
+i tatti,archive creator's attribution,1,12256,0.008
+i tatti,archive creator's bibliography,2008,12256,16.4
+i tatti,bibliography,1016,12256,8.3
+i tatti,archival classification,4826,12256,39.4
+i tatti,archive creator's note on photograph,1777,12256,14.5
+i tatti,scholar's attribution,260,12256,2.1
+i tatti,scholar's note on photograph,877,12256,7.15
+i tatti,museum attribution,254,12256,2.1
+i tatti,inscription,0,12256,0
+i tatti,sigla,1,12256,0.008
+i tatti,auction attribution,664,12256,5.4
+i tatti,collection attribution,31,12256,0.25
+i tatti,market attribution,0,12256,0
+i tatti,traditional attribution,0,12256,0
+i tatti,stylistic analysis,0,12256,0
+i tatti,anonymous note on photograph,240,12256,2
+i tatti,false signature,0,12256,0
+i tatti,caption on photograph,1,12256,0.008
+i tatti,other,0,12256,0
+i tatti,none,0,12256,0
+
+frick,documentation,2,10207,0.02
+frick,artist's signature,2,10207,0.02
+frick,archive creator's attribution,0,10207,0
+frick,archive creator's bibliography,0,10207,0
+frick,bibliography,4387,10207,43
+frick,archival classification,5015,10207,49
+frick,archive creator's note on photograph,0,10207,0
+frick,scholar's attribution,402,10207,4
+frick,scholar's note on photograph,32,10207,0.3
+frick,museum attribution,415,10207,4
+frick,inscription,2,10207,0.02
+frick,sigla,0,10207,0
+frick,auction attribution,61,10207,0.6
+frick,collection attribution,21,10207,0.2
+frick,market attribution,2,10207,0.02
+frick,traditional attribution,0,10207,0
+frick,stylistic analysis,22,10207,0.2
+frick,anonymous note on photograph,420,10207,4.1
+frick,false signature,0,10207,0
+frick,caption on photograph,2,10207,0.08
+frick,other,40,10207,0.4
+frick,none,0,10207,0
