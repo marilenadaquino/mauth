@@ -14,7 +14,7 @@ idna==2.8
 importlib-metadata==0.23
 isodate==0.6.0
 itsdangerous==1.1.0
-Jinja2==2.10.3
+Jinja2==2.11.3
 jsonschema==3.1.1
 lark-parser==0.7.7
 lxml==4.4.1
